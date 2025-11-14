@@ -52,12 +52,19 @@ public class Menu {
             g.fillRectangle(screen.getCursorPosition(), size, ' ');
 
             // título
-            String title = "=== BATALHA NAVAL ===";
-            int titleCol = (size.getColumns() - title.length()) / 2;
-            g.putString(titleCol, 5, title);
+            String s1 = "▗▄▄▖  ▗▄▖▗▄▄▄▖▗▄▖ ▗▖   ▗▖ ▗▖ ▗▄▖     ▗▖  ▗▖ ▗▄▖ ▗▖  ▗▖ ▗▄▖ ▗▖   ";
+            String s2 = "▐▌ ▐▌▐▌ ▐▌ █ ▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌ ▐▌    ▐▛▚▖▐▌▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌▐▌   ";
+            String s3 = "▐▛▀▚▖▐▛▀▜▌ █ ▐▛▀▜▌▐▌   ▐▛▀▜▌▐▛▀▜▌    ▐▌ ▝▜▌▐▛▀▜▌▐▌  ▐▌▐▛▀▜▌▐▌   ";
+            String s4 = "▐▌▄▞▘▐▌ ▐▌ █ ▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌▐▌ ▐▌    ▐▌  ▐▌▐▌ ▐▌ ▝▚▞▘ ▐▌ ▐▌▐▙▄▄▖";
+
+            int titleCol = (size.getColumns() - s1.length()) / 2;
+            g.putString(titleCol, 4, s1);
+            g.putString(titleCol, 5, s2);
+            g.putString(titleCol, 6, s3);
+            g.putString(titleCol, 7, s4);
 
             // opções
-            int startRow = 10;
+            int startRow = 15;
             for (int i = 0; i < options.length; i++) {
                 String text = options[i];
                 int col = (size.getColumns() - text.length()) / 2;
@@ -72,7 +79,7 @@ public class Menu {
 
             screen.refresh();
 
-            // input
+
             KeyStroke key = screen.readInput();
             if (key == null) continue;
 
@@ -86,8 +93,12 @@ public class Menu {
                     case 1 -> State.SETTINGS;
                     default -> State.EXIT;
                 };
-            } else if (key.getKeyType() == KeyType.EOF || key.getKeyType() == KeyType.Escape) {
+            } else if (key.getKeyType() == KeyType.EOF || key.getKeyType() == KeyType.Escape ) {
                 return State.EXIT;
+            } else if(key.getKeyType() == KeyType.Character) {
+                if ( key.getCharacter() == 'q' || key.getCharacter() == 'Q') {
+                    return State.EXIT;
+                }
             }
         }
     }
@@ -98,7 +109,7 @@ public class Menu {
         TextGraphics g = screen.newTextGraphics();
 
         // usa o teu Board – ajusta se o construtor for diferente
-        Board board = new Board(10, 10); // por agora fixo 10x10
+        Board board = new Board(new Settings()); // por agora fixo 10x10
 
         boolean running = true;
 
