@@ -7,9 +7,9 @@ public class Board {
     private int width;
     private int[][] board;
 
-    public Board(int heigth, int width) {
-        this.heigth = heigth;
-        this.width = width;
+    public Board(Settings settings) {
+        this.heigth = settings.getHeight();
+        this.width = settings.getWidth();
         this.board = new int[width][heigth];
     }
 
