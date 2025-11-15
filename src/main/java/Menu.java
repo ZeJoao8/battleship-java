@@ -25,7 +25,11 @@ public class Menu {
             while (state != State.EXIT) {
                 switch (state) {
                     case MENU -> state = runMenu(screen);
-                    case GAME -> state = runGame(screen);
+                    case GAME -> {
+                        Game game = new Game(screen);
+                        game.run();
+                        state = runGame(screen);
+                    }
                     case SETTINGS -> state = runSettings(screen);
                 }
             }
