@@ -8,9 +8,11 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
 public class Menu {
 
-    private enum State { MENU, GAME, SETTINGS, EXIT }
+    enum State {MENU, GAME, SETTINGS, EXIT}
 
-
+    private Settings settings;
+    private SettingsView settingsView;
+    private Selector menuSelector = new Selector(3);
 
     public void start() {
         try {
@@ -21,12 +23,17 @@ public class Menu {
             screen.startScreen();
 
             State state = State.MENU;
+            settings = new Settings();
+            settingsView = new SettingsView(settings);
 
             while (state != State.EXIT) {
                 switch (state) {
                     case MENU -> state = runMenu(screen);
                     case GAME -> state = runGame(screen);
-                    case SETTINGS -> state = runSettings(screen);
+                    case SETTINGS -> {
+                        settingsView.runSettings(screen);
+                        state = State.MENU;
+                    }
                 }
             }
 
@@ -41,17 +48,16 @@ public class Menu {
 
     private State runMenu(Screen screen) throws Exception {
         TextGraphics g = screen.newTextGraphics();
-        int selected = 0; // 0 = Play, 1 = Settings, 2 = Quit
         String[] options = {"Play", "Settings", "Quit"};
 
         while (true) {
-            // fundo
+            // Fundo
             g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
             g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
             TerminalSize size = screen.getTerminalSize();
             g.fillRectangle(screen.getCursorPosition(), size, ' ');
 
-            // título
+            // Título
             String s1 = "▗▄▄▖  ▗▄▖▗▄▄▄▖▗▄▖ ▗▖   ▗▖ ▗▖ ▗▄▖     ▗▖  ▗▖ ▗▄▖ ▗▖  ▗▖ ▗▄▖ ▗▖   ";
             String s2 = "▐▌ ▐▌▐▌ ▐▌ █ ▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌ ▐▌    ▐▛▚▖▐▌▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌▐▌   ";
             String s3 = "▐▛▀▚▖▐▛▀▜▌ █ ▐▛▀▜▌▐▌   ▐▛▀▜▌▐▛▀▜▌    ▐▌ ▝▜▌▐▛▀▜▌▐▌  ▐▌▐▛▀▜▌▐▌   ";
@@ -63,41 +69,39 @@ public class Menu {
             g.putString(titleCol, 6, s3);
             g.putString(titleCol, 7, s4);
 
-            // opções
+            // Opções
             int startRow = 15;
             for (int i = 0; i < options.length; i++) {
                 String text = options[i];
                 int col = (size.getColumns() - text.length()) / 2;
-                if (i == selected) {
+                if (menuSelector.getSelectedIndex() == i) {
                     g.setForegroundColor(TextColor.Factory.fromString("#00FF9D")); // verde
                     g.putString(col - 2, startRow + i * 2, "> " + text + " <");
-                    g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
                 } else {
+                    g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
                     g.putString(col, startRow + i * 2, text);
                 }
             }
 
             screen.refresh();
 
-
             KeyStroke key = screen.readInput();
             if (key == null) continue;
 
-            if (key.getKeyType() == KeyType.ArrowDown) {
-                selected = (selected + 1) % options.length;
-            } else if (key.getKeyType() == KeyType.ArrowUp) {
-                selected = (selected - 1 + options.length) % options.length;
-            } else if (key.getKeyType() == KeyType.Enter) {
-                return switch (selected) {
-                    case 0 -> State.GAME;
-                    case 1 -> State.SETTINGS;
-                    default -> State.EXIT;
-                };
-            } else if (key.getKeyType() == KeyType.EOF || key.getKeyType() == KeyType.Escape ) {
-                return State.EXIT;
-            } else if(key.getKeyType() == KeyType.Character) {
-                if ( key.getCharacter() == 'q' || key.getCharacter() == 'Q') {
-                    return State.EXIT;
+            // Navegação com Selector
+            switch (key.getKeyType()) {
+                case ArrowDown -> menuSelector.next();
+                case ArrowUp -> menuSelector.previous();
+                case Enter -> {
+                    switch (menuSelector.getSelectedIndex()) {
+                        case 0 -> { return State.GAME; }
+                        case 1 -> { return State.SETTINGS; }
+                        default -> { return State.EXIT; }
+                    }
+                }
+                case Escape, EOF -> { return State.EXIT; }
+                case Character -> {
+                    if (Character.toLowerCase(key.getCharacter()) == 'q') return State.EXIT;
                 }
             }
         }
@@ -107,71 +111,32 @@ public class Menu {
 
     private State runGame(Screen screen) throws Exception {
         TextGraphics g = screen.newTextGraphics();
-
-        // usa o teu Board – ajusta se o construtor for diferente
-        Board board = new Board(new Settings()); // por agora fixo 10x10
+        Board board = new Board(settings);
 
         boolean running = true;
 
         while (running) {
-            // fundo
+            // Fundo
             g.setBackgroundColor(TextColor.Factory.fromString("#001122"));
             g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
             TerminalSize size = screen.getTerminalSize();
             g.fillRectangle(screen.getCursorPosition(), size, ' ');
 
-            // título
+            // Título
             g.putString(2, 1, "Jogo - Batalha Naval (Q - voltar ao menu)");
 
-            // desenhar tabuleiro simples (só água por enquanto)
+            // Desenhar tabuleiro simples (só água por enquanto)
             int offsetX = 5;
             int offsetY = 3;
-
             for (int y = 0; y < board.getHeigth(); y++) {
                 for (int x = 0; x < board.getWidth(); x++) {
-                    // mais tarde, lê board.getCell(y, x) para saber se é navio/água/tiro
                     g.putString(offsetX + x * 2, offsetY + y, "·");
                 }
             }
 
             screen.refresh();
 
-            // input – por agora só tecla para voltar
-            KeyStroke key = screen.readInput();
-            if (key == null) continue;
-
-            if (key.getKeyType() == KeyType.Character) {
-                if (key.getCharacter() == 'q' || key.getCharacter() == 'Q') {
-                    running = false; // volta ao menu
-                }
-            } else if (key.getKeyType() == KeyType.Escape) {
-                running = false;
-            }
-        }
-
-        return State.MENU;
-    }
-
-    // ---------------- SETTINGS ----------------
-
-    private State runSettings(Screen screen) throws Exception {
-        TextGraphics g = screen.newTextGraphics();
-        boolean running = true;
-
-        while (running) {
-            g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
-            g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
-            TerminalSize size = screen.getTerminalSize();
-            g.fillRectangle(screen.getCursorPosition(), size, ' ');
-
-            g.putString(2, 2, "Settings (ainda por implementar)");
-            g.putString(2, 4, "Aqui depois vais mudar:");
-            g.putString(4, 6, "- Tamanho do tabuleiro");
-            g.putString(4, 7, "- Dificuldade");
-            g.putString(2, 10, "Carrega em Q para voltar ao menu");
-
-            screen.refresh();
-
+            // Input – voltar ao menu
             KeyStroke key = screen.readInput();
             if (key == null) continue;
 
