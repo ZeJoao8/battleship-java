@@ -15,7 +15,7 @@ public class Game {
 
 
 
-    public void runGame() throws Exception{
+    public void runGame() throws Exception {
         int h = settings.getHeight();
         int w = settings.getWidth();
 
@@ -27,23 +27,24 @@ public class Game {
 
         placeFleetRandomly(enemyBoard, enemyFleet);
 
-        PlacementScreen placementScreen = new PlacementScreen(screen, playerBoard, playerFleet);
-        boolean running = placementScreen.runPlacementScreen();
+        PlacementController placement = new PlacementController(screen, playerBoard, playerFleet);
+        boolean running = placement.run();
 
-        if(!running){return;}
-
+        if (!running) return;
 
         BattleScreen battleScreen = new BattleScreen(screen, playerBoard, enemyBoard);
         battleScreen.runBattleScreen();
     }
+
 
     private List<Boat> createFleet() {
         List<Boat> fleet = new ArrayList<>();
 
         fleet.add(new PortaAvioes());
         fleet.add(new NavioTanque());
-        fleet.add(new Submarino());
         fleet.add(new ContraTorpedeiro());
+        fleet.add(new ContraTorpedeiro());
+        fleet.add(new Submarino());
 
         return fleet;
     }
