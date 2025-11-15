@@ -64,6 +64,6 @@ public class Board {
         }
     }
 
-    public void markHit(int x, int y) { board[y][x] = Hit; }
-    public void markMiss(int x, int y) { board[y][x] = Miss; }
+    public void markHit(int x, int y) { board[x][y] = Hit; }
+    public void markMiss(int x, int y) { board[x][y] = Miss; }
 }
