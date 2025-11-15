@@ -39,7 +39,11 @@ public class Menu {
                         KeyStroke key = screen.readInput();
                         state = menuController.handleInput(key);
                     }
-                    case GAME -> state = runGame(screen);
+                    case GAME -> {
+                        Game game = new Game(screen, settings);
+                        game.runGame();
+                        state = State.MENU;
+                    }
                     case SETTINGS -> {
                         settingsView.runSettings(screen);
                         state = State.MENU;
@@ -51,47 +55,6 @@ public class Menu {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    // ---------------- GAME ----------------
-
-    private State runGame(Screen screen) throws Exception {
-        TextGraphics g = screen.newTextGraphics();
-        Board board = new Board(settings);
-
-        boolean running = true;
-
-        while (running) {
-            g.setBackgroundColor(TextColor.Factory.fromString("#001122"));
-            g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
-            TerminalSize size = screen.getTerminalSize();
-            g.fillRectangle(screen.getCursorPosition(), size, ' ');
-
-            g.putString(2, 1, "Jogo - Batalha Naval (Q - voltar ao menu)");
-
-            int offsetX = 5;
-            int offsetY = 3;
-            for (int y = 0; y < board.getHeigth(); y++) {
-                for (int x = 0; x < board.getWidth(); x++) {
-                    g.putString(offsetX + x * 2, offsetY + y, "·");
-                }
-            }
-
-            screen.refresh();
-
-            KeyStroke key = screen.readInput();
-            if (key == null) continue;
-
-            if (key.getKeyType() == KeyType.Character) {
-                if (key.getCharacter() == 'q' || key.getCharacter() == 'Q') {
-                    running = false;
-                }
-            } else if (key.getKeyType() == KeyType.Escape) {
-                running = false;
-            }
-        }
-
-        return State.MENU;
     }
 }
 

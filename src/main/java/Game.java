@@ -3,7 +3,6 @@ import com.googlecode.lanterna.screen.Screen;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class Game {
     private final Screen screen;
@@ -14,10 +13,7 @@ public class Game {
         this.settings = settings;
     }
 
-    // Correr sem ligar as settings (temporario)
-    public Game(Screen screen) {
-        this(screen, new Settings());
-    }
+
 
     public void runGame() throws Exception{
         int h = settings.getHeight();
@@ -44,14 +40,14 @@ public class Game {
     private List<Boat> createFleet() {
         List<Boat> fleet = new ArrayList<>();
 
-        // ADAPTA isto às tuas classes concretas (construtores)
-        fleet.add(new PortaAvioes(new Position(0, 0), true));
-        fleet.add(new NavioTanque(new Position(0, 0), true));
-        fleet.add(new Submarino(new Position(0, 0), true));
-        fleet.add(new ContraTorpedeiro(new Position(0, 0), true));
+        fleet.add(new PortaAvioes());
+        fleet.add(new NavioTanque());
+        fleet.add(new Submarino());
+        fleet.add(new ContraTorpedeiro());
 
         return fleet;
     }
+
 
     private void placeFleetRandomly(Board board, List<Boat> fleet) {
         Random rnd = new Random();

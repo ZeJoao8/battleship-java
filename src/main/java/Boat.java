@@ -1,16 +1,20 @@
 import java.util.ArrayList;
 import java.util.List;
 
+
 public abstract class Boat {
     protected String name;
     protected int size;
-    protected boolean horizontal;
     protected List<Position> positions;
     protected int hitsReceived;
+    protected boolean horizontal;
 
-    public Boat(Position ipos, boolean horizontal){
-        this.horizontal = horizontal;
+    public Boat(String name, int size){
+        this.name = name;
+        this.size = size;
         this.positions = new ArrayList<>();
+        this.hitsReceived = 0;
+        this.horizontal = true;
     }
 
     public String getName() {return name;}
@@ -28,5 +32,10 @@ public abstract class Boat {
     public void addPosition(Position p) {positions.add(p);}
     public void registerHit() {hitsReceived++;}
     public boolean isSunk() {return hitsReceived >= size;}
+
+    public void clearPositions() {
+        positions.clear();
+    }
+
 }
 

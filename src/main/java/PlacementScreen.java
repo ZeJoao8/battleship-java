@@ -19,7 +19,7 @@ public class PlacementScreen {
     private int cursorX = 0;
     private int cursorY = 0;
 
-    private Position position = new Position(0,0);
+    //private Position position = new Position(0,0);
 
     private boolean horizontal = true;
 
@@ -30,16 +30,17 @@ public class PlacementScreen {
         this.fleet = fleet;
     }
 
-    public boolean runPlacement() throws Exception {
+    public boolean runPlacementScreen() throws Exception {
 
-        boolean running = true;
-        while (running) {
+
+        while (true) {
 
             // Fundo azul suave
             g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
             g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
             TerminalSize size = screen.getTerminalSize();
-            g.fillRectangle(screen.getCursorPosition(), size, ' ');
+            g.fillRectangle(new TerminalPosition(0,0), size, ' ');
+
 
             Boat current = getCurrentBoat();
 
@@ -114,6 +115,7 @@ public class PlacementScreen {
             }
 
         }
+
     }
 
 
@@ -133,13 +135,20 @@ public class PlacementScreen {
     }
 
     private boolean isPartOfPreview(int x, int y, Boat boat) {
-        if (!boat.getPositions().isEmpty()) return false; // já está colocado, não precisa preview
+        if (!boat.getPositions().isEmpty()) return false;
+
         int size = boat.getSize();
+
         for (int i = 0; i < size; i++) {
             int bx = cursorX + (horizontal ? i : 0);
             int by = cursorY + (horizontal ? 0 : i);
-            if (x == bx && y == by) return true;
+
+            if (!playerBoard.inside(bx, by)) continue;
+
+            if (x == bx && y == by)
+                return true;
         }
+
         return false;
     }
 

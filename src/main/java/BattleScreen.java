@@ -25,7 +25,7 @@ public class BattleScreen {
         this.enemyBoard = enemyBoard;
     }
 
-    public void run() throws Exception {
+    public void runBattleScreen() throws Exception {
         boolean running = true;
 
         while (running) {
