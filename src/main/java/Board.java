@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Board {
 
-    private static final int Water = 0;
-    private static final int Ship = 1;
-    private static final int Hit = 2;
-    private static final int Miss = 3;
+    public static final int Water = 0;
+    public static final int Ship = 1;
+    public static final int Hit = 2;
+    public static final int Miss = 3;
 
     private int heigth;
     private int width;
