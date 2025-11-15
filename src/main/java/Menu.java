@@ -8,9 +8,9 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
 public class Menu {
 
-    private enum State { MENU, GAME, SETTINGS, EXIT }
-
-
+    enum State { MENU, GAME, SETTINGS, EXIT }
+    private Settings settings;
+    private SettingsView settingsView;
 
     public void start() {
         try {
@@ -21,12 +21,18 @@ public class Menu {
             screen.startScreen();
 
             State state = State.MENU;
+            settings = new Settings();
+            settingsView = new SettingsView(settings);
 
             while (state != State.EXIT) {
                 switch (state) {
                     case MENU -> state = runMenu(screen);
                     case GAME -> state = runGame(screen);
-                    case SETTINGS -> state = runSettings(screen);
+                    case SETTINGS -> {
+                        settingsView.runSettings(screen);
+                        state = State.MENU;
+                    }
+
                 }
             }
 
@@ -108,8 +114,7 @@ public class Menu {
     private State runGame(Screen screen) throws Exception {
         TextGraphics g = screen.newTextGraphics();
 
-        // usa o teu Board – ajusta se o construtor for diferente
-        Board board = new Board(new Settings()); // por agora fixo 10x10
+        Board board = new Board(settings);
 
         boolean running = true;
 
@@ -152,39 +157,6 @@ public class Menu {
         return State.MENU;
     }
 
-    // ---------------- SETTINGS ----------------
 
-    private State runSettings(Screen screen) throws Exception {
-        TextGraphics g = screen.newTextGraphics();
-        boolean running = true;
-
-        while (running) {
-            g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
-            g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
-            TerminalSize size = screen.getTerminalSize();
-            g.fillRectangle(screen.getCursorPosition(), size, ' ');
-
-            g.putString(2, 2, "Settings (ainda por implementar)");
-            g.putString(2, 4, "Aqui depois vais mudar:");
-            g.putString(4, 6, "- Tamanho do tabuleiro");
-            g.putString(4, 7, "- Dificuldade");
-            g.putString(2, 10, "Carrega em Q para voltar ao menu");
-
-            screen.refresh();
-
-            KeyStroke key = screen.readInput();
-            if (key == null) continue;
-
-            if (key.getKeyType() == KeyType.Character) {
-                if (key.getCharacter() == 'q' || key.getCharacter() == 'Q') {
-                    running = false;
-                }
-            } else if (key.getKeyType() == KeyType.Escape) {
-                running = false;
-            }
-        }
-
-        return State.MENU;
-    }
 }
 
