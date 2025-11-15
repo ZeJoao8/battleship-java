@@ -13,8 +13,6 @@ public class Game {
         this.settings = settings;
     }
 
-
-
     public void runGame() throws Exception {
         int h = settings.getHeight();
         int w = settings.getWidth();
@@ -22,12 +20,9 @@ public class Game {
         Board playerBoard = new Board(settings);
         Board enemyBoard  = new Board(settings);
 
-        List<Boat> playerFleet = createFleet();
-        List<Boat> enemyFleet  = createFleet();
+        enemyBoard.placeFleetRandomly();
 
-        placeFleetRandomly(enemyBoard, enemyFleet);
-
-        PlacementController placement = new PlacementController(screen, playerBoard, playerFleet);
+        PlacementController placement = new PlacementController(screen, playerBoard);
         boolean running = placement.run();
 
         if (!running) return;
@@ -36,36 +31,4 @@ public class Game {
         battleScreen.runBattleScreen();
     }
 
-
-    private List<Boat> createFleet() {
-        List<Boat> fleet = new ArrayList<>();
-
-        fleet.add(new PortaAvioes());
-        fleet.add(new NavioTanque());
-        fleet.add(new ContraTorpedeiro());
-        fleet.add(new ContraTorpedeiro());
-        fleet.add(new Submarino());
-
-        return fleet;
-    }
-
-
-    private void placeFleetRandomly(Board board, List<Boat> fleet) {
-        Random rnd = new Random();
-        int h = board.getHeigth();
-        int w = board.getWidth();
-
-        for (Boat boat : fleet) {
-            boolean placed = false;
-            while (!placed) {
-                boolean horiz = rnd.nextBoolean();
-                int x = rnd.nextInt(w);
-                int y = rnd.nextInt(h);
-                if (board.canPlaceBoat(boat, x, y, horiz)) {
-                    board.placeBoat(boat, x, y, horiz);
-                    placed = true;
-                }
-            }
-        }
-    }
 }

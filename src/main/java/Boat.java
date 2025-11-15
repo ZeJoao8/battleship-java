@@ -37,5 +37,7 @@ public abstract class Boat {
         positions.clear();
     }
 
+    public void rotate(){horizontal = !horizontal;}
+
 }
 
