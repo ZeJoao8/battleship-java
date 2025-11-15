@@ -8,9 +8,11 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
 public class Menu {
 
-    enum State { MENU, GAME, SETTINGS, EXIT }
+    enum State {MENU, GAME, SETTINGS, EXIT}
+
     private Settings settings;
     private SettingsView settingsView;
+    Selector menuSelector = new Selector(3);
 
     public void start() {
         try {
@@ -47,17 +49,14 @@ public class Menu {
 
     private State runMenu(Screen screen) throws Exception {
         TextGraphics g = screen.newTextGraphics();
-        int selected = 0; // 0 = Play, 1 = Settings, 2 = Quit
         String[] options = {"Play", "Settings", "Quit"};
 
         while (true) {
-            // fundo
             g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
             g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
             TerminalSize size = screen.getTerminalSize();
             g.fillRectangle(screen.getCursorPosition(), size, ' ');
 
-            // título
             String s1 = "▗▄▄▖  ▗▄▖▗▄▄▄▖▗▄▖ ▗▖   ▗▖ ▗▖ ▗▄▖     ▗▖  ▗▖ ▗▄▖ ▗▖  ▗▖ ▗▄▖ ▗▖   ";
             String s2 = "▐▌ ▐▌▐▌ ▐▌ █ ▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌ ▐▌    ▐▛▚▖▐▌▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌▐▌   ";
             String s3 = "▐▛▀▚▖▐▛▀▜▌ █ ▐▛▀▜▌▐▌   ▐▛▀▜▌▐▛▀▜▌    ▐▌ ▝▜▌▐▛▀▜▌▐▌  ▐▌▐▛▀▜▌▐▌   ";
@@ -69,47 +68,43 @@ public class Menu {
             g.putString(titleCol, 6, s3);
             g.putString(titleCol, 7, s4);
 
-            // opções
             int startRow = 15;
             for (int i = 0; i < options.length; i++) {
                 String text = options[i];
                 int col = (size.getColumns() - text.length()) / 2;
-                if (i == selected) {
+                if (menuSelector.getSelectedIndex() == i) {
                     g.setForegroundColor(TextColor.Factory.fromString("#00FF9D")); // verde
                     g.putString(col - 2, startRow + i * 2, "> " + text + " <");
-                    g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
                 } else {
+                    g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF")); // branco
                     g.putString(col, startRow + i * 2, text);
                 }
             }
 
             screen.refresh();
 
-
             KeyStroke key = screen.readInput();
             if (key == null) continue;
 
-            if (key.getKeyType() == KeyType.ArrowDown) {
-                selected = (selected + 1) % options.length;
-            } else if (key.getKeyType() == KeyType.ArrowUp) {
-                selected = (selected - 1 + options.length) % options.length;
-            } else if (key.getKeyType() == KeyType.Enter) {
-                return switch (selected) {
-                    case 0 -> State.GAME;
-                    case 1 -> State.SETTINGS;
-                    default -> State.EXIT;
-                };
-            } else if (key.getKeyType() == KeyType.EOF || key.getKeyType() == KeyType.Escape ) {
-                return State.EXIT;
-            } else if(key.getKeyType() == KeyType.Character) {
-                if ( key.getCharacter() == 'q' || key.getCharacter() == 'Q') {
-                    return State.EXIT;
+            switch (key.getKeyType()) {
+                case ArrowDown -> menuSelector.next();
+                case ArrowUp -> menuSelector.previous();
+                case Enter -> {
+                    switch (menuSelector.getSelectedIndex()) {
+                        case 0 -> { return State.GAME; }
+                        case 1 -> { return State.SETTINGS; }
+                        default -> { return State.EXIT; }
+                    }
+                }
+                case Escape, EOF -> { return State.EXIT; }
+                case Character -> {
+                    if (Character.toLowerCase(key.getCharacter()) == 'q') return State.EXIT;
                 }
             }
         }
     }
 
-    // ---------------- GAME ----------------
+// ---------------- GAME ----------------
 
     private State runGame(Screen screen) throws Exception {
         TextGraphics g = screen.newTextGraphics();
@@ -156,7 +151,6 @@ public class Menu {
 
         return State.MENU;
     }
-
-
 }
+
 

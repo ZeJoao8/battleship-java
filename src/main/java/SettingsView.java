@@ -6,13 +6,14 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 
 public class SettingsView {
-
-    private Settings settings;
-    private SettingsController controller;
+    private final Settings settings;
+    private final SettingsController controller;
+    private final Selector selector;
 
     public SettingsView(Settings settings) {
         this.settings = settings;
         this.controller = new SettingsController(settings);
+        this.selector = new Selector(2); // 0 = Width, 1 = Height
     }
 
     public void runSettings(Screen screen) throws Exception {
@@ -20,36 +21,62 @@ public class SettingsView {
         boolean running = true;
 
         while (running) {
-            g.setBackgroundColor(TextColor.Factory.fromString("#1E3A5F"));
+            // Fundo azul suave
+            g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
             g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
             TerminalSize size = screen.getTerminalSize();
             g.fillRectangle(screen.getCursorPosition(), size, ' ');
 
-            g.putString(2, 2, "Settings");
+            // Título
+            g.putString(2, 2, "=== SETTINGS ===");
 
-            g.putString(2, 4, "Board Size:");
-            g.putString(4, 6, "- Width : " + settings.getWidth());
-            g.putString(4, 7, "- Height: " + settings.getHeight());
+            // Width
+            if (selector.getSelectedIndex() == 0) {
+                g.setForegroundColor(TextColor.Factory.fromString("#00FF9D")); // verde
+                g.putString(4, 5, "Width : < " + settings.getWidth()+" >");
+            } else {
+                g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF")); // branco
+                g.putString(4, 5, "Width : " + settings.getWidth());
+            }
 
-            g.putString(2, 10, "Use W/S to increase/decrease Height");
-            g.putString(2, 11, "Use A/D to increase/decrease Width");
-            g.putString(2, 13, "Press Q to return to menu");
+            // Height
+            if (selector.getSelectedIndex() == 1) {
+                g.setForegroundColor(TextColor.Factory.fromString("#00FF9D")); // verde
+                g.putString(4, 6, "Height: < " + settings.getHeight()+" >");
+            } else {
+                g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF")); // branco
+                g.putString(4, 6, "Height: " + settings.getHeight());
+            }
+
+            // Instruções
+            g.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
+            g.putString(2, 9, "Use UP/DOWN to select field");
+            g.putString(2, 10, "Use LEFT/RIGHT to change value");
+            g.putString(2, 12, "Max Size: 14x14");
+            g.putString(2, 13, "Min Size: 6x6");
+            g.putString(2, 15, "Press Q to return to menu");
 
             screen.refresh();
 
+            // Input
             KeyStroke key = screen.readInput();
             if (key == null) continue;
 
-            if (key.getKeyType() == KeyType.Character) {
-                switch (Character.toLowerCase(key.getCharacter())) {
-                    case 'w': controller.increaseHeight(); break;
-                    case 's': controller.decreaseHeight(); break;
-                    case 'a': controller.decreaseWidth(); break;
-                    case 'd': controller.increaseWidth(); break;
-                    case 'q': running = false; break;
+            switch (key.getKeyType()) {
+                case ArrowUp -> selector.previous();
+                case ArrowDown -> selector.next();
+                case ArrowLeft -> {
+                    if (selector.getSelectedIndex() == 0) controller.decreaseWidth();
+                    else controller.decreaseHeight();
                 }
-            } else if (key.getKeyType() == KeyType.Escape) {
-                running = false;
+                case ArrowRight -> {
+                    if (selector.getSelectedIndex() == 0) controller.increaseWidth();
+                    else controller.increaseHeight();
+                }
+                case Character -> {
+                    if (Character.toLowerCase(key.getCharacter()) == 'q') running = false;
+                }
+                case Escape, EOF -> running = false;
             }
         }
     }
