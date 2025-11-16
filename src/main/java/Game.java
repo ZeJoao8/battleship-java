@@ -27,8 +27,8 @@ public class Game {
 
         if (!running) return;
 
-        BattleScreen battleScreen = new BattleScreen(screen, playerBoard, enemyBoard);
-        battleScreen.runBattleScreen();
+        BattleController battleController = new BattleController(screen, playerBoard, enemyBoard);
+        battleController.run();
     }
 
 }
