@@ -2,7 +2,9 @@ import com.googlecode.lanterna.*;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Board {
 
@@ -14,11 +16,14 @@ public class Board {
     private int heigth;
     private int width;
     private int[][] board;
+    private final List<Boat> fleet;
 
     public Board(Settings settings) {
         this.heigth = settings.getHeight();
         this.width = settings.getWidth();
         this.board = new int[width][heigth];
+        this.fleet = new ArrayList<>();
+        setFleet();
     }
 
     public int getHeigth() {
@@ -26,6 +31,24 @@ public class Board {
     }
     public int getWidth(){
         return width;
+    }
+
+    public List<Boat> getFleet() { return fleet; }
+    public void setFleet() {
+        fleet.add(new PortaAvioes());
+        fleet.add(new NavioTanque());
+        fleet.add(new ContraTorpedeiro());
+        fleet.add(new ContraTorpedeiro());
+        fleet.add(new Submarino());
+    }
+
+    public Boat getCurrentBoat() {
+        for (Boat b : fleet) if (b.getPositions().isEmpty()) return b;
+        return fleet.getLast();
+    }
+    public boolean allPlaced() {
+        for (Boat b : fleet) if (b.getPositions().isEmpty()) return false;
+        return true;
     }
 
     public boolean inside(int x, int y) {
@@ -60,6 +83,25 @@ public class Board {
                 int row = y + (horizontal ? 0 : i);
                 setCell(col, row, Ship);
                 boat.addPosition(new Position(col, row));
+            }
+        }
+    }
+
+    public void placeFleetRandomly() {
+        Random rnd = new Random();
+        int h = heigth;
+        int w = width;
+
+        for (Boat boat : fleet) {
+            boolean placed = false;
+            while (!placed) {
+                boolean horiz = rnd.nextBoolean();
+                int x = rnd.nextInt(w);
+                int y = rnd.nextInt(h);
+                if (canPlaceBoat(boat, x, y, horiz)) {
+                    placeBoat(boat, x, y, horiz);
+                    placed = true;
+                }
             }
         }
     }
