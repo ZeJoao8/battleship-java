@@ -108,4 +108,20 @@ public class Board {
 
     public void markHit(int x, int y) { board[x][y] = Hit; }
     public void markMiss(int x, int y) { board[x][y] = Miss; }
+
+    public boolean isValidBotTarget(int x, int y) {
+        int cell = getCell(x, y);
+        return cell == Water || cell == Ship;
+    }
+    public boolean hasLost(){
+        for (int y=0;y< heigth;y++){
+            for (int x = 0; x < width; x++){
+                if (board[x][y] == Ship) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
 }

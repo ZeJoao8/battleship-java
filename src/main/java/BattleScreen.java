@@ -6,6 +6,8 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 
+import java.util.Random;
+
 public class BattleScreen {
 
     private final Screen screen;
@@ -50,12 +52,32 @@ public class BattleScreen {
             } else if (key.getKeyType() == KeyType.Enter) {
                 // disparar no tabuleiro inimigo
                 int cell = enemyBoard.getCell(cursorX, cursorY);
-                    if (cell == Board.Water) {
+                if (cell == Board.Hit || cell == Board.Miss){
+                    continue;
+                }
+                if (cell == Board.Water) {
                     enemyBoard.markMiss(cursorX, cursorY);
+
                     // TODO: turno do bot aqui
                 } else if (cell == Board.Ship) {
                     enemyBoard.markHit(cursorX, cursorY);
+
                     // TODO: verificar se afundou navio, se ganhou, etc.
+                }
+
+                screen.refresh();
+
+                if (enemyBoard.hasLost()){
+                    showEndMessage("VITÓRIA!!");
+                    running = false;
+                    continue;
+                }
+                botTurn();
+
+                if (playerBoard.hasLost()) {
+                    showEndMessage("DERROTA");
+                    running = false;
+                    continue;
                 }
             }
         }
@@ -95,7 +117,7 @@ public class BattleScreen {
 
                 if (cell == Board.Water) ch = '·';
                 if (cell == Board.Ship) ch = hideShips ? '·' : 'O';
-                if (cell == Board.Hit)  ch = 'X';
+                if (cell == Board.Hit) ch = 'X';
                 if (cell == Board.Miss) ch = 'o';
 
                 boolean cursorHere = (hideShips && x == cursorX && y == cursorY);
@@ -110,4 +132,46 @@ public class BattleScreen {
             }
         }
     }
+
+    private void botTurn() throws Exception{
+        Random rnd = new Random();
+        int w = playerBoard.getWidth();
+        int h = playerBoard.getHeigth();
+
+        int x,y;
+
+        do {
+                x = rnd.nextInt(w);
+                y = rnd.nextInt(h);
+            } while (!playerBoard.isValidBotTarget(x, y));
+
+            int cell = playerBoard.getCell(x, y);
+
+            if (cell == Board.Ship) {
+                playerBoard.markHit(x, y);
+            } else {
+                playerBoard.markMiss(x, y);
+        }
+
+        screen.refresh();
+    }
+    private void showEndMessage(String msg) throws Exception{
+        g.setBackgroundColor(TextColor.Factory.fromString("#001122"));
+        g.setForegroundColor(TextColor.ANSI.WHITE);
+        g.fillRectangle(new TerminalPosition(0, 0), screen.getTerminalSize(), ' ');
+
+        g.putString(5, 5, msg);
+        g.putString(6, 6,"Pressiona Q para voltar ao menu");
+
+        screen.refresh();
+
+        while(true) {
+            KeyStroke key = screen.readInput();
+            if (key!= null && key.getKeyType() == KeyType.Character) {
+                char c= key.getCharacter();
+                if (c == 'q' || c == 'Q') return;
+            }
+        }
+    }
+
 }
