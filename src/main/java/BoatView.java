@@ -16,7 +16,8 @@ public class BoatView {
             int bx = cursorX + (boat.isHorizontal() ? i : 0);
             int by = cursorY + (boat.isHorizontal() ? 0 : i);
             g.setForegroundColor(TextColor.Factory.fromString("#00FF9D"));
-            g.putString(offsetX + bx * 2, offsetY + by, "#");
+            char ch = getBoatChar(boat, i);
+            g.putString(offsetX + bx * 2, offsetY + by, String.valueOf(ch));
         }
     }
 

@@ -48,8 +48,8 @@ public class BattleView {
                 char ch = '·';
                 int cell = board.getCell(x, y);
 
-                if (cell == Board.Water) ch = '·';
-                if (cell == Board.Ship) ch = hideShips ? '·' : 'O';
+                if (cell == Board.Water) ch = '~';
+                if (cell == Board.Ship) ch = hideShips ? '~' : 'O';
                 if (cell == Board.Hit) ch = 'X';
                 if (cell == Board.Miss) ch = 'o';
 
