@@ -77,7 +77,7 @@ public class Board {
     public void placeBoat(Boat boat, int x, int y, boolean horizontal) {
         if (canPlaceBoat(boat, x, y, horizontal)) {
             int tamanho = boat.getSize();
-
+            boat.setHorizontal(horizontal);
             for (int i = 0; i < tamanho; i++) {
                 int col = x + (horizontal ? i : 0);
                 int row = y + (horizontal ? 0 : i);
@@ -106,7 +106,18 @@ public class Board {
         }
     }
 
-    public void markHit(int x, int y) { board[x][y] = Hit; }
+    public void markHit(int x, int y) {
+        board[x][y] = Hit;
+        for (Boat b : fleet) {
+            for (Position p : b.getPositions()) {
+                if (p.getX() == x && p.getY() == y) {
+                    b.registerHit(x, y);
+                    return;
+                }
+            }
+        }
+    }
+
     public void markMiss(int x, int y) { board[x][y] = Miss; }
 
     public boolean isValidBotTarget(int x, int y) {

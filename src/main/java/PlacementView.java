@@ -8,10 +8,11 @@ public class PlacementView {
 
     private final Screen screen;
     private final TextGraphics g;
-
+    private final PlacementBoardView view;
     public PlacementView(Screen screen) {
         this.screen = screen;
         this.g = screen.newTextGraphics();
+        this.view = new PlacementBoardView(screen);
     }
 
     public void draw(PlacementModel model) throws Exception {
@@ -20,26 +21,10 @@ public class PlacementView {
 
         clearScreen();
         drawHeader(current);
+        int x=5;
+        int y=6;
 
-        int offsetX = 5;
-        int offsetY = 6;
-
-        // desenhar grelha vazia
-        for (int y = 0; y < board.getHeigth(); y++) {
-            for (int x = 0; x < board.getWidth(); x++) {
-                g.putString(offsetX + x * 2, offsetY + y, "~");
-            }
-        }
-
-        // desenhar frota já colocada
-        for (Boat boat : board.getFleet()) {
-            BoatView.drawBoat(boat, offsetX, offsetY, g);
-        }
-
-        // desenhar preview do barco atual
-        if (current != null && current.getPositions().isEmpty()) {
-            BoatView.drawPreview(current, model.getCursorX(), model.getCursorY(), offsetX, offsetY, g);
-        }
+        view.draw(model,x,y);
 
         screen.refresh();
     }

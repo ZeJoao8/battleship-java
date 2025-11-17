@@ -7,6 +7,21 @@ public class BoatView {
         for (int i = 0; i < boat.getPositions().size(); i++) {
             Position pos = boat.getPositions().get(i);
             char ch = getBoatChar(boat, i);
+            if (boat.isPartHit(i)) {
+                g.setForegroundColor(TextColor.Factory.fromString("#FF4444")); // vermelho
+            } else {
+                g.setForegroundColor(TextColor.Factory.fromString("#C17F42")); // castanho
+            }
+            g.putString(offsetX + pos.getX() * 2, offsetY + pos.getY(), String.valueOf(ch));
+        }
+    }
+
+    public static void drawSunkBoat(Boat boat, int offsetX, int offsetY, TextGraphics g) {
+        for (int i = 0; i < boat.getPositions().size(); i++) {
+            Position pos = boat.getPositions().get(i);
+            char ch = getBoatChar(boat, i); // já considera horizontal ou vertical
+
+            g.setForegroundColor(TextColor.Factory.fromString("#FF4444")); // vermelho forte
             g.putString(offsetX + pos.getX() * 2, offsetY + pos.getY(), String.valueOf(ch));
         }
     }
