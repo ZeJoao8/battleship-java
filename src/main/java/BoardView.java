@@ -45,7 +45,7 @@ public abstract class BoardView {
                             color = "#4DA6FF"; // escondido → parece água
                         break;
                 }
-
+                g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
                 g.setForegroundColor(TextColor.Factory.fromString(color));
                 drawCell(x, y, offsetX, offsetY, ch);
             }

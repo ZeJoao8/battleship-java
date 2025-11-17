@@ -42,25 +42,4 @@ public class BattleView {
 
         screen.refresh();
     }
-
-    public void showEndMessage(String msg) throws Exception{
-        g.setBackgroundColor(TextColor.Factory.fromString("#001122"));
-        g.setForegroundColor(TextColor.ANSI.WHITE);
-        g.fillRectangle(new TerminalPosition(0, 0), screen.getTerminalSize(), ' ');
-
-        g.putString(5, 5, msg);
-        g.putString(6, 6,"Pressiona Q para voltar ao menu");
-
-        screen.refresh();
-
-        while(true) {
-            KeyStroke key = screen.readInput();
-            if (key!= null && key.getKeyType() == KeyType.Character) {
-                char c= key.getCharacter();
-                if (c == 'q' || c == 'Q') return;
-            }
-        }
-    }
-
-
 }

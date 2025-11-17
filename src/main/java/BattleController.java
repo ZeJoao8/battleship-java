@@ -5,6 +5,7 @@ public class BattleController {
     private final Screen screen;
     private final BattleModel model;
     private final BattleView view;
+    private final EndScreen endScreen;
 
     private int cursorX = 0;
     private int cursorY = 0;
@@ -13,6 +14,7 @@ public class BattleController {
         this.screen = screen;
         this.model = new BattleModel(playerBoard, enemyBoard);
         this.view = new BattleView(screen);
+        this.endScreen = new EndScreen(screen);
     }
 
     public void run() throws Exception {
@@ -51,7 +53,7 @@ public class BattleController {
                 model.playerShoot(cursorX, cursorY);
 
                 if (model.hasEnemyLost()) {
-                    view.showEndMessage("VITÓRIA!!");
+                    endScreen.showEndMessage(true);
                     running = false;
                     continue;
                 }
@@ -59,7 +61,7 @@ public class BattleController {
                 model.botTurn();
 
                 if (model.hasPlayerLost()) {
-                    view.showEndMessage("DERROTA");
+                    endScreen.showEndMessage(false);
                     running = false;
                 }
             }
