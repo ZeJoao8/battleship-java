@@ -22,10 +22,17 @@ public class PlacementBoardView extends BoardView {
         }
 
         if (current != null && current.getPositions().isEmpty()) {
-            BoatView.drawPreview(current, model.getCursorX(), model.getCursorY(),
-                    x, y, g);
+            if (current.isHorizontal()) {
+                int lastX = model.getCursorX() + current.getSize() - 1;
+                if (lastX >= model.getBoard().getWidth()) {
+                    int overflow = lastX - (model.getBoard().getWidth() - 1);
+                    for (int i = 0; i < overflow; i++) {
+                        model.moveLeft();
+                    }
+                }
+            }
+            BoatView.drawPreview(current, model.getCursorX(), model.getCursorY(), x, y, g);
         }
-
         screen.refresh();
     }
 
