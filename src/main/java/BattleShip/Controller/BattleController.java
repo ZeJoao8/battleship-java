@@ -1,3 +1,9 @@
+package BattleShip.Controller;
+
+import BattleShip.Model.BattleModel;
+import BattleShip.Model.Board;
+import BattleShip.View.BattleView;
+import BattleShip.View.EndScreen;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;

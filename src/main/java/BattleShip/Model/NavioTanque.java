@@ -1,6 +1,8 @@
+package BattleShip.Model;
+
 public class NavioTanque extends Boat {
     public NavioTanque() {
-        super("NavioTanque", 4);
+        super("Navio Tanque", 4);
     }
 }
 

@@ -1,8 +1,8 @@
-import com.googlecode.lanterna.screen.Screen;
+package BattleShip.Controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import BattleShip.Model.Board;
+import BattleShip.Model.Settings;
+import com.googlecode.lanterna.screen.Screen;
 
 public class Game {
     private final Screen screen;

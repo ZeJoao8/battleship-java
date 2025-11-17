@@ -1,8 +1,12 @@
+package BattleShip.View;
+
+import BattleShip.Controller.SettingsController;
+import BattleShip.Model.Settings;
+import BattleShip.util.Selector;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 
 public class SettingsView {

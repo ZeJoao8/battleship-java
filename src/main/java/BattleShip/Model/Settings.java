@@ -1,3 +1,5 @@
+package BattleShip.Model;
+
 public class Settings {
     private int width;
     private int height;

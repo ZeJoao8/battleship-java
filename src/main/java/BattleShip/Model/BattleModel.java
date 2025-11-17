@@ -1,3 +1,5 @@
+package BattleShip.Model;
+
 import java.util.Random;
 
 public class BattleModel {

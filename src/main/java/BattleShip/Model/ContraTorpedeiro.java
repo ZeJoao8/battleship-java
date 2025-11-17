@@ -1,6 +1,8 @@
+package BattleShip.Model;
+
 public class ContraTorpedeiro extends Boat {
     public ContraTorpedeiro() {
-        super("ContraTorpedeiro", 3);
+        super("Contra Torpedeiro", 3);
     }
 }
 

@@ -1,3 +1,5 @@
+package BattleShip.util;
+
 public class Selector {
     private int selectedIndex;
     private final int size;

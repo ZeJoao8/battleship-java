@@ -1,4 +1,4 @@
-import java.util.List;
+package BattleShip.Model;
 
 public class PlacementModel {
     private final Board board;

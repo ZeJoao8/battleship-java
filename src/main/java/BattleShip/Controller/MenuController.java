@@ -1,3 +1,7 @@
+package BattleShip.Controller;
+
+import BattleShip.View.MenuView;
+import BattleShip.util.Selector;
 import com.googlecode.lanterna.input.KeyStroke;
 
 public class MenuController {

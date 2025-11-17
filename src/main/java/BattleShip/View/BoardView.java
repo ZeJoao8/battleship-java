@@ -1,3 +1,6 @@
+package BattleShip.View;
+
+import BattleShip.Model.Board;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
@@ -69,7 +72,7 @@ public abstract class BoardView {
         g.putString(offsetX + x * 2, offsetY + y, "●");
     }
 
-    // cada view terá uma forma própria de desenhar o ecrã
+    // cada BattleShip.view terá uma forma própria de desenhar o ecrã
     public abstract void draw(Object model, int x, int y) throws Exception;
 }
 

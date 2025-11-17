@@ -1,3 +1,7 @@
+package BattleShip.Controller;
+
+import BattleShip.Model.Settings;
+
 public class SettingsController {
     private Settings settings;
 

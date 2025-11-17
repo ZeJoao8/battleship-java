@@ -1,3 +1,8 @@
+package BattleShip.View;
+
+import BattleShip.Model.BattleModel;
+import BattleShip.Model.Board;
+import BattleShip.Model.Boat;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.screen.Screen;
 
