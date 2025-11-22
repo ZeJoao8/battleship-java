@@ -4,9 +4,9 @@ package battleship.viewer.battle;
 import battleship.gui.GUI;
 import battleship.model.battle.BattleModel;
 import battleship.model.common.Board;
+import battleship.viewer.Viewer;
 import battleship.viewer.common.BoardViewer;
 import battleship.viewer.common.BoatViewer;
-import battleship.viewer.Viewer;
 
 public class BattleViewer extends Viewer<BattleModel> {
     public BattleViewer(BattleModel model) { super(model); }

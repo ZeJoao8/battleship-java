@@ -4,8 +4,8 @@ import battleship.controller.Controller;
 import battleship.controller.placement.PlacementController;
 import battleship.model.placement.PlacementModel;
 import battleship.model.settings.Settings;
-import battleship.viewer.placement.PlacementViewer;
 import battleship.viewer.Viewer;
+import battleship.viewer.placement.PlacementViewer;
 
 public class PlacementState extends State<PlacementModel> {
     private final Settings settings;

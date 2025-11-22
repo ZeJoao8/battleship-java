@@ -2,8 +2,8 @@ package battleship;
 
 import battleship.gui.GUI;
 import battleship.gui.LanternaGUI;
-import battleship.model.settings.Settings;
 import battleship.model.menu.Menu;
+import battleship.model.settings.Settings;
 import battleship.states.MenuState;
 import battleship.states.State;
 

@@ -1,9 +1,9 @@
 package battleship.states;
 
 import battleship.Game;
+import battleship.controller.Controller;
 import battleship.gui.GUI;
 import battleship.viewer.Viewer;
-import battleship.controller.Controller;
 
 public abstract class State<T> {
     private final T model;

@@ -3,8 +3,8 @@ package battleship.controller.settings;
 import battleship.Game;
 import battleship.controller.Controller;
 import battleship.gui.GUI;
-import battleship.model.settings.Settings;
 import battleship.model.menu.Menu;
+import battleship.model.settings.Settings;
 import battleship.states.MenuState;
 
 public class SettingsController extends Controller<Settings> {

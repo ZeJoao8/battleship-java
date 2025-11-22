@@ -1,8 +1,8 @@
 package battleship.controller.end;
 
+import battleship.Game;
 import battleship.controller.Controller;
 import battleship.gui.GUI;
-import battleship.Game;
 import battleship.model.menu.Menu;
 import battleship.states.MenuState;
 

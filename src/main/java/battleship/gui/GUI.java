@@ -1,6 +1,5 @@
 package battleship.gui;
 
-import battleship.model.Position;
 import java.io.IOException;
 
 public interface GUI {

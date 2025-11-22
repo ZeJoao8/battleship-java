@@ -1,8 +1,8 @@
 package battleship.viewer.common;
 
 import battleship.gui.GUI;
-import battleship.model.common.Boat;
 import battleship.model.Position;
+import battleship.model.common.Boat;
 
 public class BoatViewer {
 

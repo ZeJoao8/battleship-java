@@ -1,14 +1,13 @@
 package battleship.controller.battle;
 
 import battleship.Game;
-
 import battleship.controller.Controller;
 import battleship.gui.GUI;
 import battleship.model.battle.BattleModel;
 import battleship.model.common.Board;
 import battleship.model.menu.Menu;
-import battleship.states.MenuState;
 import battleship.states.EndState;
+import battleship.states.MenuState;
 
 public class BattleController extends Controller<BattleModel> {
 

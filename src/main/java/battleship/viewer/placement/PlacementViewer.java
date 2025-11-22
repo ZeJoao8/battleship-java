@@ -2,8 +2,8 @@ package battleship.viewer.placement;
 
 
 import battleship.gui.GUI;
-import battleship.model.placement.PlacementModel;
 import battleship.model.common.Board;
+import battleship.model.placement.PlacementModel;
 import battleship.viewer.Viewer;
 
 public class PlacementViewer extends Viewer<PlacementModel> {

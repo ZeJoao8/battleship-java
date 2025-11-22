@@ -1,6 +1,7 @@
 package battleship.viewer;
 
 import battleship.gui.GUI;
+
 import java.io.IOException;
 
 public abstract class Viewer<T> {

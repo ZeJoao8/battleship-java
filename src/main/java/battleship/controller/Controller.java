@@ -1,7 +1,7 @@
 package battleship.controller;
 
-import battleship.gui.GUI;
 import battleship.Game;
+import battleship.gui.GUI;
 
 public abstract class Controller<T> {
     private final T model;
