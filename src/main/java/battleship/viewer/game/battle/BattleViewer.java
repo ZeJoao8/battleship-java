@@ -32,7 +32,7 @@ public class BattleViewer extends Viewer<BattleModel> {
 
         for (Boat b : player.getFleet()) {BoatViewer.drawBoatGUI(b, xP, yP, gui);}
         for (Boat b : enemy.getFleet()){if (b.isSunk()) {BoatViewer.drawBoatGUI(b, xE, yE, gui);}}
-        Position cursor = model.getViewCursor();
+        Position cursor = model.getCursor();
         gui.drawCharacter(xE + cursor.getX() * 2, yE + cursor.getY(), '●', "#00FF9D");
     }
 }

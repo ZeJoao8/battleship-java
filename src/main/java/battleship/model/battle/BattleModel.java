@@ -11,7 +11,7 @@ public class BattleModel {
     private final Board enemyBoard;
     private final Random rnd = new Random();
 
-    private Position viewCursor = new Position(0, 0);
+    private Position Cursor = new Position(0, 0);
 
     public BattleModel(Board playerBoard, Board enemyBoard) {
         this.playerBoard = playerBoard;
@@ -21,10 +21,10 @@ public class BattleModel {
     public Board getPlayerBoard() { return playerBoard; }
     public Board getEnemyBoard()  { return enemyBoard; }
 
-    public Position getViewCursor() { return viewCursor; }
+    public Position getCursor() { return Cursor; }
 
-    public void setViewCursor(Position p) {
-        this.viewCursor = p;
+    public void setCursor(Position p) {
+        this.Cursor = p;
     }
 
     public boolean isAlreadyShotEnemy(Position p) {

@@ -41,22 +41,22 @@ public class PlacementController extends Controller<PlacementModel> {
             startBattle(game, board);
             return;
         }
-
+        Position cursor = model.getCursor();
         switch (action) {
             case UP -> {
-                model.moveUp();
-                adjustCursorBounds(current, model, board);
-            }
-            case DOWN -> {
-                model.moveDown();
+                model.setCursor(cursor.moveUpBounded());
                 adjustCursorBounds(current, model, board);
             }
             case LEFT -> {
-                model.moveLeft();
+                model.setCursor(cursor.moveLeftBounded());
+                adjustCursorBounds(current, model, board);
+            }
+            case DOWN -> {
+                model.setCursor(cursor.moveDownBounded(model.getBoard().getHeigth() - 1));
                 adjustCursorBounds(current, model, board);
             }
             case RIGHT -> {
-                model.moveRight();
+                model.setCursor(cursor.moveRightBounded(model.getBoard().getWidth() - 1));
                 adjustCursorBounds(current, model, board);
             }
 

@@ -21,17 +21,18 @@ public class BattleController extends Controller<BattleModel> {
         BattleModel model = getModel();
         Board enemy = model.getEnemyBoard();
 
-        Position cursor = model.getViewCursor();
+        Position cursor = model.getCursor();
 
         switch (action) {
-            case UP    -> cursor.moveUp();
-            case LEFT  -> cursor.moveLeft();
-            case DOWN  -> cursor.moveDown(enemy.getHeigth() - 1);
-            case RIGHT -> cursor.moveRight(enemy.getWidth() - 1);
+            case UP -> model.setCursor(cursor.moveUpBounded());
+            case LEFT -> model.setCursor(cursor.moveLeftBounded());
+            case DOWN -> model.setCursor(cursor.moveDownBounded(enemy.getHeigth() - 1));
+            case RIGHT -> model.setCursor(cursor.moveRightBounded(enemy.getWidth() - 1));
             case SELECT -> handleSelect(game, cursor);
-            case QUIT   -> game.setState(new MenuState(new Menu()));
+            case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
+
     }
 
     private void handleSelect(Game game, Position p) {

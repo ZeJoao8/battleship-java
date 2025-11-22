@@ -5,15 +5,29 @@ import battleship.model.common.Board;
 
 public class PlacementModel {
     private final Board board;
-    private final Position cursor = new Position(0, 0);
+    private Position cursor = new Position(0, 0);
 
-    public PlacementModel(Board board) { this.board = board; }
+    public PlacementModel(Board board) {
+        this.board = board;
+    }
 
     public Board getBoard() { return board; }
     public Position getCursor() { return cursor; }
+    public void setCursor(Position cursor) { this.cursor = cursor; }
 
-    public void moveUp() { cursor.moveUp(); }
-    public void moveLeft() { cursor.moveLeft(); }
-    public void moveDown() { cursor.moveDown(board.getHeigth() - 1); }
-    public void moveRight(){ cursor.moveRight(board.getWidth() - 1); }
+    public void moveUp() {
+        cursor = cursor.moveUpBounded();
+    }
+
+    public void moveLeft() {
+        cursor = cursor.moveLeftBounded();
+    }
+
+    public void moveDown() {
+        cursor = cursor.moveDownBounded(board.getHeigth() - 1);
+    }
+
+    public void moveRight() {
+        cursor = cursor.moveRightBounded(board.getWidth() - 1);
+    }
 }
