@@ -3,6 +3,7 @@ package battleship.controller.placement;
 import battleship.Game;
 import battleship.controller.Controller;
 import battleship.gui.GUI;
+import battleship.model.Position;
 import battleship.model.battle.BattleModel;
 import battleship.model.common.Board;
 import battleship.model.common.Boat;
@@ -23,19 +24,19 @@ public class PlacementController extends Controller<PlacementModel> {
 
     @Override
     public void step(Game game, GUI.ACTION action) {
+
         PlacementModel model = getModel();
         Board board = model.getBoard();
 
-        // próximo barco a colocar
         Boat current = null;
         for (Boat b : board.getFleet()) {
             if (b.getPositions().isEmpty()) {
                 current = b;
+                adjustCursorBounds(current, model, board);
                 break;
             }
         }
 
-        // se já não há barco -> iniciar batalha
         if (current == null) {
             startBattle(game, board);
             return;
@@ -65,12 +66,10 @@ public class PlacementController extends Controller<PlacementModel> {
             }
 
             case SELECT -> {
-                int x = model.getCursorX();
-                int y = model.getCursorY();
+                Position p = model.getCursor();
+                if (board.canPlaceBoat(current, p, current.isHorizontal()))
+                    board.placeBoat(current, p, current.isHorizontal());
 
-                if (board.canPlaceBoat(current, x, y, current.isHorizontal())) {
-                    board.placeBoat(current, x, y, current.isHorizontal());
-                }
                 boolean allPlaced = true;
                 for (Boat b : board.getFleet()) {
                     if (b.getPositions().isEmpty()) {
@@ -86,25 +85,25 @@ public class PlacementController extends Controller<PlacementModel> {
             case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
-
     }
 
     private void adjustCursorBounds(Boat current, PlacementModel model, Board board) {
         if (current == null) return;
 
         int size = current.getSize();
-        int x = model.getCursorX();
-        int y = model.getCursorY();
+        Position c = model.getCursor();
+        int x = c.getX();
+        int y = c.getY();
 
         if (current.isHorizontal()) {
             while (x + size > board.getWidth()) {
                 model.moveLeft();
-                x = model.getCursorX();
+                x = model.getCursor().getX();
             }
         } else {
             while (y + size > board.getHeigth()) {
                 model.moveUp();
-                y = model.getCursorY();
+                y = model.getCursor().getY();
             }
         }
     }
@@ -113,13 +112,11 @@ public class PlacementController extends Controller<PlacementModel> {
 
     private void startBattle(Game game, Board playerBoard) {
 
-        // usamos as settings passadas (vêm de Game e não são null)
         Settings s = (settings != null) ? settings : game.getSettings();
 
         Board enemy = new Board(s);
         enemy.placeFleetRandomly();
 
-        BattleModel battleModel = new BattleModel(playerBoard, enemy);
-        game.setState(new BattleState(battleModel));
+        game.setState(new BattleState(new BattleModel(playerBoard, enemy)));
     }
 }

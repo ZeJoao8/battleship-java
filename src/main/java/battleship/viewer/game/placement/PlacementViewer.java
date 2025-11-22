@@ -1,8 +1,9 @@
-package battleship.viewer.placement;
+package battleship.viewer.game.placement;
 
 
 import battleship.gui.GUI;
 import battleship.model.common.Board;
+import battleship.model.common.Boat;
 import battleship.model.placement.PlacementModel;
 import battleship.viewer.Viewer;
 
@@ -20,7 +21,13 @@ public class PlacementViewer extends Viewer<PlacementModel> {
         gui.drawText(2, 1, "Posicione a sua frota (Q = sair)", "#FFFFFF");
 
         // boat info
-        var current = board.getFleet().stream().filter(b -> b.getPositions().isEmpty()).findFirst().orElse(null);
+        Boat current = null;
+        for (Boat b : board.getFleet()) {
+            if (b.getPositions().isEmpty()) {
+                current = b;
+                break;
+            }
+        }
         gui.drawText(2, 3, "A colocar: " + (current != null ? current.getName() : "Nenhum"), "#00FF9D");
         gui.drawText(2, 4, "Setas = mover | R = rodar | Enter = colocar", "#AAAAAA");
 

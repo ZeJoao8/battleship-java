@@ -1,11 +1,12 @@
-package battleship.viewer.placement;
+package battleship.viewer.game.placement;
 
 import battleship.gui.GUI;
+import battleship.model.Position;
 import battleship.model.common.Board;
 import battleship.model.common.Boat;
 import battleship.model.placement.PlacementModel;
-import battleship.viewer.common.BoardViewer;
-import battleship.viewer.common.BoatViewer;
+import battleship.viewer.game.common.BoardViewer;
+import battleship.viewer.game.common.BoatViewer;
 
 public class PlacementBoardViewer {
 
@@ -21,21 +22,19 @@ public class PlacementBoardViewer {
 
         BoardViewer.drawBoard(gui, board, offsetX, offsetY);
 
-        for (Boat b : board.getFleet()) {
+        for (Boat b : board.getFleet())
             BoatViewer.drawBoatGUI(b, offsetX, offsetY, gui);
-        }
 
         Boat current = null;
-        for (Boat b : board.getFleet()) {
-            if (b.getPositions().isEmpty()) {
-                current = b;
-                break;
-            }
-        }
+        for (Boat b : board.getFleet())
+            if (b.getPositions().isEmpty()) { current = b; break; }
 
         if (current != null) {
-            boolean valid = board.canPlaceBoat(current, model.getCursorX(), model.getCursorY(), current.isHorizontal());
-            BoatViewer.drawPreviewGUI(current, model.getCursorX(), model.getCursorY(), offsetX, offsetY, gui, valid);
+
+            Position cursor = model.getCursor();
+            boolean valid = board.canPlaceBoat(current, cursor, current.isHorizontal());
+
+            BoatViewer.drawPreviewGUI(current, cursor, offsetX, offsetY, gui, valid);
         }
     }
 }

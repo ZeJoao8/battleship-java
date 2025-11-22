@@ -3,6 +3,7 @@ package battleship.controller.battle;
 import battleship.Game;
 import battleship.controller.Controller;
 import battleship.gui.GUI;
+import battleship.model.Position;
 import battleship.model.battle.BattleModel;
 import battleship.model.common.Board;
 import battleship.model.menu.Menu;
@@ -11,40 +12,41 @@ import battleship.states.MenuState;
 
 public class BattleController extends Controller<BattleModel> {
 
-    private int cursorX = 0;
-    private int cursorY = 0;
-
-    public BattleController(BattleModel model) { super(model); }
-
-    @Override
-    public void step(Game game, GUI.ACTION action) throws Exception {
-        Board enemy = getModel().getEnemyBoard();
-
-        switch (action) {
-            case UP -> { if (cursorY > 0) cursorY--; }
-            case DOWN -> { if (cursorY < enemy.getHeigth() - 1) cursorY++; }
-            case LEFT -> { if (cursorX > 0) cursorX--; }
-            case RIGHT -> { if (cursorX < enemy.getWidth() - 1) cursorX++; }
-            case SELECT -> handleSelect(game);
-            case QUIT -> game.setState(new MenuState(new Menu()));
-            default -> {}
-        }
-
-        // update view cursor for viewer
-        getModel().setViewCursor(cursorX, cursorY);
+    public BattleController(BattleModel model) {
+        super(model);
     }
 
-    private void handleSelect(Game game) {
+    @Override
+    public void step(Game game, GUI.ACTION action) {
         BattleModel model = getModel();
-        if (model.isAlreadyShotEnemy(cursorX, cursorY)) return;
+        Board enemy = model.getEnemyBoard();
 
-        model.playerShoot(cursorX, cursorY);
+        Position cursor = model.getViewCursor();
+
+        switch (action) {
+            case UP    -> cursor.moveUp();
+            case LEFT  -> cursor.moveLeft();
+            case DOWN  -> cursor.moveDown(enemy.getHeigth() - 1);
+            case RIGHT -> cursor.moveRight(enemy.getWidth() - 1);
+            case SELECT -> handleSelect(game, cursor);
+            case QUIT   -> game.setState(new MenuState(new Menu()));
+            default -> {}
+        }
+    }
+
+    private void handleSelect(Game game, Position p) {
+        BattleModel model = getModel();
+
+        if (model.isAlreadyShotEnemy(p))
+            return;
+
+        model.playerShoot(p);
+
         if (model.hasEnemyLost()) {
             game.setState(new EndState(true));
             return;
         }
 
-        // bot turn
         model.botTurn();
         if (model.hasPlayerLost()) {
             game.setState(new EndState(false));
