@@ -6,9 +6,11 @@ import battleship.gui.GUI;
 import battleship.model.battle.BattleModel;
 import battleship.model.common.Board;
 import battleship.model.common.Boat;
+import battleship.model.menu.Menu;
 import battleship.model.placement.PlacementModel;
 import battleship.model.settings.Settings;
 import battleship.states.BattleState;
+import battleship.states.MenuState;
 
 public class PlacementController extends Controller<PlacementModel> {
 
@@ -81,7 +83,7 @@ public class PlacementController extends Controller<PlacementModel> {
                 }
             }
 
-            case QUIT -> game.setState(null);
+            case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
 
