@@ -32,15 +32,15 @@ public abstract class Boat {
     public void rotate() { horizontal = !horizontal; }
     public boolean isSunk() { return hits.size() >= size; }
 
-    public void registerHit(int x, int y) {
+    public void registerHit(Position pos) {
         for (int i = 0; i < positions.size(); i++) {
-            Position p = positions.get(i);
-            if (p.getX() == x && p.getY() == y) {
+            if (positions.get(i).equals(pos)) {
                 hits.add(i);
                 return;
             }
         }
     }
+
 
     public boolean isPartHit(int p) { return hits.contains(p); }
 }

@@ -26,66 +26,48 @@ public class PlacementController extends Controller<PlacementModel> {
     public void step(Game game, GUI.ACTION action) {
 
         PlacementModel model = getModel();
-        Board board = model.getBoard();
 
-        Boat current = null;
-        for (Boat b : board.getFleet()) {
-            if (b.getPositions().isEmpty()) {
-                current = b;
-                adjustCursorBounds(current, model, board);
-                break;
-            }
-        }
+        Boat current = model.getCurrentBoat();
 
         if (current == null) {
-            startBattle(game, board);
+            startBattle(game, model.getBoard());
             return;
         }
-        Position cursor = model.getCursor();
+
         switch (action) {
             case UP -> {
-                model.setCursor(cursor.moveUpBounded());
-                adjustCursorBounds(current, model, board);
-            }
-            case LEFT -> {
-                model.setCursor(cursor.moveLeftBounded());
-                adjustCursorBounds(current, model, board);
+                model.moveUp();
+                adjustCursorBounds(current,model,model.getBoard());
             }
             case DOWN -> {
-                model.setCursor(cursor.moveDownBounded(model.getBoard().getHeigth() - 1));
-                adjustCursorBounds(current, model, board);
+                model.moveDown();
+                adjustCursorBounds(current,model,model.getBoard());
+            }
+            case LEFT -> {
+                model.moveLeft();
+                adjustCursorBounds(current,model,model.getBoard());
             }
             case RIGHT -> {
-                model.setCursor(cursor.moveRightBounded(model.getBoard().getWidth() - 1));
-                adjustCursorBounds(current, model, board);
+                model.moveRight();
+                adjustCursorBounds(current,model,model.getBoard());
             }
 
             case ROTATE -> {
-                current.rotate();
-                adjustCursorBounds(current, model, board);
+                model.rotateCurrentBoat();
+                adjustCursorBounds(current,model,model.getBoard());
             }
 
             case SELECT -> {
-                Position p = model.getCursor();
-                if (board.canPlaceBoat(current, p, current.isHorizontal()))
-                    board.placeBoat(current, p, current.isHorizontal());
-
-                boolean allPlaced = true;
-                for (Boat b : board.getFleet()) {
-                    if (b.getPositions().isEmpty()) {
-                        allPlaced = false;
-                        break;
-                    }
-                }
-                if (allPlaced) {
-                    startBattle(game, board);
-                }
+                model.placeCurrentBoat();
+                if (model.allBoatsPlaced())
+                    startBattle(game, model.getBoard());
             }
 
             case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
     }
+
 
     private void adjustCursorBounds(Boat current, PlacementModel model, Board board) {
         if (current == null) return;

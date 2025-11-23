@@ -13,24 +13,23 @@ public class BoardViewer {
             for (int x = 0; x < board.getWidth(); x++) {
                 Position p = new Position(x, y);
                 int cell = board.getCell(p);
-                gui.drawCharacter(offsetX + p.getX() * 2, offsetY + p.getY(), cellToChar(cell), cellToColor(cell)
-                );
+                gui.drawCharacter(offsetX + p.getX() * 2, offsetY + p.getY(), cellToChar(cell), cellToColor(cell));
             }
         }
     }
 
     private static char cellToChar(int cell) {
         switch (cell) {
-            case Board.Hit:  return 'X';
-            case Board.Miss: return 'O';
+            case Board.HIT:  return 'X';
+            case Board.MISS: return 'O';
             default:         return '~';
         }
     }
 
     private static String cellToColor(int cell) {
         switch (cell) {
-            case Board.Hit:  return "#FF4444";
-            case Board.Miss: return "#C8C8C8";
+            case Board.HIT:  return "#FF4444";
+            case Board.MISS: return "#C8C8C8";
             default:         return "#4DA6FF";
         }
     }
