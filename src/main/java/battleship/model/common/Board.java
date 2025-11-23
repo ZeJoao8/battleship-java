@@ -10,23 +10,24 @@ import java.util.Random;
 
 public class Board {
 
-    public static final int WATER = 0;
-    public static final int SHIP  = 1;
-    public static final int HIT   = 2;
-    public static final int MISS  = 3;
-
     private final int height;
     private final int width;
-    private final int[][] grid;
-
+    private final CellState[][] grid;
     private final List<Boat> fleet;
 
     public Board(Settings settings) {
         this.width = settings.getWidth();
         this.height = settings.getHeight();
-        this.grid = new int[width][height];
+        this.grid = new CellState[width][height];
+        initializeGrid();
         this.fleet = new ArrayList<>();
         createFleet();
+    }
+
+    private void initializeGrid() {
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+                grid[x][y] = CellState.WATER;
     }
 
     private void createFleet() {
@@ -42,12 +43,12 @@ public class Board {
 
     public List<Boat> getFleet() { return fleet; }
 
-    public int getCell(Position p) {
+    public CellState getState(Position p) {
         return grid[p.getX()][p.getY()];
     }
 
-    private void setCell(Position p, int value) {
-        grid[p.getX()][p.getY()] = value;
+    private void setState(Position p, CellState state) {
+        grid[p.getX()][p.getY()] = state;
     }
 
     public boolean isInside(Position p) {
@@ -55,21 +56,10 @@ public class Board {
                 p.getY() >= 0 && p.getY() < height;
     }
 
-    public boolean isWater(Position p) {
-        return getCell(p) == WATER;
-    }
-
-    public boolean isShip(Position p) {
-        return getCell(p) == SHIP;
-    }
-
-    public boolean isHit(Position p) {
-        return getCell(p) == HIT;
-    }
-
-    public boolean isMiss(Position p) {
-        return getCell(p) == MISS;
-    }
+    public boolean isWater(Position p) { return getState(p) == CellState.WATER; }
+    public boolean isShip(Position p)  { return getState(p) == CellState.SHIP; }
+    public boolean isHit(Position p)   { return getState(p) == CellState.HIT; }
+    public boolean isMiss(Position p)  { return getState(p) == CellState.MISS; }
 
     public boolean canPlaceBoat(Boat boat, Position start, boolean horizontal) {
         int size = boat.getSize();
@@ -87,12 +77,12 @@ public class Board {
 
     public void placeBoat(Boat boat, Position start, boolean horizontal) {
         if (!canPlaceBoat(boat, start, horizontal)) return;
-        for (Position old : boat.getPositions()) {setCell(old, WATER);}
+        for (Position old : boat.getPositions()) {setState(old, CellState.WATER);}
         boat.clearPositions();
         boat.setHorizontal(horizontal);
         for (int i = 0; i < boat.getSize(); i++) {
             Position p = horizontal ? new Position(start.getX() + i, start.getY()) : new Position(start.getX(), start.getY() + i);
-            setCell(p, SHIP);
+            setState(p, CellState.SHIP);
             boat.addPosition(p);
         }
     }
@@ -116,7 +106,7 @@ public class Board {
     }
 
     public void markHit(Position p) {
-        setCell(p, HIT);
+        setState(p, CellState.HIT);
         for (Boat b : fleet) {
             for (Position part : b.getPositions()) {
                 if (part.equals(p)) {
@@ -128,20 +118,18 @@ public class Board {
     }
 
     public void markMiss(Position p) {
-        setCell(p, MISS);
+        setState(p, CellState.MISS);
     }
 
     public boolean isValidBotTarget(Position p) {
-        int cell = getCell(p);
-        return cell == WATER || cell == SHIP;
+        CellState cs = getState(p);
+        return cs == CellState.WATER || cs == CellState.SHIP;
     }
 
     public boolean hasLost() {
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
-                if (grid[x][y] == SHIP)
-                    return false;
-
+                if (grid[x][y] == CellState.SHIP) return false;
         return true;
     }
 

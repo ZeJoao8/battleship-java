@@ -7,10 +7,14 @@ import battleship.model.common.Boat;
 public class BoatViewer {
 
     public static void drawBoatGUI(Boat boat, int ox, int oy, GUI gui) {
+        boolean sunk = boat.isSunk();
         for (int i = 0; i < boat.getPositions().size(); i++) {
             Position part = boat.getPositions().get(i);
-            gui.drawCharacter(ox + part.getX() * 2, oy + part.getY(), getBoatChar(boat, i), boat.isPartHit(i) ? "#FF4444" : "#C17F42"
-            );
+            String color;
+            if (sunk) color = "#FF4444";
+            else if (boat.isPartHit(i)) color = "#FF4444";
+            else color = "#C17F42";
+            gui.drawCharacter(ox + part.getX() * 2, oy + part.getY(), getBoatChar(boat, i), color);
         }
     }
 

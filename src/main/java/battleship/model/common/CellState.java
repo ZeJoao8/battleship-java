@@ -1,4 +1,8 @@
 package battleship.model.common;
 
-public class CellState {
+public enum CellState {
+    WATER,
+    SHIP,
+    HIT,
+    MISS
 }

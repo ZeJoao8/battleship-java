@@ -2,6 +2,7 @@ package battleship.model.battle;
 
 import battleship.model.Position;
 import battleship.model.common.Board;
+import battleship.model.common.Boat;
 
 import java.util.Random;
 
@@ -52,6 +53,10 @@ public class BattleModel {
     private void applyShot(Board b, Position p) {
         if (b.isShip(p)) b.markHit(p);
         else b.markMiss(p);
+    }
+
+    public boolean shouldRevealBoat(Boat b) {
+        return b.isSunk();
     }
 
     public boolean enemyLost() { return enemyBoard.hasLost(); }
