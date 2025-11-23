@@ -28,6 +28,7 @@ public class PlacementController extends Controller<PlacementModel> {
         PlacementModel model = getModel();
 
         Boat current = model.getCurrentBoat();
+        adjustCursorBounds(current,model,model.getBoard());
 
         if (current == null) {
             startBattle(game, model.getBoard());

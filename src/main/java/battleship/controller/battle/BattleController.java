@@ -28,29 +28,24 @@ public class BattleController extends Controller<BattleModel> {
             case LEFT -> model.setCursor(cursor.moveLeftBounded());
             case DOWN -> model.setCursor(cursor.moveDownBounded(enemy.getHeigth() - 1));
             case RIGHT -> model.setCursor(cursor.moveRightBounded(enemy.getWidth() - 1));
-            case SELECT -> handleSelect(game, cursor);
+            case SELECT -> handleSelect(game);
             case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
 
     }
 
-    private void handleSelect(Game game, Position p) {
+    private void handleSelect(Game game) {
         BattleModel model = getModel();
-
-        if (model.isAlreadyShotEnemy(p))
-            return;
-
-        model.playerShoot(p);
-
-        if (model.hasEnemyLost()) {
+        Position p = model.getCursor();
+        if (model.alreadyShotEnemy(p)) return;
+        model.shootPlayer(p);
+        if (model.enemyLost()) {
             game.setState(new EndState(true));
             return;
         }
-
-        model.botTurn();
-        if (model.hasPlayerLost()) {
+        model.makeBotMove();
+        if (model.playerLost())
             game.setState(new EndState(false));
-        }
     }
 }
