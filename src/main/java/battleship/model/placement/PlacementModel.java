@@ -15,6 +15,7 @@ public class PlacementModel {
 
     public Board getBoard() {return board;}
     public Position getCursor() {return cursor;}
+    public void setCursor(Position p) {this.cursor = p;}
 
     public void moveUp()    { cursor = cursor.moveUpBounded(); }
     public void moveLeft()  { cursor = cursor.moveLeftBounded(); }

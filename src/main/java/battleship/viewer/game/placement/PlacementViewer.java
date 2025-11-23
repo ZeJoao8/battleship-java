@@ -19,13 +19,9 @@ public class PlacementViewer extends Viewer<PlacementModel> {
     protected void drawElements(GUI gui) {
         Board board = getModel().getBoard();
         gui.drawText(2, 1, "Posicione a sua frota (Q = sair)", "#FFFFFF");
-
-        // boat info
         Boat current = getModel().getCurrentBoat();
-
         gui.drawText(2, 3, "A colocar: " + (current != null ? current.getName() : "Nenhum"), "#00FF9D");
         gui.drawText(2, 4, "Setas = mover | R = rodar | Enter = colocar", "#AAAAAA");
-
         boardViewer.draw(gui, 5, 6);
     }
 }

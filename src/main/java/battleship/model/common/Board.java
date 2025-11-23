@@ -63,6 +63,14 @@ public class Board {
         return getCell(p) == SHIP;
     }
 
+    public boolean isHit(Position p) {
+        return getCell(p) == HIT;
+    }
+
+    public boolean isMiss(Position p) {
+        return getCell(p) == MISS;
+    }
+
     public boolean canPlaceBoat(Boat boat, Position start, boolean horizontal) {
         int size = boat.getSize();
 
@@ -79,15 +87,11 @@ public class Board {
 
     public void placeBoat(Boat boat, Position start, boolean horizontal) {
         if (!canPlaceBoat(boat, start, horizontal)) return;
-
+        for (Position old : boat.getPositions()) {setCell(old, WATER);}
         boat.clearPositions();
         boat.setHorizontal(horizontal);
-
         for (int i = 0; i < boat.getSize(); i++) {
-            Position p = horizontal ?
-                    new Position(start.getX() + i, start.getY()) :
-                    new Position(start.getX(), start.getY() + i);
-
+            Position p = horizontal ? new Position(start.getX() + i, start.getY()) : new Position(start.getX(), start.getY() + i);
             setCell(p, SHIP);
             boat.addPosition(p);
         }

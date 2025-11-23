@@ -24,14 +24,12 @@ public class BattleModel {
     public void setCursor(Position p) { this.cursor = p; }
 
     public boolean alreadyShotEnemy(Position p) {
-        int cell = enemyBoard.getCell(p);
-        return cell == Board.HIT || cell == Board.MISS;
+        return enemyBoard.isHit(p) || enemyBoard.isMiss(p);
     }
 
     public void shootPlayer(Position p) {
-        int cell = enemyBoard.getCell(p);
-        if (cell == Board.WATER) enemyBoard.markMiss(p);
-        else if (cell == Board.SHIP) enemyBoard.markHit(p);
+        if (enemyBoard.isWater(p)) enemyBoard.markMiss(p);
+        else if (enemyBoard.isShip(p)) enemyBoard.markHit(p);
     }
 
     public void makeBotMove() {
@@ -52,8 +50,7 @@ public class BattleModel {
     }
 
     private void applyShot(Board b, Position p) {
-        int cell = b.getCell(p);
-        if (cell == Board.SHIP) b.markHit(p);
+        if (b.isShip(p)) b.markHit(p);
         else b.markMiss(p);
     }
 

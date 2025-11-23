@@ -69,28 +69,25 @@ public class PlacementController extends Controller<PlacementModel> {
         }
     }
 
-
     private void adjustCursorBounds(Boat current, PlacementModel model, Board board) {
         if (current == null) return;
-
-        int size = current.getSize();
         Position c = model.getCursor();
-        int x = c.getX();
-        int y = c.getY();
-
+        int size = current.getSize();
         if (current.isHorizontal()) {
-            while (x + size > board.getWidth()) {
-                model.moveLeft();
-                x = model.getCursor().getX();
+            int maxX = board.getWidth() - size;
+            if (c.getX() > maxX) {
+                c = new Position(maxX, c.getY());
+                model.setCursor(c);
             }
-        } else {
-            while (y + size > board.getHeigth()) {
-                model.moveUp();
-                y = model.getCursor().getY();
+        }
+        else {
+            int maxY = board.getHeigth() - size;
+            if (c.getY() > maxY) {
+                c = new Position(c.getX(), maxY);
+                model.setCursor(c);
             }
         }
     }
-
 
 
     private void startBattle(Game game, Board playerBoard) {

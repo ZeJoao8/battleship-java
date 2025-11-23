@@ -11,7 +11,7 @@ public abstract class Boat {
     protected String name;
     protected int size;
     protected List<Position> positions;
-    private Set<Integer> hits = new HashSet<>();
+    private Set<Position> hits = new HashSet<>();
     protected boolean horizontal;
 
     public Boat(String name, int size) {
@@ -25,7 +25,7 @@ public abstract class Boat {
     public int getSize() { return size; }
     public boolean isHorizontal() { return horizontal; }
     public List<Position> getPositions() { return positions; }
-    public Set<Integer> getHits() { return hits; }
+    public Set<Position> getHits() { return hits; }
     public void setHorizontal(boolean horizontal) { this.horizontal = horizontal; }
     public void addPosition(Position p) { positions.add(p); }
     public void clearPositions() { positions.clear(); }
@@ -33,15 +33,9 @@ public abstract class Boat {
     public boolean isSunk() { return hits.size() >= size; }
 
     public void registerHit(Position pos) {
-        for (int i = 0; i < positions.size(); i++) {
-            if (positions.get(i).equals(pos)) {
-                hits.add(i);
-                return;
-            }
-        }
+        hits.add(pos);
     }
 
-
-    public boolean isPartHit(int p) { return hits.contains(p); }
+    public boolean isPartHit(int p) {return hits.contains(positions.get(p));}
 }
 
