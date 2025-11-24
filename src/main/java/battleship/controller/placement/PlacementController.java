@@ -28,7 +28,6 @@ public class PlacementController extends Controller<PlacementModel> {
         PlacementModel model = getModel();
 
         Boat current = model.getCurrentBoat();
-        adjustCursorBounds(current,model,model.getBoard());
 
         if (current == null) {
             startBattle(game, model.getBoard());
@@ -38,24 +37,19 @@ public class PlacementController extends Controller<PlacementModel> {
         switch (action) {
             case UP -> {
                 model.moveUp();
-                adjustCursorBounds(current,model,model.getBoard());
             }
             case DOWN -> {
                 model.moveDown();
-                adjustCursorBounds(current,model,model.getBoard());
             }
             case LEFT -> {
                 model.moveLeft();
-                adjustCursorBounds(current,model,model.getBoard());
             }
             case RIGHT -> {
                 model.moveRight();
-                adjustCursorBounds(current,model,model.getBoard());
             }
 
             case ROTATE -> {
                 model.rotateCurrentBoat();
-                adjustCursorBounds(current,model,model.getBoard());
             }
 
             case SELECT -> {
@@ -68,27 +62,6 @@ public class PlacementController extends Controller<PlacementModel> {
             default -> {}
         }
     }
-
-    private void adjustCursorBounds(Boat current, PlacementModel model, Board board) {
-        if (current == null) return;
-        Position c = model.getCursor();
-        int size = current.getSize();
-        if (current.isHorizontal()) {
-            int maxX = board.getWidth() - size;
-            if (c.getX() > maxX) {
-                c = new Position(maxX, c.getY());
-                model.setCursor(c);
-            }
-        }
-        else {
-            int maxY = board.getHeigth() - size;
-            if (c.getY() > maxY) {
-                c = new Position(c.getX(), maxY);
-                model.setCursor(c);
-            }
-        }
-    }
-
 
     private void startBattle(Game game, Board playerBoard) {
 
