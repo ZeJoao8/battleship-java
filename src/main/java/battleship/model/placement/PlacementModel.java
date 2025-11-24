@@ -59,17 +59,15 @@ public class PlacementModel {
         return board.getNextUnplacedBoat();
     }
 
-    public boolean placeCurrentBoat() {
+    public void placeCurrentBoat() {
         Boat current = getCurrentBoat();
 
-        if (current == null) return false;
+        if (current == null) return;
 
         if (board.canPlaceBoat(current, cursor, current.isHorizontal())) {
             board.placeBoat(current, cursor, current.isHorizontal());
             adjustCursorBounds();
-            return true;
         }
-        return false;
     }
 
     public boolean allBoatsPlaced() {
