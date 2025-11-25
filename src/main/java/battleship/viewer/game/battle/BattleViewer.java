@@ -27,11 +27,19 @@ public class BattleViewer extends Viewer<BattleModel> {
         int xE = xP + player.getWidth() * 2 + 6;
         int yE = 4;
 
-        BoardViewer.drawBoard(gui, player, xP, yP);
-        BoardViewer.drawBoard(gui, enemy,  xE, yE);
+        new BoardViewer(player).draw(gui, xP, yP);
+        new BoardViewer(enemy).draw(gui, xE, yE);
 
-        for (Boat b : player.getFleet()) {BoatViewer.drawBoatGUI(b, xP, yP, gui);}
-        for (Boat b : enemy.getFleet()) {if (model.shouldRevealBoat(b)) BoatViewer.drawBoatGUI(b, xE, yE, gui);}
+        for (Boat b : player.getFleet()) {
+            new BoatViewer(b).draw(gui, xP, yP);
+        }
+
+        for (Boat b : enemy.getFleet()) {
+            if (model.shouldRevealBoat(b)) {
+                new BoatViewer(b).draw(gui, xE, yE);
+            }
+        }
+
         Position cursor = model.getCursor();
         gui.drawCharacter(xE + cursor.getX() * 2, yE + cursor.getY(), '●', "#00FF9D");
     }

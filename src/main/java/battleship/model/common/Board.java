@@ -135,9 +135,8 @@ public class Board {
 
     public Boat getNextUnplacedBoat() {
         for (Boat b : fleet)
-            if (b.getPositions().isEmpty())
+            if (!b.isPlaced())
                 return b;
-
         return null;
     }
 

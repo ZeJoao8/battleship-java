@@ -60,4 +60,8 @@ public abstract class Boat {
             if (!h) return false;
         return true;
     }
+
+    public boolean isPlaced() {
+        return !positions.isEmpty();
+    }
 }

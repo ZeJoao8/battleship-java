@@ -29,7 +29,7 @@ public class Game {
     public void start() throws Exception {
         while (state != null) {
             state.step(this, gui);
-            Thread.sleep(10); // para não usar 100% CPU
+            Thread.sleep(10);
         }
         gui.close();
     }
