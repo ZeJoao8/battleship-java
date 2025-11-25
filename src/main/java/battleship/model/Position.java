@@ -20,19 +20,23 @@ public final class Position {
     public Position right() { return new Position(x + 1, y); }
 
     public Position moveUpBounded() {
-        return new Position(x, Math.max(0, y - 1));
+        if(y-1>0){return new Position(x, y-1);}
+        else return new Position(x, 0);
     }
 
     public Position moveLeftBounded() {
-        return new Position(Math.max(0, x - 1), y);
+        if(x-1>0){return new Position(x-1, y);}
+        else{return new Position(0, y);}
     }
 
     public Position moveDownBounded(int maxY) {
-        return new Position(x, Math.min(maxY, y + 1));
+        if(y+1<maxY){return new Position(x, y+1);}
+        else{return new Position(x, maxY);}
     }
 
     public Position moveRightBounded(int maxX) {
-        return new Position(Math.min(maxX, x + 1), y);
+        if(x+1<maxX){return new Position(x+1, y);}
+        else{return new Position(maxX, y);}
     }
 
     @Override

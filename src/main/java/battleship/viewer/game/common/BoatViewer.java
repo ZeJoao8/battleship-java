@@ -7,17 +7,15 @@ import battleship.viewer.game.ElementViewer;
 
 public class BoatViewer extends ElementViewer<Boat> {
 
-    private final Position cursor;   // null = barco colocado
-    private final boolean valid;     // só tem efeito no preview
+    private final Position cursor;
+    private final boolean valid;
 
-    // Para barcos colocados
     public BoatViewer(Boat boat) {
         super(boat);
         this.cursor = null;
         this.valid = true;
     }
 
-    // Para preview
     public BoatViewer(Boat boat, Position cursor, boolean valid) {
         super(boat);
         this.cursor = cursor;
