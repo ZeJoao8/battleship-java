@@ -1,5 +1,7 @@
 package battleship.gui;
 
+import battleship.model.Position;
+
 import java.io.IOException;
 
 public interface GUI {
@@ -20,9 +22,9 @@ public interface GUI {
 
     void close() throws IOException;
 
-    void drawText(int x, int y, String text, String color);
+    void drawText(Position p, String text, String color);
 
-    void drawCharacter(int x, int y, char c, String color);
+    void drawCharacter(Position p, char c, String color);
 
     void fillBackground(String bgColor);
 }

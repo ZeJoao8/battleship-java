@@ -20,7 +20,7 @@ public class BoardViewer extends ElementViewer<Board> {
             for (int x = 0; x < board.getWidth(); x++) {
                 Position p = new Position(x, y);
                 CellState cs = board.getState(p);
-                gui.drawCharacter(pos.getX() + x * 2, pos.getY() + y, cellToChar(cs), cellToColor(cs));
+                gui.drawCharacter(new Position(pos.getX() + x * 2, pos.getY() + y), cellToChar(cs), cellToColor(cs));
             }
         }
     }

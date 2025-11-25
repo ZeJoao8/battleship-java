@@ -1,6 +1,7 @@
 package battleship.viewer.game.end;
 
 import battleship.gui.GUI;
+import battleship.model.Position;
 import battleship.viewer.Viewer;
 
 public class EndViewer extends Viewer<Boolean> {
@@ -29,13 +30,15 @@ public class EndViewer extends Viewer<Boolean> {
         int screenWidth = gui.getWidth();
 
         int col = (screenWidth - s1.length()) / 2;
-        gui.drawText(col, 6,  s1, "#FFFFFF");
-        gui.drawText(col, 7,  s2, "#FFFFFF");
-        gui.drawText(col, 8,  s3, "#FFFFFF");
-        gui.drawText(col, 9,  s4, "#FFFFFF");
+        Position text = new Position(col, 6);
+        gui.drawText(text,  s1, "#FFFFFF");
+        gui.drawText(new Position(text.getX(), text.getY()+1),  s2, "#FFFFFF");
+        gui.drawText(new Position(text.getX(), text.getY()+2),  s3, "#FFFFFF");
+        gui.drawText(new Position(text.getX(), text.getY()+3),  s4, "#FFFFFF");
 
         String msg = "Press Q to return to menu";
         int msgCol = (screenWidth - msg.length()) / 2;
-        gui.drawText(msgCol, 11, msg, "#AAAAAA");
+        Position pmsg = new Position(msgCol, 11);
+        gui.drawText(pmsg, msg, "#AAAAAA");
     }
 }

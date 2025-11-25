@@ -20,7 +20,7 @@ public class BattleViewer extends Viewer<BattleModel> {
         Board player = model.getPlayerBoard();
         Board enemy  = model.getEnemyBoard();
 
-        gui.drawText(2, 1, "Batalha Naval - Q = voltar ao menu | Enter = disparar", "#FFFFFF");
+        gui.drawText(new Position(2,1), "Batalha Naval - Q = voltar ao menu | Enter = disparar", "#FFFFFF");
 
         Position p = new Position(2, 4);
         Position e = new Position(p.getX() + player.getWidth() * 2 + 6, p.getY());
@@ -36,6 +36,6 @@ public class BattleViewer extends Viewer<BattleModel> {
         }
 
         Position cursor = model.getCursor();
-        gui.drawCharacter(e.getX() + cursor.getX() * 2, e.getY() + cursor.getY(), '●', "#00FF9D");
+        gui.drawCharacter(new Position(e.getX() + cursor.getX() * 2, e.getY() + cursor.getY()), '●', "#00FF9D");
     }
 }

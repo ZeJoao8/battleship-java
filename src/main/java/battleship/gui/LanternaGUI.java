@@ -1,5 +1,6 @@
 package battleship.gui;
 
+import battleship.model.Position;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
@@ -62,19 +63,19 @@ public class LanternaGUI implements GUI {
     }
 
     @Override
-    public void drawText(int x, int y, String text, String fg) {
+    public void drawText(Position p, String text, String fg) {
         TextGraphics g = screen.newTextGraphics();
         g.setForegroundColor(TextColor.Factory.fromString(fg));
         g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
-        g.putString(x, y, text);
+        g.putString(p.getX(), p.getY(), text);
     }
 
     @Override
-    public void drawCharacter(int x, int y, char c, String fg) {
+    public void drawCharacter(Position p, char c, String fg) {
         TextGraphics g = screen.newTextGraphics();
         g.setForegroundColor(TextColor.Factory.fromString(fg));
         g.setBackgroundColor(TextColor.Factory.fromString("#010326"));
-        g.putString(x, y, String.valueOf(c));
+        g.putString(p.getX(), p.getY(), String.valueOf(c));
     }
 
     @Override

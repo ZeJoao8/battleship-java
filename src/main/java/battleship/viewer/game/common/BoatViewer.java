@@ -34,7 +34,7 @@ public class BoatViewer extends ElementViewer<Boat> {
                 p=boat.isHorizontal() ? new Position(cursor.getX() + i, cursor.getY()) : new Position(cursor.getX(), cursor.getY() + i);
             }
             String color = boat.isPlaced() ? ((sunk || boat.isPartHit(i)) ? "#FF4444" : "#C17F42") : (valid ? "#00FF9D" : "#FF4444");
-            gui.drawCharacter(pos.getX() + p.getX() * 2, pos.getY() + p.getY(), getChar(boat, i), color);
+            gui.drawCharacter(new Position(pos.getX() + p.getX() * 2, pos.getY() + p.getY()), getChar(boat, i), color);
         }
     }
 

@@ -18,10 +18,11 @@ public class PlacementViewer extends Viewer<PlacementModel> {
 
     @Override
     protected void drawElements(GUI gui) {
-        gui.drawText(2, 1, "Posicione a sua frota (Q = sair)", "#FFFFFF");
+        Position p= new Position(2,1);
+        gui.drawText(p, "Posicione a sua frota (Q = sair)", "#FFFFFF");
         Boat current = getModel().getCurrentBoat();
-        gui.drawText(2, 3, "A colocar: " + (current != null ? current.getName() : "Nenhum"), "#00FF9D");
-        gui.drawText(2, 4, "Setas = mover | R = rodar | Enter = colocar", "#AAAAAA");
+        gui.drawText(new Position(p.getX(),p.getY()+2), "A colocar: " + (current != null ? current.getName() : "Nenhum"), "#00FF9D");
+        gui.drawText(new Position(p.getX(),p.getY()+3), "Setas = mover | R = rodar | Enter = colocar", "#AAAAAA");
         boardViewer.draw(gui, new Position(5,6));
     }
 }
