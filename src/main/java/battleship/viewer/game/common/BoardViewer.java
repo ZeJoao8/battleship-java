@@ -13,14 +13,14 @@ public class BoardViewer extends ElementViewer<Board> {
     }
 
     @Override
-    public void draw(GUI gui, int ox, int oy) {
+    public void draw(GUI gui, Position pos) {
         Board board = getModel();
         if (board == null) return;
         for (int y = 0; y < board.getHeigth(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
                 Position p = new Position(x, y);
                 CellState cs = board.getState(p);
-                gui.drawCharacter(ox + x * 2, oy + y, cellToChar(cs), cellToColor(cs));
+                gui.drawCharacter(pos.getX() + x * 2, pos.getY() + y, cellToChar(cs), cellToColor(cs));
             }
         }
     }

@@ -23,7 +23,7 @@ public class BoatViewer extends ElementViewer<Boat> {
     }
 
     @Override
-    public void draw(GUI gui, int ox, int oy) {
+    public void draw(GUI gui, Position pos) {
         Boat boat = getModel();
         for (int i = 0; i < boat.getSize(); i++) {
             Position p;
@@ -34,7 +34,7 @@ public class BoatViewer extends ElementViewer<Boat> {
                 p=boat.isHorizontal() ? new Position(cursor.getX() + i, cursor.getY()) : new Position(cursor.getX(), cursor.getY() + i);
             }
             String color = boat.isPlaced() ? ((sunk || boat.isPartHit(i)) ? "#FF4444" : "#C17F42") : (valid ? "#00FF9D" : "#FF4444");
-            gui.drawCharacter(ox + p.getX() * 2, oy + p.getY(), getChar(boat, i), color);
+            gui.drawCharacter(pos.getX() + p.getX() * 2, pos.getY() + p.getY(), getChar(boat, i), color);
         }
     }
 

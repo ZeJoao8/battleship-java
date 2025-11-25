@@ -22,25 +22,20 @@ public class BattleViewer extends Viewer<BattleModel> {
 
         gui.drawText(2, 1, "Batalha Naval - Q = voltar ao menu | Enter = disparar", "#FFFFFF");
 
-        int xP = 2;
-        int yP = 4;
-        int xE = xP + player.getWidth() * 2 + 6;
-        int yE = 4;
-
-        new BoardViewer(player).draw(gui, xP, yP);
-        new BoardViewer(enemy).draw(gui, xE, yE);
-
+        Position p = new Position(2, 4);
+        Position e = new Position(p.getX() + player.getWidth() * 2 + 6, p.getY());
+        new BoardViewer(player).draw(gui, p);
+        new BoardViewer(enemy).draw(gui, e);
         for (Boat b : player.getFleet()) {
-            new BoatViewer(b).draw(gui, xP, yP);
+            new BoatViewer(b).draw(gui, p);
         }
-
         for (Boat b : enemy.getFleet()) {
             if (model.shouldRevealBoat(b)) {
-                new BoatViewer(b).draw(gui, xE, yE);
+                new BoatViewer(b).draw(gui, e);
             }
         }
 
         Position cursor = model.getCursor();
-        gui.drawCharacter(xE + cursor.getX() * 2, yE + cursor.getY(), '●', "#00FF9D");
+        gui.drawCharacter(e.getX() + cursor.getX() * 2, e.getY() + cursor.getY(), '●', "#00FF9D");
     }
 }

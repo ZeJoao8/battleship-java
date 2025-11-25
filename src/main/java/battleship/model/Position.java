@@ -1,7 +1,5 @@
 package battleship.model;
 
-import java.util.Objects;
-
 public final class Position {
     private final int x;
     private final int y;
@@ -13,11 +11,6 @@ public final class Position {
 
     public int getX() { return x; }
     public int getY() { return y; }
-
-    public Position up()    { return new Position(x, y - 1); }
-    public Position down()  { return new Position(x, y + 1); }
-    public Position left()  { return new Position(x - 1, y); }
-    public Position right() { return new Position(x + 1, y); }
 
     public Position moveUpBounded() {
         if(y-1>0){return new Position(x, y-1);}

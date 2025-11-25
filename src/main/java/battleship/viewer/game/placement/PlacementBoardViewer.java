@@ -16,18 +16,18 @@ public class PlacementBoardViewer extends ElementViewer<PlacementModel> {
     }
 
     @Override
-    public void draw(GUI gui, int ox, int oy) {
+    public void draw(GUI gui, Position pos) {
         PlacementModel model = getModel();
         Board board = model.getBoard();
-        new BoardViewer(board).draw(gui, ox, oy);
+        new BoardViewer(board).draw(gui, pos);
         for (Boat b : board.getFleet()) {
-            new BoatViewer(b).draw(gui, ox, oy);
+            new BoatViewer(b).draw(gui, pos);
         }
         Boat current = model.getCurrentBoat();
         if (current != null && !current.isPlaced()) {
             Position cursor = model.getCursor();
             boolean valid = board.canPlaceBoat(current, cursor, current.isHorizontal());
-            new BoatViewer(current, cursor, valid).draw(gui, ox, oy);
+            new BoatViewer(current, cursor, valid).draw(gui, pos);
         }
     }
 }

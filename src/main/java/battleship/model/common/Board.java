@@ -142,7 +142,7 @@ public class Board {
 
     public boolean allBoatsPlaced() {
         for (Boat b : fleet)
-            if (b.getPositions().isEmpty())
+            if (!b.isPlaced())
                 return false;
         return true;
     }

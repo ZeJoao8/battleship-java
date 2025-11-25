@@ -2,6 +2,7 @@ package battleship.viewer.game.placement;
 
 
 import battleship.gui.GUI;
+import battleship.model.Position;
 import battleship.model.common.Board;
 import battleship.model.common.Boat;
 import battleship.model.placement.PlacementModel;
@@ -21,6 +22,6 @@ public class PlacementViewer extends Viewer<PlacementModel> {
         Boat current = getModel().getCurrentBoat();
         gui.drawText(2, 3, "A colocar: " + (current != null ? current.getName() : "Nenhum"), "#00FF9D");
         gui.drawText(2, 4, "Setas = mover | R = rodar | Enter = colocar", "#AAAAAA");
-        boardViewer.draw(gui, 5, 6);
+        boardViewer.draw(gui, new Position(5,6));
     }
 }
