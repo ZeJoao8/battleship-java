@@ -25,4 +25,8 @@ public class PlacementState extends State<PlacementModel> {
     protected Controller<PlacementModel> getController() {
         return new PlacementController(getModel(), settings);
     }
+
+    public Settings getSettings() {
+        return settings;
+    }
 }

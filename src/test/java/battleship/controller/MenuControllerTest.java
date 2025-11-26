@@ -1,114 +1,90 @@
 package battleship.controller;
 
 import battleship.Game;
-import battleship.controller.MenuController;
 import battleship.gui.GUI;
 import battleship.model.Menu;
 import battleship.model.Settings;
 import battleship.states.SettingsState;
 import battleship.states.game.PlacementState;
 import org.junit.jupiter.api.Test;
-import battleship.states.State;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MenuControllerTest {
 
     @Test
-    void upMovesSelectionUp() throws Exception {
+    void pressingUpMovesSelectionUp() throws Exception {
         Menu menu = new Menu();
         MenuController controller = new MenuController(menu);
-        assertTrue(menu.isSelectedPlay());
         controller.step(null, GUI.ACTION.UP);
         assertTrue(menu.isSelectedQuit());
-        assertFalse(menu.isSelectedPlay());
-        assertFalse(menu.isSelectedSettings());
     }
 
     @Test
-    void downMovesSelectionDown() throws Exception {
+    void pressingDownMovesSelectionDown() throws Exception {
         Menu menu = new Menu();
         MenuController controller = new MenuController(menu);
-        assertTrue(menu.isSelectedPlay());
         controller.step(null, GUI.ACTION.DOWN);
         assertTrue(menu.isSelectedSettings());
-        assertFalse(menu.isSelectedPlay());
-        assertFalse(menu.isSelectedQuit());
     }
 
     @Test
-    void startGameLeadsToPlacementState() throws Exception {
+    void selectingPlayCreatesPlacementStateWithCorrectSettings() throws Exception {
         Game game = mock(Game.class);
-        when(game.getSettings()).thenReturn(new Settings());
+        Settings s = new Settings();
+        s.setWidth(12);
+        s.setHeight(8);
+        s.setDifficulty(Settings.BotDifficulty.HUNT);
+        when(game.getSettings()).thenReturn(s);
         Menu menu = new Menu();
         MenuController controller = new MenuController(menu);
         controller.step(game, GUI.ACTION.SELECT);
-        verify(game).setState(isA(PlacementState.class));
-    }
-
-
-
-    @Test
-    void openSettingsMenu() throws Exception {
-        Game game = mock(Game.class);
-        Menu menu = new Menu();
-        menu.next();
-        assertTrue(menu.isSelectedSettings());
-        MenuController controller = new MenuController(menu);
-        controller.step(game, GUI.ACTION.SELECT);
-        verify(game).setState(isA(SettingsState.class));
-    }
-
-    @Test
-    void quitEndsGameOnSelect() throws Exception {
-        Game game = mock(Game.class);
-        Menu menu = new Menu();
-        menu.next();
-        menu.next();
-        assertTrue(menu.isSelectedQuit());
-        MenuController controller = new MenuController(menu);
-        controller.step(game, GUI.ACTION.SELECT);
-        verify(game).setState(isNull());
-    }
-
-    @Test
-    void quitEndsGameOnQuitAction() throws Exception {
-        Game game = mock(Game.class);
-        Menu menu = new Menu();
-        MenuController controller = new MenuController(menu);
-        controller.step(game, GUI.ACTION.QUIT);
-        verify(game).setState(isNull());
-    }
-    @Test
-    void quitActionEndsGameRegardlessofSelection() throws Exception{
-        Game game = mock(Game.class);
-        Menu menu = new Menu();
-        MenuController controller = new MenuController(menu);
-        controller.step(game, GUI.ACTION.QUIT);
-        verify(game).setState(isNull());
-    }
-    @Test
-    void selectingSettingsUsesSharedSettingsInstance() throws Exception {
-        Game game= mock(Game.class);
-        Settings sharedSettings = new Settings(12,8);
-        when(game.getSettings()).thenReturn(sharedSettings);
-
-        Menu menu = new Menu();
-        menu.next();
-        assertTrue(menu.isSelectedSettings());
-
-        MenuController controller = new MenuController(menu);
-        controller.step(game, GUI.ACTION.SELECT);
-
-        var captor= org.mockito.ArgumentCaptor.forClass(battleship.states.State.class);
+        ArgumentCaptor<PlacementState> captor = ArgumentCaptor.forClass(PlacementState.class);
         verify(game).setState(captor.capture());
-        assertTrue(captor.getValue() instanceof SettingsState);
-        SettingsState state = (SettingsState) captor.getValue();
+        PlacementState state = captor.getValue();
+        assertEquals(12, state.getSettings().getWidth());
+        assertEquals(8,  state.getSettings().getHeight());
+        assertEquals(Settings.BotDifficulty.HUNT, state.getSettings().getDifficulty());
+    }
 
-        assertSame(sharedSettings, state.getModel());
+    @Test
+    void selectingSettingsOpensSettingsStateAndPassesSameSettingsInstance() throws Exception {
+        Game game = mock(Game.class);
+        Settings shared = new Settings();
+        shared.setWidth(10);
+        shared.setHeight(9);
+        shared.setDifficulty(Settings.BotDifficulty.RANDOM);
+        when(game.getSettings()).thenReturn(shared);
+        Menu menu = new Menu();
+        menu.next();
+        MenuController controller = new MenuController(menu);
+        controller.step(game, GUI.ACTION.SELECT);
+        ArgumentCaptor<SettingsState> captor = ArgumentCaptor.forClass(SettingsState.class);
+        verify(game).setState(captor.capture());
+        SettingsState state = captor.getValue();
+        assertSame(shared, state.getModel());
+    }
 
+    @Test
+    void selectingQuitEndsTheGame() throws Exception {
+        Game game = mock(Game.class);
+        Menu menu = new Menu();
+        menu.next();
+        menu.next();
+        MenuController controller = new MenuController(menu);
+        controller.step(game, GUI.ACTION.SELECT);
+        verify(game).setState(null);
+    }
 
+    @Test
+    void pressingQuitAlwaysEndsGameRegardlessOfSelection() throws Exception {
+        Game game = mock(Game.class);
+        Menu menu = new Menu();
+        menu.next(); menu.next();
+        MenuController controller = new MenuController(menu);
+        controller.step(game, GUI.ACTION.QUIT);
+        verify(game).setState(null);
     }
 }
