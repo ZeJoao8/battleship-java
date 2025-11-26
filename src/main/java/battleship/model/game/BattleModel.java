@@ -1,29 +1,38 @@
 package battleship.model.game;
 
 import battleship.model.Position;
+import battleship.model.Settings;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
+import battleship.model.game.common.bot.BotStrategy;
+import battleship.model.game.common.bot.HuntTargetBot;
+import battleship.model.game.common.bot.RandomBot;
 
-import java.util.Random;
+import static battleship.model.Settings.BotDifficulty.HUNT;
+import static battleship.model.Settings.BotDifficulty.RANDOM;
 
 public class BattleModel {
 
     private final Board playerBoard;
     private final Board enemyBoard;
-    private final Random rnd = new Random();
-    private final Bot bot = new Bot();
+    private BotStrategy bot;
 
     private Position cursor = new Position(0, 0);
 
-    public BattleModel(Board playerBoard, Board enemyBoard) {
+    public BattleModel(Board playerBoard, Board enemyBoard, Settings settings) {
         this.playerBoard = playerBoard;
         this.enemyBoard = enemyBoard;
+        switch (settings.getDifficulty()) {
+            case RANDOM -> bot = new RandomBot();
+            case HUNT   -> bot = new HuntTargetBot();
+        }
     }
 
     public Board getPlayerBoard() { return playerBoard; }
     public Board getEnemyBoard()  { return enemyBoard; }
+
     public Position getCursor() { return cursor; }
-    public void setCursor(Position p) { this.cursor = p; }
+    public void setCursor(Position p) { cursor = p; }
 
     public boolean alreadyShotEnemy(Position p) {
         return enemyBoard.isHit(p) || enemyBoard.isMiss(p);
@@ -35,20 +44,8 @@ public class BattleModel {
     }
 
     public void makeBotMove() {
-        Position p = bot.chooseMove(playerBoard);
-        applyShot(playerBoard, p);
-    }
-
-    private Position randomValidTarget(Board b) {
-        int w = b.getWidth();
-        int h = b.getHeigth();
-
-        Position p;
-        do {
-            p = new Position(rnd.nextInt(w), rnd.nextInt(h));
-        } while (!b.isValidBotTarget(p));
-
-        return p;
+        Position botShot = bot.chooseMove(playerBoard);
+        applyShot(playerBoard, botShot);
     }
 
     private void applyShot(Board b, Position p) {
@@ -56,10 +53,7 @@ public class BattleModel {
         else b.markMiss(p);
     }
 
-    public boolean shouldRevealBoat(Boat b) {
-        return b.isSunk();
-    }
-
+    public boolean shouldRevealBoat(Boat b) { return b.isSunk(); }
     public boolean enemyLost() { return enemyBoard.hasLost(); }
     public boolean playerLost() { return playerBoard.hasLost(); }
 }

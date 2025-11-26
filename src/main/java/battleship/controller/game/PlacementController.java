@@ -63,12 +63,10 @@ public class PlacementController extends Controller<PlacementModel> {
     }
 
     private void startBattle(Game game, Board playerBoard) {
-
         Settings s = (settings != null) ? settings : game.getSettings();
-
         Board enemy = new Board(s);
         enemy.placeFleetRandomly();
-
-        game.setState(new BattleState(new BattleModel(playerBoard, enemy)));
+        assert settings != null;
+        game.setState(new BattleState(new BattleModel(playerBoard, enemy, s)));
     }
 }
