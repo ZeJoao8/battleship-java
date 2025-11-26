@@ -30,4 +30,5 @@ sourceSets {
 
 test {
     useJUnitPlatform()
+    jvmArgs += "-XX:+EnableDynamicAgentLoading"
 }
