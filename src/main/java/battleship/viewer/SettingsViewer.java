@@ -3,7 +3,7 @@ package battleship.viewer;
 
 import battleship.gui.GUI;
 import battleship.model.Position;
-import battleship.model.settings.Settings;
+import battleship.model.Settings;
 
 public class SettingsViewer extends Viewer<Settings> {
 

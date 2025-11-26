@@ -2,7 +2,7 @@ package battleship.states;
 
 import battleship.controller.Controller;
 import battleship.controller.SettingsController;
-import battleship.model.settings.Settings;
+import battleship.model.Settings;
 import battleship.viewer.Viewer;
 import battleship.viewer.SettingsViewer;
 

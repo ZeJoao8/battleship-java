@@ -2,8 +2,8 @@ package battleship.controller;
 
 import battleship.Game;
 import battleship.gui.GUI;
-import battleship.model.menu.Menu;
-import battleship.model.settings.Settings;
+import battleship.model.Menu;
+import battleship.model.Settings;
 import battleship.states.MenuState;
 
 public class SettingsController extends Controller<Settings> {

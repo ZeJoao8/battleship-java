@@ -1,4 +1,4 @@
-package battleship.model.menu;
+package battleship.model;
 
 import java.util.Arrays;
 import java.util.List;

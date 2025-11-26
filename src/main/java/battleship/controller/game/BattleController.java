@@ -6,8 +6,8 @@ import battleship.gui.GUI;
 import battleship.model.Position;
 import battleship.model.game.BattleModel;
 import battleship.model.game.common.Board;
-import battleship.model.menu.Menu;
-import battleship.states.EndState;
+import battleship.model.Menu;
+import battleship.states.game.EndState;
 import battleship.states.MenuState;
 
 public class BattleController extends Controller<BattleModel> {

@@ -1,8 +1,9 @@
-package battleship.states;
+package battleship.states.game;
 
 import battleship.controller.Controller;
 import battleship.controller.game.BattleController;
 import battleship.model.game.BattleModel;
+import battleship.states.State;
 import battleship.viewer.Viewer;
 import battleship.viewer.game.BattleViewer;
 

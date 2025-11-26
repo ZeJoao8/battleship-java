@@ -3,10 +3,10 @@ package battleship.controller;
 import battleship.Game;
 import battleship.gui.GUI;
 import battleship.model.game.common.Board;
-import battleship.model.menu.Menu;
+import battleship.model.Menu;
 import battleship.model.game.PlacementModel;
-import battleship.model.settings.Settings;
-import battleship.states.PlacementState;
+import battleship.model.Settings;
+import battleship.states.game.PlacementState;
 import battleship.states.SettingsState;
 
 public class MenuController extends Controller<Menu> {

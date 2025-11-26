@@ -2,7 +2,7 @@ package battleship.states;
 
 import battleship.controller.Controller;
 import battleship.controller.MenuController;
-import battleship.model.menu.Menu;
+import battleship.model.Menu;
 import battleship.viewer.Viewer;
 import battleship.viewer.MenuViewer;
 

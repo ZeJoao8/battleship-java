@@ -2,7 +2,7 @@ package battleship.viewer;
 
 import battleship.gui.GUI;
 import battleship.model.Position;
-import battleship.model.menu.Menu;
+import battleship.model.Menu;
 
 public class MenuViewer extends Viewer<Menu> {
     public MenuViewer(Menu model) { super(model); }

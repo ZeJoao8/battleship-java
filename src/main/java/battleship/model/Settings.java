@@ -1,4 +1,4 @@
-package battleship.model.settings;
+package battleship.model;
 
 public class Settings {
     private int width;

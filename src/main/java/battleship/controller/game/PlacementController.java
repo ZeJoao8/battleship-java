@@ -6,10 +6,10 @@ import battleship.gui.GUI;
 import battleship.model.game.BattleModel;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
-import battleship.model.menu.Menu;
+import battleship.model.Menu;
 import battleship.model.game.PlacementModel;
-import battleship.model.settings.Settings;
-import battleship.states.BattleState;
+import battleship.model.Settings;
+import battleship.states.game.BattleState;
 import battleship.states.MenuState;
 
 public class PlacementController extends Controller<PlacementModel> {
