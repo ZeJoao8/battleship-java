@@ -1,10 +1,10 @@
 package battleship.states;
 
 import battleship.controller.Controller;
-import battleship.controller.battle.BattleController;
-import battleship.model.battle.BattleModel;
+import battleship.controller.game.BattleController;
+import battleship.model.game.BattleModel;
 import battleship.viewer.Viewer;
-import battleship.viewer.game.battle.BattleViewer;
+import battleship.viewer.game.BattleViewer;
 
 public class BattleState extends State<BattleModel> {
     public BattleState(BattleModel model) { super(model); }

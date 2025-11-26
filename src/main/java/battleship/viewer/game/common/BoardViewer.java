@@ -2,8 +2,8 @@ package battleship.viewer.game.common;
 
 import battleship.gui.GUI;
 import battleship.model.Position;
-import battleship.model.common.Board;
-import battleship.model.common.CellState;
+import battleship.model.game.common.Board;
+import battleship.model.game.common.CellState;
 import battleship.viewer.game.ElementViewer;
 
 public class BoardViewer extends ElementViewer<Board> {

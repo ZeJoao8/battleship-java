@@ -1,4 +1,4 @@
-package battleship.controller.end;
+package battleship.controller.game;
 
 import battleship.Game;
 import battleship.controller.Controller;

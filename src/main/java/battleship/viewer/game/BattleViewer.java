@@ -1,10 +1,10 @@
-package battleship.viewer.game.battle;
+package battleship.viewer.game;
 
 import battleship.gui.GUI;
 import battleship.model.Position;
-import battleship.model.battle.BattleModel;
-import battleship.model.common.Board;
-import battleship.model.common.Boat;
+import battleship.model.game.BattleModel;
+import battleship.model.game.common.Board;
+import battleship.model.game.common.Boat;
 import battleship.viewer.Viewer;
 import battleship.viewer.game.common.BoardViewer;
 import battleship.viewer.game.common.BoatViewer;

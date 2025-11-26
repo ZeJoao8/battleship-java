@@ -3,9 +3,8 @@ package battleship.viewer.game.placement;
 
 import battleship.gui.GUI;
 import battleship.model.Position;
-import battleship.model.common.Board;
-import battleship.model.common.Boat;
-import battleship.model.placement.PlacementModel;
+import battleship.model.game.common.Boat;
+import battleship.model.game.PlacementModel;
 import battleship.viewer.Viewer;
 
 public class PlacementViewer extends Viewer<PlacementModel> {

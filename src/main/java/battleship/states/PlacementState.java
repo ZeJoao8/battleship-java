@@ -1,8 +1,8 @@
 package battleship.states;
 
 import battleship.controller.Controller;
-import battleship.controller.placement.PlacementController;
-import battleship.model.placement.PlacementModel;
+import battleship.controller.game.PlacementController;
+import battleship.model.game.PlacementModel;
 import battleship.model.settings.Settings;
 import battleship.viewer.Viewer;
 import battleship.viewer.game.placement.PlacementViewer;

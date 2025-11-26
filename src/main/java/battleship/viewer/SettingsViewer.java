@@ -1,10 +1,9 @@
-package battleship.viewer.settings;
+package battleship.viewer;
 
 
 import battleship.gui.GUI;
 import battleship.model.Position;
 import battleship.model.settings.Settings;
-import battleship.viewer.Viewer;
 
 public class SettingsViewer extends Viewer<Settings> {
 

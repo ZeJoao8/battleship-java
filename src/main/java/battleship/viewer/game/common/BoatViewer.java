@@ -2,7 +2,7 @@ package battleship.viewer.game.common;
 
 import battleship.gui.GUI;
 import battleship.model.Position;
-import battleship.model.common.Boat;
+import battleship.model.game.common.Boat;
 import battleship.viewer.game.ElementViewer;
 
 public class BoatViewer extends ElementViewer<Boat> {

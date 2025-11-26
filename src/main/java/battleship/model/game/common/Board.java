@@ -1,7 +1,7 @@
-package battleship.model.common;
+package battleship.model.game.common;
 
 import battleship.model.Position;
-import battleship.model.common.boats.*;
+import battleship.model.game.common.boats.*;
 import battleship.model.settings.Settings;
 
 import java.util.ArrayList;

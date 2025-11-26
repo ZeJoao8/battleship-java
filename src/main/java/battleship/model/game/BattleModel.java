@@ -1,8 +1,8 @@
-package battleship.model.battle;
+package battleship.model.game;
 
 import battleship.model.Position;
-import battleship.model.common.Board;
-import battleship.model.common.Boat;
+import battleship.model.game.common.Board;
+import battleship.model.game.common.Boat;
 
 import java.util.Random;
 

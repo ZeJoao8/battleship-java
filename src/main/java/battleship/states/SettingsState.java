@@ -1,10 +1,10 @@
 package battleship.states;
 
 import battleship.controller.Controller;
-import battleship.controller.settings.SettingsController;
+import battleship.controller.SettingsController;
 import battleship.model.settings.Settings;
 import battleship.viewer.Viewer;
-import battleship.viewer.settings.SettingsViewer;
+import battleship.viewer.SettingsViewer;
 
 public class SettingsState extends State<Settings> {
 

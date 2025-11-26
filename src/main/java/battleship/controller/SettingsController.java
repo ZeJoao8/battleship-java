@@ -1,7 +1,6 @@
-package battleship.controller.settings;
+package battleship.controller;
 
 import battleship.Game;
-import battleship.controller.Controller;
 import battleship.gui.GUI;
 import battleship.model.menu.Menu;
 import battleship.model.settings.Settings;

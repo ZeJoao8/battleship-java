@@ -1,4 +1,4 @@
-package battleship.model.common;
+package battleship.model.game.common;
 
 import battleship.model.Position;
 

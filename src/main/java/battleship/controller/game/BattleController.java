@@ -1,11 +1,11 @@
-package battleship.controller.battle;
+package battleship.controller.game;
 
 import battleship.Game;
 import battleship.controller.Controller;
 import battleship.gui.GUI;
 import battleship.model.Position;
-import battleship.model.battle.BattleModel;
-import battleship.model.common.Board;
+import battleship.model.game.BattleModel;
+import battleship.model.game.common.Board;
 import battleship.model.menu.Menu;
 import battleship.states.EndState;
 import battleship.states.MenuState;

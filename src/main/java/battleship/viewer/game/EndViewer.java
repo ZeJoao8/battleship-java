@@ -1,4 +1,4 @@
-package battleship.viewer.game.end;
+package battleship.viewer.game;
 
 import battleship.gui.GUI;
 import battleship.model.Position;
