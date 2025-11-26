@@ -3,22 +3,31 @@ plugins {
     id 'application'
 }
 
-group = 'com.ZeGoncalo.hero'
-version = '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'net.jqwik:jqwik:1.8.2'
     implementation group: 'com.googlecode.lanterna', name: 'lanterna', version: '3.1.1'
 }
+
 application {
     mainClass = 'battleship.Application'
 }
+
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
 test {
     useJUnitPlatform()
 }
