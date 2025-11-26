@@ -11,6 +11,7 @@ public class BattleModel {
     private final Board playerBoard;
     private final Board enemyBoard;
     private final Random rnd = new Random();
+    private final Bot bot = new Bot();
 
     private Position cursor = new Position(0, 0);
 
@@ -34,7 +35,7 @@ public class BattleModel {
     }
 
     public void makeBotMove() {
-        Position p = randomValidTarget(playerBoard);
+        Position p = bot.chooseMove(playerBoard);
         applyShot(playerBoard, p);
     }
 
