@@ -118,7 +118,7 @@ public class PlacementControllerTest {
     @Test
     void select_placesBoat_andStartsBattle_ifAllPlaced() {
         PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
+        Settings settings = new Settings();
         Game game = mock(Game.class);
         Board playerBoard = mock(Board.class);
 
@@ -163,7 +163,8 @@ public class PlacementControllerTest {
     @Test
     void whenNoCurrentBoat_startBattleImmediately() {
         PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
+        Settings settings = new Settings();
+
         Game game = mock(Game.class);
         Board playerBoard = mock(Board.class);
 
