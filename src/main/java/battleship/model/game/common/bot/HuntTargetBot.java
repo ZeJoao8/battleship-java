@@ -2,13 +2,18 @@ package battleship.model.game.common.bot;
 
 import battleship.model.Position;
 import battleship.model.game.common.Board;
+import battleship.model.game.common.Bot;
 
 import java.util.*;
 
-public class HuntTargetBot implements BotStrategy {
+public class HuntTargetBot extends Bot {
 
     private final Queue<Position> queue = new LinkedList<>();
     private final Random rnd = new Random();
+
+    public HuntTargetBot() {
+        super("Hunt Target", "Médio");
+    }
 
     @Override
     public Position chooseMove(Board board) {

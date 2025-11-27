@@ -4,28 +4,31 @@ import battleship.model.Position;
 import battleship.model.Settings;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
-import battleship.model.game.common.bot.BotStrategy;
+import battleship.model.game.common.bot.Bolachas;
 import battleship.model.game.common.bot.HuntTargetBot;
 import battleship.model.game.common.bot.RandomBot;
+import battleship.model.game.common.BotStrategy;
 
-import static battleship.model.Settings.BotDifficulty.HUNT;
-import static battleship.model.Settings.BotDifficulty.RANDOM;
 
 public class BattleModel {
 
     private final Board playerBoard;
     private final Board enemyBoard;
-    private BotStrategy bot;
+    private final Settings settings;
+    private final BotStrategy bot;
 
     private Position cursor = new Position(0, 0);
 
     public BattleModel(Board playerBoard, Board enemyBoard, Settings settings) {
         this.playerBoard = playerBoard;
         this.enemyBoard = enemyBoard;
-        switch (settings.getDifficulty()) {
-            case RANDOM -> bot = new RandomBot();
-            case HUNT   -> bot = new HuntTargetBot();
-        }
+        this.settings = settings;
+
+        this.bot = switch (settings.getDifficulty()) {
+            case RANDOM ->  new RandomBot();
+            case HUNT   -> new HuntTargetBot();
+            case BOLACHAS   -> new Bolachas();
+        };
     }
 
     public Board getPlayerBoard() { return playerBoard; }
