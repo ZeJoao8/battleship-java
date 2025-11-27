@@ -5,17 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PositionTest {
 
-    /* ===================== GETTERS ===================== */
-
     @Test
     void gettersReturnCorrectValues() {
         Position p = new Position(7, 3);
         assertEquals(7, p.getX());
         assertEquals(3, p.getY());
     }
-
-
-    /* ===================== MOVE UP ===================== */
 
     @Test
     void moveUpBounded_movesNormallyWhenAboveZero() {
@@ -29,9 +24,6 @@ class PositionTest {
         assertEquals(new Position(4, 0), p.moveUpBounded());
     }
 
-
-    /* ===================== MOVE LEFT ===================== */
-
     @Test
     void moveLeftBounded_movesNormally() {
         Position p = new Position(5, 6);
@@ -44,38 +36,29 @@ class PositionTest {
         assertEquals(new Position(0, 6), p.moveLeftBounded());
     }
 
-
-    /* ===================== MOVE DOWN ===================== */
-
     @Test
     void moveDownBounded_movesNormallyIfNotAtLimit() {
         Position p = new Position(3, 2);
-        assertEquals(new Position(3, 3), p.moveDownBounded(5)); // 2→3
+        assertEquals(new Position(3, 3), p.moveDownBounded(5));
     }
 
     @Test
     void moveDownBounded_clampsToMax() {
         Position p = new Position(3, 7);
-        assertEquals(new Position(3, 7), p.moveDownBounded(7)); // não passa
+        assertEquals(new Position(3, 7), p.moveDownBounded(7));
     }
-
-
-    /* ===================== MOVE RIGHT ===================== */
 
     @Test
     void moveRightBounded_movesNormallyIfNotAtLimit() {
         Position p = new Position(2, 4);
-        assertEquals(new Position(3, 4), p.moveRightBounded(5)); // 2→3
+        assertEquals(new Position(3, 4), p.moveRightBounded(5));
     }
 
     @Test
     void moveRightBounded_clampsToMax() {
         Position p = new Position(5, 4);
-        assertEquals(new Position(5, 4), p.moveRightBounded(5)); // não passa
+        assertEquals(new Position(5, 4), p.moveRightBounded(5));
     }
-
-
-    /* ===================== EQUALS — TODOS OS RAMOS ===================== */
 
     @Test
     void equalsSelf() {

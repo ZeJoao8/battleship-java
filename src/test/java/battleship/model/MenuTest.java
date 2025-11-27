@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MenuTest {
 
-    /* ========================= COBERTURA FALTANTE ========================= */
-
     @Test
     void getEntryReturnsCorrectNames() {
         Menu menu = new Menu();
@@ -27,46 +25,42 @@ public class MenuTest {
     void isSelectedIntReturnsTrueOnlyForCurrentIndex() {
         Menu menu = new Menu();
 
-        assertTrue(menu.isSelected(0));  // default
+        assertTrue(menu.isSelected(0));
         assertFalse(menu.isSelected(1));
         assertFalse(menu.isSelected(2));
 
-        menu.next(); // -> 1
+        menu.next();
         assertTrue(menu.isSelected(1));
         assertFalse(menu.isSelected(0));
         assertFalse(menu.isSelected(2));
 
-        menu.next(); // -> 2
+        menu.next();
         assertTrue(menu.isSelected(2));
         assertFalse(menu.isSelected(0));
         assertFalse(menu.isSelected(1));
     }
 
     @Test
-    void isSelectedQuitCoverageBothBranches() {
+    void isSelectedQuit() {
         Menu menu = new Menu();
-
-        assertFalse(menu.isSelectedQuit()); // ramo false coberto
-        menu.next(); menu.next();
-        assertTrue(menu.isSelectedQuit());  // ramo true coberto
+        assertFalse(menu.isSelectedQuit());
+        menu.next();
+        menu.next();
+        assertTrue(menu.isSelectedQuit());
     }
-
-    /* ==================== COBERTURA FUNCIONAL COMPLETA ==================== */
 
     @Test
     void nextCyclesInOrder() {
         Menu menu = new Menu();
-
         assertTrue(menu.isSelectedPlay());
         menu.next(); assertTrue(menu.isSelectedSettings());
         menu.next(); assertTrue(menu.isSelectedQuit());
-        menu.next(); assertTrue(menu.isSelectedPlay()); // wrap completo
+        menu.next(); assertTrue(menu.isSelectedPlay());
     }
 
     @Test
-    void previousCyclesBackwardsCorrectly() {
+    void previousCyclesBackwards() {
         Menu menu = new Menu();
-
         menu.previous(); assertTrue(menu.isSelectedQuit());
         menu.previous(); assertTrue(menu.isSelectedSettings());
         menu.previous(); assertTrue(menu.isSelectedPlay());
