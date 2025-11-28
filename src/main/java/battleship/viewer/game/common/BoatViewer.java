@@ -38,7 +38,7 @@ public class BoatViewer extends ElementViewer<Boat> {
         }
     }
 
-    private char getChar(Boat boat, int idx) {
+    char getChar(Boat boat, int idx) {
         if (idx == 0 && boat.isHorizontal()) return '<';
         if (idx == 0 && !boat.isHorizontal()) return '^';
         if (idx == boat.getSize() - 1 && boat.isHorizontal()) return '>';

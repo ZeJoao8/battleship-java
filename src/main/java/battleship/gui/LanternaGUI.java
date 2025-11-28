@@ -27,6 +27,10 @@ public class LanternaGUI implements GUI {
         screen.setCursorPosition(null);
     }
 
+    public LanternaGUI(Screen screen) {
+        this.screen = screen;
+    }
+
     @Override
     public ACTION getNextAction() throws IOException {
         KeyStroke key = screen.pollInput();
