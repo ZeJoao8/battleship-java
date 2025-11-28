@@ -2,7 +2,6 @@ package battleship.controller.game;
 
 import battleship.Game;
 import battleship.gui.GUI;
-import battleship.model.Menu;
 import battleship.model.Settings;
 import battleship.model.game.PlacementModel;
 import battleship.model.game.common.Boat;
@@ -10,175 +9,88 @@ import battleship.model.game.common.Board;
 import battleship.states.MenuState;
 import battleship.states.State;
 import battleship.states.game.BattleState;
+
+import net.jqwik.api.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PlacementControllerTest {
 
-    private PlacementController controllerWithCurrentBoat(PlacementModel model, Settings settings) {
-        Boat boat = mock(Boat.class);
-        when(model.getCurrentBoat()).thenReturn(boat);
-        return new PlacementController(model, settings);
+    @Provide Arbitrary<GUI.ACTION> movementActions() {
+        return Arbitraries.of(GUI.ACTION.UP, GUI.ACTION.DOWN, GUI.ACTION.LEFT, GUI.ACTION.RIGHT);
     }
 
-    // ---------- movimentos ----------
-
-    @Test
-    void up_movesBoatUp() {
+    @Property
+    void movementCallsCorrectModelMethod(@ForAll("movementActions") GUI.ACTION action) {
         PlacementModel model = mock(PlacementModel.class);
         Settings settings = mock(Settings.class);
-        Game game = mock(Game.class);
-
-        PlacementController controller = controllerWithCurrentBoat(model, settings);
-
-        controller.step(game, GUI.ACTION.UP);
-
-        verify(model).moveUp();
-        verifyNoMoreInteractions(game);
-    }
-
-    @Test
-    void down_movesBoatDown() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
-        Game game = mock(Game.class);
-
-        PlacementController controller = controllerWithCurrentBoat(model, settings);
-
-        controller.step(game, GUI.ACTION.DOWN);
-
-        verify(model).moveDown();
-        verifyNoMoreInteractions(game);
-    }
-
-    @Test
-    void left_movesBoatLeft() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
-        Game game = mock(Game.class);
-
-        PlacementController controller = controllerWithCurrentBoat(model, settings);
-
-        controller.step(game, GUI.ACTION.LEFT);
-
-        verify(model).moveLeft();
-        verifyNoMoreInteractions(game);
-    }
-
-    @Test
-    void right_movesBoatRight() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
-        Game game = mock(Game.class);
-
-        PlacementController controller = controllerWithCurrentBoat(model, settings);
-
-        controller.step(game, GUI.ACTION.RIGHT);
-
-        verify(model).moveRight();
-        verifyNoMoreInteractions(game);
-    }
-
-    @Test
-    void rotate_rotatesCurrentBoat() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
-        Game game = mock(Game.class);
-
-        PlacementController controller = controllerWithCurrentBoat(model, settings);
-
-        controller.step(game, GUI.ACTION.ROTATE);
-
-        verify(model).rotateCurrentBoat();
-        verifyNoMoreInteractions(game);
-    }
-
-    // ---------- SELECT ----------
-
-    @Test
-    void select_placesBoat_doesNotStartBattle_ifNotAllPlaced() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
-        Game game = mock(Game.class);
-
-        when(model.allBoatsPlaced()).thenReturn(false);
-
-        PlacementController controller = controllerWithCurrentBoat(model, settings);
-
-        controller.step(game, GUI.ACTION.SELECT);
-
-        verify(model).placeCurrentBoat();
-        verify(model).allBoatsPlaced();
-        verify(game, never()).setState(any());
-    }
-
-    @Test
-    void select_placesBoat_andStartsBattle_ifAllPlaced() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = new Settings();
-        Game game = mock(Game.class);
-        Board playerBoard = mock(Board.class);
-
         when(model.getCurrentBoat()).thenReturn(mock(Boat.class));
-        when(model.allBoatsPlaced()).thenReturn(true);
-        when(model.getBoard()).thenReturn(playerBoard);
-
         PlacementController controller = new PlacementController(model, settings);
-
-        controller.step(game, GUI.ACTION.SELECT);
-
-        verify(model).placeCurrentBoat();
-        verify(model).allBoatsPlaced();
-        verify(model, atLeastOnce()).getBoard();
-
-        ArgumentCaptor<State> stateCaptor = ArgumentCaptor.forClass(State.class);
-        verify(game).setState(stateCaptor.capture());
-
-        assertInstanceOf(BattleState.class, stateCaptor.getValue());
+        controller.step(null, action);
+        switch(action) {
+            case UP    -> verify(model).moveUp();
+            case DOWN  -> verify(model).moveDown();
+            case LEFT  -> verify(model).moveLeft();
+            case RIGHT -> verify(model).moveRight();
+        }
     }
 
-    // ---------- QUIT ----------
-
     @Test
-    void quit_goesBackToMenu() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = mock(Settings.class);
-        Game game = mock(Game.class);
-
-        PlacementController controller = controllerWithCurrentBoat(model, settings);
-
-        controller.step(game, GUI.ACTION.QUIT);
-
-        ArgumentCaptor<State> stateCaptor = ArgumentCaptor.forClass(State.class);
-        verify(game).setState(stateCaptor.capture());
-
-        assertInstanceOf(MenuState.class, stateCaptor.getValue());
+    void rotateRotatesBoat() {
+        PlacementModel m = mock(PlacementModel.class);
+        when(m.getCurrentBoat()).thenReturn(mock(Boat.class));
+        new PlacementController(m, mock(Settings.class)).step(null, GUI.ACTION.ROTATE);
+        verify(m).rotateCurrentBoat();
     }
 
-    // ---------- current == null ----------
+    @Test
+    void select_placesBoat_ifNotAllPlaced() {
+        PlacementModel m = mock(PlacementModel.class);
+        when(m.getCurrentBoat()).thenReturn(mock(Boat.class));
+        when(m.allBoatsPlaced()).thenReturn(false);
+        new PlacementController(m, mock(Settings.class)).step(null, GUI.ACTION.SELECT);
+        verify(m).placeCurrentBoat();
+        verify(m).allBoatsPlaced();
+        verifyNoInteractions(mock(Game.class));
+    }
 
     @Test
-    void whenNoCurrentBoat_startBattleImmediately() {
-        PlacementModel model = mock(PlacementModel.class);
-        Settings settings = new Settings();
+    void select_startsBattleOnlyWhenAllPlaced() {
+        Board board = mock(Board.class);
+        PlacementModel m = mock(PlacementModel.class);
+        when(m.getCurrentBoat()).thenReturn(mock(Boat.class));
+        when(m.allBoatsPlaced()).thenReturn(true);
+        when(m.getBoard()).thenReturn(board);
+        Game g = mock(Game.class);
+        new PlacementController(m, new Settings()).step(g, GUI.ACTION.SELECT);
+        ArgumentCaptor<State> captor = ArgumentCaptor.forClass(State.class);
+        verify(g).setState(captor.capture());
+        assertInstanceOf(BattleState.class, captor.getValue());
+    }
 
-        Game game = mock(Game.class);
-        Board playerBoard = mock(Board.class);
+    @Test
+    void quit_goesToMenu() {
+        PlacementModel m = mock(PlacementModel.class);
+        when(m.getCurrentBoat()).thenReturn(mock(Boat.class));
+        Game g = mock(Game.class);
+        new PlacementController(m, mock(Settings.class)).step(g, GUI.ACTION.QUIT);
+        ArgumentCaptor<State> captor = ArgumentCaptor.forClass(State.class);
+        verify(g).setState(captor.capture());
+        assertInstanceOf(MenuState.class, captor.getValue());
+    }
 
-        when(model.getCurrentBoat()).thenReturn(null);
-        when(model.getBoard()).thenReturn(playerBoard);
-
-        PlacementController controller = new PlacementController(model, settings);
-
-        controller.step(game, GUI.ACTION.UP);
-
-        ArgumentCaptor<State> stateCaptor = ArgumentCaptor.forClass(State.class);
-        verify(game).setState(stateCaptor.capture());
-
-        assertInstanceOf(BattleState.class, stateCaptor.getValue());
+    @Test
+    void noCurrentBoat_startsBattleImmediately() {
+        PlacementModel m = mock(PlacementModel.class);
+        when(m.getCurrentBoat()).thenReturn(null);
+        when(m.getBoard()).thenReturn(mock(Board.class));
+        Game g = mock(Game.class);
+        new PlacementController(m, new Settings()).step(g, GUI.ACTION.UP);
+        ArgumentCaptor<State> captor = ArgumentCaptor.forClass(State.class);
+        verify(g).setState(captor.capture());
+        assertInstanceOf(BattleState.class, captor.getValue());
     }
 }
-

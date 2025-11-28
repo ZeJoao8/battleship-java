@@ -8,95 +8,48 @@ import battleship.model.game.common.Board;
 import battleship.states.MenuState;
 import battleship.states.State;
 import battleship.states.game.EndState;
+import net.jqwik.api.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BattleControllerTest {
 
-    // --------- movimentos do cursor ---------
-
-    @Test
-    void stepUp_movesCursorUp() {
-        BattleModel model = mock(BattleModel.class);
-        Game game = mock(Game.class);
-        Board enemyBoard = mock(Board.class);
-        Position cursor = mock(Position.class);
-        Position movedUp = mock(Position.class);
-
-        when(model.getEnemyBoard()).thenReturn(enemyBoard);
-        when(model.getCursor()).thenReturn(cursor);
-        when(cursor.moveUpBounded()).thenReturn(movedUp);
-
-        BattleController controller = new BattleController(model);
-
-        controller.step(game, GUI.ACTION.UP);
-
-        verify(model).setCursor(movedUp);
+    @Provide
+    Arbitrary<GUI.ACTION> cursorActions() {
+        return Arbitraries.of(GUI.ACTION.UP, GUI.ACTION.DOWN, GUI.ACTION.LEFT, GUI.ACTION.RIGHT);
     }
 
-    @Test
-    void stepLeft_movesCursorLeft() {
+    @Property
+    void cursorMovesCorrectly(@ForAll("cursorActions") GUI.ACTION action) {
         BattleModel model = mock(BattleModel.class);
         Game game = mock(Game.class);
-        Board enemyBoard = mock(Board.class);
+        Board enemy = mock(Board.class);
+
         Position cursor = mock(Position.class);
-        Position movedLeft = mock(Position.class);
+        Position moved = mock(Position.class);
 
-        when(model.getEnemyBoard()).thenReturn(enemyBoard);
+        when(model.getEnemyBoard()).thenReturn(enemy);
         when(model.getCursor()).thenReturn(cursor);
-        when(cursor.moveLeftBounded()).thenReturn(movedLeft);
 
-        BattleController controller = new BattleController(model);
+        switch(action) {
+            case UP -> when(cursor.moveUpBounded()).thenReturn(moved);
+            case LEFT -> when(cursor.moveLeftBounded()).thenReturn(moved);
+            case DOWN -> {
+                when(enemy.getHeigth()).thenReturn(10);
+                when(cursor.moveDownBounded(9)).thenReturn(moved);
+            }
+            case RIGHT -> {
+                when(enemy.getWidth()).thenReturn(10);
+                when(cursor.moveRightBounded(9)).thenReturn(moved);
+            }
+        }
 
-        controller.step(game, GUI.ACTION.LEFT);
-
-        verify(model).setCursor(movedLeft);
+        new BattleController(model).step(game, action);
+        verify(model).setCursor(moved);
     }
-
-    @Test
-    void stepDown_movesCursorDownWithinBounds() {
-        BattleModel model = mock(BattleModel.class);
-        Game game = mock(Game.class);
-        Board enemyBoard = mock(Board.class);
-        Position cursor = mock(Position.class);
-        Position movedDown = mock(Position.class);
-
-        when(model.getEnemyBoard()).thenReturn(enemyBoard);
-        when(enemyBoard.getHeigth()).thenReturn(10);
-        when(model.getCursor()).thenReturn(cursor);
-        when(cursor.moveDownBounded(9)).thenReturn(movedDown);
-
-        BattleController controller = new BattleController(model);
-
-        controller.step(game, GUI.ACTION.DOWN);
-
-        verify(model).setCursor(movedDown);
-    }
-
-    @Test
-    void stepRight_movesCursorRightWithinBounds() {
-        BattleModel model = mock(BattleModel.class);
-        Game game = mock(Game.class);
-        Board enemyBoard = mock(Board.class);
-        Position cursor = mock(Position.class);
-        Position movedRight = mock(Position.class);
-
-        when(model.getEnemyBoard()).thenReturn(enemyBoard);
-        when(enemyBoard.getWidth()).thenReturn(10);
-        when(model.getCursor()).thenReturn(cursor);
-        when(cursor.moveRightBounded(9)).thenReturn(movedRight);
-
-        BattleController controller = new BattleController(model);
-
-        controller.step(game, GUI.ACTION.RIGHT);
-
-        verify(model).setCursor(movedRight);
-    }
-
-    // --------- QUIT ---------
 
     @Test
     void stepQuit_changesStateToMenuState() {
@@ -117,8 +70,6 @@ public class BattleControllerTest {
 
         assertInstanceOf(MenuState.class, stateCaptor.getValue());
     }
-
-    // --------- SELECT / handleSelect ---------
 
     @Test
     void select_doesNothingIfAlreadyShot() {
