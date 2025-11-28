@@ -15,7 +15,7 @@ public class BattleModel {
     private final Board playerBoard;
     private final Board enemyBoard;
     private final Settings settings;
-    private final BotStrategy bot;
+    final BotStrategy bot;
 
     private Position cursor = new Position(0, 0);
 
@@ -51,7 +51,7 @@ public class BattleModel {
         applyShot(playerBoard, botShot);
     }
 
-    private void applyShot(Board b, Position p) {
+    void applyShot(Board b, Position p) {
         if (b.isShip(p)) b.markHit(p);
         else b.markMiss(p);
     }
