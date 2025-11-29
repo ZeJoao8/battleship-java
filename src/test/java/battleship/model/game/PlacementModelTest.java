@@ -2,9 +2,11 @@ package battleship.model.game;
 
 import battleship.model.Position;
 import battleship.model.Settings;
+import battleship.model.Settings.BotDifficulty;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
 import org.junit.jupiter.api.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlacementModelTest {
@@ -14,58 +16,57 @@ class PlacementModelTest {
 
     @BeforeEach
     void setup() {
-        board = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM));
+        board = new Board(new Settings(10,10, BotDifficulty.RANDOM));
         model = new PlacementModel(board);
     }
 
     @Test
-    void getBoardWorks() {
+    void initialCursorIsZeroZero() {
+        assertEquals(new Position(0,0), model.getCursor());
+    }
+
+    @Test
+    void getBoardReturnsInjectedInstance() {
         assertSame(board, model.getBoard());
     }
 
     @Test
-    void getCursorInitial() {
-        assertEquals(0, model.getCursor().getX());
-        assertEquals(0, model.getCursor().getY());
-    }
-
-    @Test
-    void cursorNeverLeavesHorizontalBounds() {
+    void horizontalBoatClampsRightCorrectly() {
         Boat b = model.getCurrentBoat();
         model.setCursor(new Position(9,0));
         model.moveRight();
-        assertEquals(board.getWidth()-b.getSize(), model.getCursor().getX());
+        assertEquals(board.getWidth() - b.getSize(), model.getCursor().getX());
     }
 
     @Test
-    void verticalClampXTooLarge() {
+    void verticalBoatClampsXCorrectly() {
         Boat b = model.getCurrentBoat();
-        b.rotate(); // vertical
+        b.rotate(); // becomes vertical
         model.setCursor(new Position(99,0));
         model.moveRight();
-        assertEquals(board.getWidth()-1, model.getCursor().getX());
+        assertEquals(board.getWidth() - 1, model.getCursor().getX());
     }
 
     @Test
-    void verticalClampYTooLarge() {
+    void verticalBoatClampsYCorrectly() {
         Boat b = model.getCurrentBoat();
-        b.rotate(); // vertical
+        b.rotate();
         model.setCursor(new Position(0,99));
         model.moveDown();
-        assertEquals(board.getHeigth()-b.getSize(), model.getCursor().getY());
+        assertEquals(board.getHeigth() - b.getSize(), model.getCursor().getY());
     }
 
     @Test
-    void movesNormallyInsideBounds() {
+    void movementWorksNormallyInsideBoard() {
         model.setCursor(new Position(5,5));
-        model.moveUp();    assertEquals(4, model.getCursor().getY());
-        model.moveLeft();  assertEquals(4, model.getCursor().getX());
-        model.moveDown();  assertEquals(5, model.getCursor().getY());
-        model.moveRight(); assertEquals(5, model.getCursor().getX());
+        model.moveUp();    assertEquals(new Position(5,4), model.getCursor());
+        model.moveLeft();  assertEquals(new Position(4,4), model.getCursor());
+        model.moveDown();  assertEquals(new Position(4,5), model.getCursor());
+        model.moveRight(); assertEquals(new Position(5,5), model.getCursor());
     }
 
     @Test
-    void validPlacementAdvancesToNextBoat() {
+    void successfulPlacementAdvancesToNextBoat() {
         Boat b = model.getCurrentBoat();
         model.placeCurrentBoat();
         assertTrue(b.isPlaced());
@@ -73,7 +74,7 @@ class PlacementModelTest {
     }
 
     @Test
-    void invalidPlacementDoesNotAdvance() {
+    void invalidPlacementDoesNotAdvanceBoat() {
         model.setCursor(new Position(9,9));
         Boat b = model.getCurrentBoat();
         model.placeCurrentBoat();
@@ -82,33 +83,40 @@ class PlacementModelTest {
     }
 
     @Test
-    void rotationClampsCorrectly() {
+    void rotationAdjustsCursorIfOutOfBounds() {
         Boat b = model.getCurrentBoat();
         model.setCursor(new Position(9,5));
         model.rotateCurrentBoat();
-        assertEquals(Math.min(5, board.getHeigth()-b.getSize()), model.getCursor().getY());
+        assertEquals(
+                new Position(9, Math.min(5, board.getHeigth()-b.getSize())),
+                model.getCursor()
+        );
     }
 
     @Test
-    void rotateDoesNothingIfNoBoatsLeft() {
-        while(model.getCurrentBoat()!=null){
-            model.setCursor(new Position(0, model.getCursor().getY()+1));
+    void rotateAndPlaceDoesNothingWhenFleetComplete() {
+        int y = 0;
+        while (model.getCurrentBoat() != null) {
+            model.setCursor(new Position(0, y));
             model.placeCurrentBoat();
+            y++;
         }
         assertNull(model.getCurrentBoat());
+        assertTrue(model.allBoatsPlaced());
         model.placeCurrentBoat();
         model.rotateCurrentBoat();
         assertNull(model.getCurrentBoat());
+        assertTrue(model.allBoatsPlaced());
     }
 
-
     @Test
-    void allBoatsPlacedTrueAndFalse() {
+    void detectsWhenAllBoatsPlaced() {
         assertFalse(model.allBoatsPlaced());
         int y=0;
-        for(Boat b : board.getFleet()){
-            model.setCursor(new Position(0,y++));
+        while(model.getCurrentBoat()!=null){
+            model.setCursor(new Position(0,y));
             model.placeCurrentBoat();
+            y++;
         }
         assertTrue(model.allBoatsPlaced());
     }

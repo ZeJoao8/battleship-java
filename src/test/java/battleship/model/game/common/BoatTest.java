@@ -21,9 +21,9 @@ class BoatTest {
     }
 
     @Test
-    void constructorValuesCorrect() {
-        assertEquals(2, smallBoat.getSize());
-        assertEquals(5, bigBoat.getSize());
+    void constructorInitializesValuesCorrectly() {
+        assertEquals(2,  smallBoat.getSize());
+        assertEquals(5,  bigBoat.getSize());
         assertTrue(smallBoat.getPositions().isEmpty());
         assertTrue(bigBoat.getPositions().isEmpty());
         assertTrue(smallBoat.isHorizontal());
@@ -32,7 +32,7 @@ class BoatTest {
     }
 
     @Test
-    void setHorizontalAndRotate() {
+    void rotateTogglesOrientationCorrectly() {
         smallBoat.setHorizontal(false);
         assertFalse(smallBoat.isHorizontal());
         smallBoat.rotate();
@@ -42,7 +42,7 @@ class BoatTest {
     }
 
     @Test
-    void addPositionAndClear() {
+    void addPositionMarksBoatAsPlacedUntilCleared() {
         bigBoat.addPosition(new Position(2,2));
         bigBoat.addPosition(new Position(3,2));
         assertEquals(2, bigBoat.getPositions().size());
@@ -59,20 +59,19 @@ class BoatTest {
         bigBoat.addPosition(new Position(3,1));
         bigBoat.registerHit(new Position(2,1));
         assertFalse(bigBoat.isPartHit(0));
-        assertTrue(bigBoat.isPartHit(1));
+        assertTrue (bigBoat.isPartHit(1));
         assertFalse(bigBoat.isPartHit(2));
     }
 
     @Test
-    void registerHitIgnoresInvalidPosition() {
+    void registerHitIgnoresNonExistingPosition() {
         smallBoat.addPosition(new Position(5,5));
-        smallBoat.registerHit(new Position(8,8));
+        smallBoat.registerHit(new Position(8,8)); // miss
         assertFalse(smallBoat.isPartHit(0));
         assertFalse(smallBoat.isSunk());
     }
-
     @Test
-    void boatSinksOnlyWhenAllPartsHit() {
+    void boatSinksOnlyWhenAllPartsAreHit() {
         for (int i = 0; i < bigBoat.getSize(); i++)
             bigBoat.addPosition(new Position(i, 0));
         for (int i = 0; i < bigBoat.getSize(); i++) {
@@ -82,5 +81,4 @@ class BoatTest {
         }
         assertTrue(bigBoat.isSunk());
     }
-
 }

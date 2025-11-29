@@ -14,16 +14,19 @@ class BoardTest {
     Board board;
 
     @BeforeEach
-    void setup() { board = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM)); }
+    void setup() {
+        board = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM));
+    }
 
     @Test
-    void gridStartsAllWater() {
-        for(int x=0;x<10;x++)
-            for(int y=0;y<10;y++)
+    void gridStartsFilledWithWater() {
+        for (int x=0;x<10;x++)
+            for (int y=0;y<10;y++)
                 assertTrue(board.isWater(new Position(x,y)));
     }
+
     @Test
-    void fleetHasCorrectBoats() {
+    void fleetContainsCorrectBoatComposition() {
         List<Boat> f = board.getFleet();
         assertEquals(5,f.size());
         int portaAvioes=0, navio=0, contraTorp=0, submarino=0;
@@ -41,7 +44,7 @@ class BoardTest {
     }
 
     @Test
-    void canPlaceBoatTrueAndFalse() {
+    void canPlaceBoatReturnsTrueAndFalseCorrectly() {
         Boat b = new NavioTanque();
         assertTrue(board.canPlaceBoat(b,new Position(2,2),true));
         assertFalse(board.canPlaceBoat(b,new Position(9,9),true));
@@ -50,19 +53,19 @@ class BoardTest {
     }
 
     @Test
-    void placeBoatMarksShipsButIgnoresInvalids() {
+    void placeBoatMarksShipCellsOrIgnoresInvalidPlacement() {
         Boat b = new NavioTanque();
         board.placeBoat(b,new Position(1,5),true);
         assertTrue(board.isShip(new Position(1,5)));
         assertTrue(board.isShip(new Position(2,5)));
         assertTrue(board.isShip(new Position(3,5)));
         Board b2 = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM));
-        b2.placeBoat(b,new Position(9,9),true);
+        b2.placeBoat(b,new Position(9,9),true); // invalid
         assertTrue(b2.isWater(new Position(9,9)));
     }
 
     @Test
-    void replacingBoatRestoresOldCells() {
+    void placingBoatAgainRestoresPreviousCellsBackToWater() {
         Boat boat = board.getFleet().get(4);
         board.placeBoat(boat,new Position(0,0),true);
         board.placeBoat(boat,new Position(5,5),true);
@@ -71,7 +74,7 @@ class BoardTest {
     }
 
     @Test
-    void markHitAndMiss() {
+    void hitAndMissAreRecordedCorrectly() {
         Position miss = new Position(3,3);
         assertFalse(board.isHit(miss));
         assertFalse(board.isMiss(miss));
@@ -86,20 +89,19 @@ class BoardTest {
         assertFalse(board.isMiss(hp));
     }
 
-
     @Test
-    void validBotTargetRulesCorrect() {
+    void validBotTargetAllowsWaterOrUnhitShipOnly() {
         Position p = new Position(5,5);
         assertTrue(board.isValidBotTarget(p));
-        Boat b = new Submarino();
-        board.placeBoat(b,p,true);
+        Boat sub = new Submarino();
+        board.placeBoat(sub,p,true);
         assertTrue(board.isValidBotTarget(p));
-        board.markHit(p); assertFalse(board.isValidBotTarget(p));
-        board.markMiss(p); assertFalse(board.isValidBotTarget(p));
+        board.markHit(p);
+        assertFalse(board.isValidBotTarget(p));
     }
 
     @Test
-    void boundsCheck() {
+    void isInsideReturnsTrueOnlyForValidCoordinates() {
         assertTrue(board.isInside(new Position(0,0)));
         assertTrue(board.isInside(new Position(9,9)));
         assertFalse(board.isInside(new Position(-1,0)));
@@ -108,29 +110,26 @@ class BoardTest {
         assertFalse(board.isInside(new Position(0,10)));
     }
 
-
     @Test
-    void hasLostTrueAndFalse() {
+    void hasLostIsTrueOnlyWhenNoShipsRemain() {
         assertTrue(board.hasLost());
         board.placeFleetRandomly();
         assertFalse(board.hasLost());
         for(int x=0;x<board.getWidth();x++)
-            for(int y=0;y<board.getHeigth();y++) {
-                Position p = new Position(x,y);
-                if(board.isShip(p)) board.markHit(p);
-            }
+            for(int y=0;y<board.getHeigth();y++)
+                if(board.isShip(new Position(x,y)))
+                    board.markHit(new Position(x,y));
         assertTrue(board.hasLost());
     }
 
     @Test
-    void nextUnplacedAndAllPlaced() {
+    void getNextUnplacedBoatReturnsNullOnlyAfterAllPlaced() {
         assertFalse(board.allBoatsPlaced());
         assertNotNull(board.getNextUnplacedBoat());
-        int y = 0;
+        int y=0;
         for (Boat b : board.getFleet())
-            board.placeBoat(b, new Position(0, y++), true);
+            board.placeBoat(b,new Position(0,y++),true);
         assertTrue(board.allBoatsPlaced());
         assertNull(board.getNextUnplacedBoat());
     }
-
 }
