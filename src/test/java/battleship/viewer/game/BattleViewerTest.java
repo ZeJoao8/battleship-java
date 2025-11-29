@@ -8,45 +8,78 @@ import battleship.model.game.common.Boat;
 import battleship.model.game.common.CellState;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class BattleViewerTest {
 
+    private void setupBoard(Board board) {
+        when(board.getWidth()).thenReturn(5);
+        when(board.getHeigth()).thenReturn(5);
+        when(board.getFleet()).thenReturn(List.of());
+        when(board.getState(any())).thenReturn(CellState.WATER);
+    }
+
     @Test
-    void drawElementsAndDrawsCursor() {
+    void drawsUIBoardsAndCursor() {
         GUI gui = mock(GUI.class);
-
         BattleModel model = mock(BattleModel.class);
-        Board playerBoard = mock(Board.class);
-        Board enemyBoard = mock(Board.class);
-
-        when(model.getPlayerBoard()).thenReturn(playerBoard);
-        when(model.getEnemyBoard()).thenReturn(enemyBoard);
-
-        when(playerBoard.getWidth()).thenReturn(5);
-        when(playerBoard.getHeigth()).thenReturn(5);
-        when(enemyBoard.getWidth()).thenReturn(5);
-        when(enemyBoard.getHeigth()).thenReturn(5);
-
-        when(playerBoard.getFleet()).thenReturn(Collections.emptyList());
-        when(enemyBoard.getFleet()).thenReturn(Collections.emptyList());
-
-        when(playerBoard.getState(any(Position.class))).thenReturn(CellState.WATER);
-        when(enemyBoard.getState(any(Position.class))).thenReturn(CellState.WATER);
-
-        when(model.getCursor()).thenReturn(new Position(0, 0));
-
-        when(model.shouldRevealBoat(any(Boat.class))).thenReturn(false);
-
+        Board player = mock(Board.class);
+        Board enemy  = mock(Board.class);
+        setupBoard(player);
+        setupBoard(enemy);
+        when(model.getPlayerBoard()).thenReturn(player);
+        when(model.getEnemyBoard()).thenReturn(enemy);
+        when(model.getCursor()).thenReturn(new Position(2,1));
         BattleViewer viewer = new BattleViewer(model);
+        viewer.drawElements(gui);
+        verify(gui).drawText(
+                new Position(2,1), "Batalha Naval - Q = voltar ao menu | Enter = disparar", "#FFFFFF");
+        verify(gui, atLeast(10)).drawCharacter(any(), anyChar(), anyString());
+        verify(gui).drawCharacter(new Position(2 + player.getWidth()*2 + 6 + 2*2, 4 + 1), '●', "#00FF9D");
+    }
 
-        assertDoesNotThrow(() -> viewer.drawElements(gui));
+    @Test
+    void drawsPlayerBoatsAlways() {
+        GUI gui = mock(GUI.class);
+        BattleModel model = mock(BattleModel.class);
+        Board player = mock(Board.class);
+        Board enemy  = mock(Board.class);
+        Boat b1 = mock(Boat.class);
+        Boat b2 = mock(Boat.class);
+        setupBoard(player);
+        setupBoard(enemy);
+        when(player.getFleet()).thenReturn(List.of(b1,b2));
+        when(model.getPlayerBoard()).thenReturn(player);
+        when(model.getEnemyBoard()).thenReturn(enemy);
+        when(model.getCursor()).thenReturn(new Position(0,0));
+        when(model.shouldRevealBoat(any())).thenReturn(false);
+        BattleViewer viewer = new BattleViewer(model);
+        viewer.drawElements(gui);
+        verify(b1, atLeastOnce()).getSize();
+        verify(b2, atLeastOnce()).getSize();
+    }
 
-        verify(gui, atLeastOnce())
-                .drawCharacter(any(Position.class), eq('●'), eq("#00FF9D"));
+    @Test
+    void drawsEnemyBoatsOnlyWhenRevealed() {
+        GUI gui = mock(GUI.class);
+        BattleModel model = mock(BattleModel.class);
+        Board player = mock(Board.class);
+        Board enemy  = mock(Board.class);
+        Boat enemyBoat = mock(Boat.class);
+        setupBoard(player);
+        setupBoard(enemy);
+        when(enemy.getFleet()).thenReturn(List.of(enemyBoat));
+        when(model.getPlayerBoard()).thenReturn(player);
+        when(model.getEnemyBoard()).thenReturn(enemy);
+        when(model.getCursor()).thenReturn(new Position(0,0));
+        BattleViewer viewer = new BattleViewer(model);
+        when(model.shouldRevealBoat(enemyBoat)).thenReturn(false);
+        viewer.drawElements(gui);
+        verify(enemyBoat, never()).getSize();
+        when(model.shouldRevealBoat(enemyBoat)).thenReturn(true);
+        viewer.drawElements(gui);
+        verify(enemyBoat, atLeastOnce()).getSize();
     }
 }

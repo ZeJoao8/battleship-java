@@ -5,13 +5,12 @@ import battleship.model.Position;
 import battleship.model.game.PlacementModel;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
+import battleship.viewer.game.common.BoatViewer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 class PlacementBoardViewerTest {
 
@@ -19,7 +18,6 @@ class PlacementBoardViewerTest {
     private GUI gui;
     private Board board;
     private PlacementBoardViewer viewer;
-
 
     @BeforeEach
     void setup() {
@@ -31,36 +29,39 @@ class PlacementBoardViewerTest {
     }
 
     @Test
-    void drawBoardAndFleet() {
+    void drawsPlacedFleet() {
         Boat b1 = mock(Boat.class);
         Boat b2 = mock(Boat.class);
         when(board.getFleet()).thenReturn(List.of(b1,b2));
+        when(b1.isPlaced()).thenReturn(true);
+        when(b2.isPlaced()).thenReturn(true);
         viewer.draw(gui,new Position(0,0));
-        verify(model).getBoard();
-        verify(b1,atLeast(0)).getSize();
-        verify(b2,atLeast(0)).getSize();
+        verify(board).getFleet();
+        verify(b1, atLeastOnce()).getSize();
+        verify(b2, atLeastOnce()).getSize();
     }
 
     @Test
-    void drawsCurrentBoatIfNotPlaced() {
-        Boat current = mock(Boat.class);
-        when(current.isPlaced()).thenReturn(false);
-        when(model.getCurrentBoat()).thenReturn(current);
-        when(model.getCursor()).thenReturn(new Position(4,3));
-        when(board.canPlaceBoat(current,new Position(4,3), current.isHorizontal())).thenReturn(true);
-        viewer.draw(gui,new Position(0,0));
-        verify(current,atLeast(0)).getSize();
-    }
-
-    @Test
-    void drawsInvalidPreviewBoat() {
+    void drawsValidPreview() {
         Boat cur = mock(Boat.class);
-        when(cur.isPlaced()).thenReturn(false);
         when(model.getCurrentBoat()).thenReturn(cur);
-        when(model.getCursor()).thenReturn(new Position(2,2));
-        when(board.canPlaceBoat(cur,new Position(2,2), cur.isHorizontal())).thenReturn(false);
+        when(cur.isPlaced()).thenReturn(false);
+        when(model.getCursor()).thenReturn(new Position(3,2));
+        when(board.canPlaceBoat(cur,new Position(3,2),cur.isHorizontal())).thenReturn(true);
         viewer.draw(gui,new Position(0,0));
-        verify(cur,atLeast(0)).getSize();
+        verify(cur, atLeastOnce()).getSize();
+    }
+
+    @Test
+    void drawsInvalidPreview() {
+        Boat cur = mock(Boat.class);
+        when(model.getCurrentBoat()).thenReturn(cur);
+        when(cur.isPlaced()).thenReturn(false);
+        when(model.getCursor()).thenReturn(new Position(1,1));
+        when(board.canPlaceBoat(cur,new Position(1,1),cur.isHorizontal())).thenReturn(false);
+        viewer.draw(gui,new Position(0,0));
+        verify(cur, atLeastOnce()).getSize();
+        verify(board).canPlaceBoat(cur,new Position(1,1),cur.isHorizontal());
     }
 
     @Test
@@ -68,14 +69,16 @@ class PlacementBoardViewerTest {
         when(model.getCurrentBoat()).thenReturn(null);
         viewer.draw(gui,new Position(0,0));
         verify(model).getCurrentBoat();
+        verifyNoMoreInteractions(gui);
     }
 
     @Test
     void doesNotPreviewIfBoatAlreadyPlaced() {
         Boat cur = mock(Boat.class);
-        when(cur.isPlaced()).thenReturn(true);
         when(model.getCurrentBoat()).thenReturn(cur);
+        when(cur.isPlaced()).thenReturn(true);
         viewer.draw(gui,new Position(0,0));
         verify(cur).isPlaced();
+        verifyNoMoreInteractions(gui);
     }
 }

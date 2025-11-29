@@ -27,9 +27,7 @@ class ViewerTest {
     void draw_callsGuiMethodsAndDrawElements() throws IOException {
         GUI gui = mock(GUI.class);
         TestViewer viewer = new TestViewer(new Object());
-
         viewer.draw(gui);
-
         verify(gui).clear();
         verify(gui).fillBackground("#010326");
         verify(gui).refresh();
