@@ -4,7 +4,7 @@ import battleship.model.Position;
 import battleship.model.Settings;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
-import battleship.model.game.common.bot.Bolachas;
+import battleship.model.game.common.bot.PerfectBot;
 import battleship.model.game.common.bot.HuntTargetBot;
 import battleship.model.game.common.bot.RandomBot;
 import battleship.model.game.common.BotStrategy;
@@ -27,7 +27,7 @@ public class BattleModel {
         this.bot = switch (settings.getDifficulty()) {
             case RANDOM ->  new RandomBot();
             case HUNT   -> new HuntTargetBot();
-            case BOLACHAS   -> new Bolachas();
+            case PERFECT   -> new PerfectBot();
         };
     }
 

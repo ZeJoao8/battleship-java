@@ -31,7 +31,7 @@ public class BattleModelTest {
     void selectsCorrectBotForDifficulty() {
         assertInstanceOf(RandomBot.class, new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.RANDOM)).bot);
         assertInstanceOf(HuntTargetBot.class,new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.HUNT)).bot);
-        assertInstanceOf(Bolachas.class, new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.BOLACHAS)).bot);
+        assertInstanceOf(PerfectBot.class, new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.PERFECT)).bot);
     }
 
     @Test

@@ -4,10 +4,10 @@ import battleship.model.Position;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Bot;
 
-public class Bolachas extends Bot {
+public class PerfectBot extends Bot {
 
-    public Bolachas() {
-        super("Bolachas", "Impossível");
+    public PerfectBot() {
+        super("Perfect", "Impossível");
     }
 
     @Override
