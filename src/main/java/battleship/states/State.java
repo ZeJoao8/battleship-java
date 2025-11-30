@@ -21,22 +21,11 @@ public abstract class State<T> {
 
     public T getModel() { return model; }
 
-    /**
-     * Executa apenas o controller e — só se o state não tiver mudado — desenha o viewer.
-     * Isto evita que o viewer antigo seja desenhado depois de um controller trocar de state.
-     */
     public void step(Game game, GUI gui) throws Exception {
-        // guarda referência do state atual antes de executar lógica
         Object before = game.getState();
-
-        // obter ação e executar controller
         GUI.ACTION action = gui.getNextAction();
         controller.step(game, action);
-
-        // se o state mudou durante controller.step, não desenhar o viewer antigo
         if (before != game.getState()) return;
-
-        // caso contrário desenhar
         viewer.draw(gui);
     }
 }

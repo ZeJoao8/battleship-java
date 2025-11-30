@@ -37,14 +37,36 @@ O objetivo do jogo é afundar todos os navios do inimigo antes que o adversário
 
 ## 3. Desenvolvimento (Decisões e Design)
 
-Durante a construção do projeto foram definidos e aplicados os seguintes princípios:
+Durante o desenvolvimento foram identificados vários problemas estruturais que levaram à utilização de padrões específicos.
+O objetivo principal foi manter o código limpo, modular e fácil de evoluir.
 
-- Mistura entre renderização, lógica e input - Separação explícita com MVC
-- Diferentes fases do jogo exigiam lógica distinta	- Implementação de State Pattern
-- Facilidade em trocar o Bot sem alterar o jogo	- Aplicação do Strategy Pattern nos bots
-- Testes de GUI complexos -	Mockito para simular terminal e input
+### Separação entre lógica, interface e input
 
-Resultado: código modular, extensível e altamente testável.
+- **Problema**: renderização, regras e input estavam misturadas → difícil de testar e manter
+
+- **Solução**: MVC
+
+- **Consequência**: Model independente, Viewers focados em desenho, Controllers controlam fluxo → fácil testar e trocar interface futuramente
+
+### Jogo dividido em fases distintas
+
+- **Problema**: cada fase tem lógica diferente → sem separação surgem ifs gigantes
+
+- **Solução**: State Pattern
+
+- **Consequência**: adicionar ou alterar estados do jogo sem modificar a estrutura principal
+
+### Diferentes Bots com estratégias diferentes
+
+- **Problema**: troca de bot exigia alterar o motor do jogo
+
+- **Solução**: Strategy Pattern nos bots
+
+- **Consequência**: novos bots são plug-ins → basta implementar chooseMove()
+
+
+### Resultado 
+- Código modular, extensível e altamente testável.
 
 ## 4. Documentação e Testes
 
