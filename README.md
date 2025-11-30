@@ -25,7 +25,7 @@ O objetivo do jogo é afundar todos os navios do inimigo antes que o adversário
 
 - Fácil	- RandomBot - Dispara aleatoriamente
 - Médio -	HuntTargetBot -	Procura adjacentes depois de um acerto
-- Impossível -	Bolachas -	Acerta todos os tiros
+- Impossível -	PerfectBot -	Acerta todos os tiros
 
 ### Interface e Estados
 
