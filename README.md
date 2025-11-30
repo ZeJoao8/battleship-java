@@ -69,3 +69,6 @@ A cobertura atual inclui models, controllers e viewers, garantindo o correto fun
 ![Victory](docs/images/Victory.png)
 ### Defeat
 ![Defeat](docs/images/Defeat.png)
+
+## 6. UML
+![UML](docs/images/UML.png)
