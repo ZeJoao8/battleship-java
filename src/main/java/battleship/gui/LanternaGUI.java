@@ -42,6 +42,7 @@ public class LanternaGUI implements GUI {
             return switch (c) {
                 case 'q' -> ACTION.QUIT;
                 case 'r' -> ACTION.ROTATE;
+                case 't' -> ACTION.SHOW_BOARD;
                 default -> ACTION.NONE;
             };
         }

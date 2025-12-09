@@ -32,7 +32,6 @@ public class BattleController extends Controller<BattleModel> {
             case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
-
     }
 
     private void handleSelect(Game game) {
@@ -42,14 +41,15 @@ public class BattleController extends Controller<BattleModel> {
         model.shootPlayer(p);
         if (model.enemyLost()) {
             model.getStats().finish();
+            model.getStats().setFinalModel(model);
             game.setState(new EndState(true, model.getStats()));
             return;
         }
         model.makeBotMove();
         if (model.playerLost()) {
             model.getStats().finish();
+            model.getStats().setFinalModel(model);
             game.setState(new EndState(false, model.getStats()));
         }
     }
-
 }

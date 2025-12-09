@@ -8,6 +8,7 @@ public class GameStats {
     private int botHits = 0;
     private final long startTime;
     private long endTime = 0;
+    private BattleModel finalModel;
 
     public GameStats() {
         this.startTime = System.currentTimeMillis();
@@ -25,6 +26,14 @@ public class GameStats {
 
     public void finish() {
         this.endTime = System.currentTimeMillis();
+    }
+
+    public void setFinalModel(BattleModel model) {
+        this.finalModel = model;
+    }
+
+    public BattleModel getFinalModel() {
+        return finalModel;
     }
 
     public int getPlayerShots() { return playerShots; }

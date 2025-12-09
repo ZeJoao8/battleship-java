@@ -7,7 +7,7 @@ import java.io.IOException;
 public interface GUI {
     enum ACTION {
         UP, DOWN, LEFT, RIGHT,
-        SELECT, QUIT, ROTATE, NONE
+        SELECT, QUIT, ROTATE, SHOW_BOARD, NONE
     }
 
     ACTION getNextAction() throws IOException;
