@@ -17,14 +17,14 @@ public class BattleModel {
     private final Board enemyBoard;
     private final Settings settings;
     final BotStrategy bot;
-
+    private final GameStats stats;
     private Position cursor = new Position(0, 0);
 
     public BattleModel(Board playerBoard, Board enemyBoard, Settings settings) {
         this.playerBoard = playerBoard;
         this.enemyBoard = enemyBoard;
         this.settings = settings;
-
+        this.stats= new GameStats();
         this.bot = switch (settings.getDifficulty()) {
             case RANDOM ->  new RandomBot();
             case HUNT   -> new HuntTargetBot();
@@ -35,6 +35,7 @@ public class BattleModel {
 
     public Board getPlayerBoard() { return playerBoard; }
     public Board getEnemyBoard()  { return enemyBoard; }
+    public GameStats getStats() {return stats;}
 
     public Position getCursor() { return cursor; }
     public void setCursor(Position p) { cursor = p; }
@@ -46,11 +47,15 @@ public class BattleModel {
     public void shootPlayer(Position p) {
         if (enemyBoard.isWater(p)) enemyBoard.markMiss(p);
         else if (enemyBoard.isShip(p)) enemyBoard.markHit(p);
+        boolean hit = enemyBoard.isHit(p);
+        stats.registerPlayerShot(hit);
     }
 
     public void makeBotMove() {
         Position botShot = bot.chooseMove(playerBoard);
         applyShot(playerBoard, botShot);
+        boolean hit = playerBoard.isHit(botShot);
+        stats.registerBotShot(hit);
         bot.registerShot(playerBoard, botShot);
     }
 

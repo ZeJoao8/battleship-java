@@ -41,11 +41,15 @@ public class BattleController extends Controller<BattleModel> {
         if (model.alreadyShotEnemy(p)) return;
         model.shootPlayer(p);
         if (model.enemyLost()) {
-            game.setState(new EndState(true));
+            model.getStats().finish();
+            game.setState(new EndState(true, model.getStats()));
             return;
         }
         model.makeBotMove();
-        if (model.playerLost())
-            game.setState(new EndState(false));
+        if (model.playerLost()) {
+            model.getStats().finish();
+            game.setState(new EndState(false, model.getStats()));
+        }
     }
+
 }
