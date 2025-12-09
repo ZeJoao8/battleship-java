@@ -6,6 +6,7 @@ import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
 import battleship.model.game.common.bot.PerfectBot;
 import battleship.model.game.common.bot.HuntTargetBot;
+import battleship.model.game.common.bot.ProbabilityBot;
 import battleship.model.game.common.bot.RandomBot;
 import battleship.model.game.common.BotStrategy;
 
@@ -27,6 +28,7 @@ public class BattleModel {
         this.bot = switch (settings.getDifficulty()) {
             case RANDOM ->  new RandomBot();
             case HUNT   -> new HuntTargetBot();
+            case PROBABILITY -> new ProbabilityBot();
             case PERFECT   -> new PerfectBot();
         };
     }
@@ -49,6 +51,7 @@ public class BattleModel {
     public void makeBotMove() {
         Position botShot = bot.chooseMove(playerBoard);
         applyShot(playerBoard, botShot);
+        bot.registerShot(playerBoard, botShot);
     }
 
     void applyShot(Board b, Position p) {

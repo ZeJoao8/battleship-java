@@ -2,7 +2,7 @@ package battleship.model;
 
 public class Settings {
 
-    public enum BotDifficulty { RANDOM, HUNT, PERFECT }
+    public enum BotDifficulty { RANDOM, HUNT, PROBABILITY, PERFECT }
 
     private int width;
     private int height;
