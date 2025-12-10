@@ -121,6 +121,10 @@ public class Board {
         setState(p, CellState.MISS);
     }
 
+    public void markWater(Position p) {
+        setState(p, CellState.WATER);
+    }
+
     public boolean isValidBotTarget(Position p) {
         CellState cs = getState(p);
         return cs == CellState.WATER || cs == CellState.SHIP;

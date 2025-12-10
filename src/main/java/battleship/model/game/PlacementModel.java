@@ -80,4 +80,34 @@ public class PlacementModel {
         current.rotate();
         adjustCursorBounds();
     }
+
+    public void autoPlaceFleet() {
+        for (Boat b : board.getFleet()) {
+            for (Position pos : b.getPositions()) {
+                board.markWater(pos);
+            }
+            b.clearPositions();
+        }
+        board.placeFleetRandomly();
+    }
+
+    public void undoLastBoat() {
+        Boat current = getCurrentBoat();
+        current.setHorizontal(true);
+        Boat toRemove = null;
+        for (int i = board.getFleet().size() - 1; i >= 0; i--) {
+            Boat b = board.getFleet().get(i);
+            if (b.isPlaced()) {
+                toRemove = b;
+                break;
+            }
+        }
+        if (toRemove == null) return;
+        for (Position p : toRemove.getPositions()) {
+            board.markWater(p);
+        }
+        toRemove.clearPositions();
+        toRemove.setHorizontal(true);
+        adjustCursorBounds();
+    }
 }
