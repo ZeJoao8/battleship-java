@@ -70,15 +70,15 @@ public class EndViewer extends Viewer<Boolean> {
 
         y++;
         t = "Tiros do bot: " + stats.getBotShots();
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#AAAAAA");
+        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
         t = "Acertos do bot: " + stats.getBotHits();
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#AAAAAA");
+        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
         t = String.format("Precisão do bot: %.1f%%", stats.getBotAccuracy());
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#AAAAAA");
+        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
         y++;
 
         t = "Duração: " + stats.getDurationSeconds() + "s";
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#CCCCCC");
+        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
     }
 
     private void drawFinalBoards(GUI gui) {
@@ -86,7 +86,7 @@ public class EndViewer extends Viewer<Boolean> {
 
         gui.drawText(new Position(2,2),
                 "TABULEIROS FINAIS — Pressiona T para voltar",
-                "#00FF9D");
+                "#FFFFFF");
 
         int px = 4;
         int py = 5;

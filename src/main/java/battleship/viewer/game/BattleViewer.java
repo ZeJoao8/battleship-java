@@ -36,6 +36,12 @@ public class BattleViewer extends Viewer<BattleModel> {
         }
 
         Position cursor = model.getCursor();
-        gui.drawCharacter(new Position(e.getX() + cursor.getX() * 2, e.getY() + cursor.getY()), '●', "#00FF9D");
+        int cx = e.getX() + cursor.getX() * 2;
+        int cy = e.getY() + cursor.getY();
+        boolean already = enemy.isHit(cursor) || enemy.isMiss(cursor);
+        String color = already ? "#FF4444" : "#00FF9D";
+        gui.drawCharacter(new Position(cx - 1, cy), '<', color);
+        gui.drawCharacter(new Position(cx + 1, cy), '>', color);
+
     }
 }
