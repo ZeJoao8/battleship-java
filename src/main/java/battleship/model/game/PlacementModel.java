@@ -99,6 +99,7 @@ public class PlacementModel {
             autoPlaced = false;
             for (Boat b : board.getFleet()) {
                 for (Position p : b.getPositions()) board.markWater(p);
+                b.setHorizontal(true);
                 b.clearPositions();
             }
             adjustCursorBounds();
@@ -106,7 +107,7 @@ public class PlacementModel {
         }
         Boat last = null;
         Boat current = getCurrentBoat();
-        current.setHorizontal(true);
+        if(current!=null)current.setHorizontal(true);
         for (int i = board.getFleet().size() - 1; i >= 0; i--) {
             Boat b = board.getFleet().get(i);
             if (b.isPlaced()) {
