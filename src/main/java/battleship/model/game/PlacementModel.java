@@ -101,6 +101,7 @@ public class PlacementModel {
                 for (Position p : b.getPositions()) board.markWater(p);
                 b.clearPositions();
             }
+            adjustCursorBounds();
             return;
         }
         Boat last = null;
