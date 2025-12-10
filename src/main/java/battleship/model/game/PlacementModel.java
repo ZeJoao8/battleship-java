@@ -16,6 +16,9 @@ public class PlacementModel {
     public Board getBoard() {return board;}
     public Position getCursor() {return cursor;}
     public void setCursor(Position p) {this.cursor = p;}
+    private boolean autoPlaced = false;
+
+    public boolean wasAutoPlaced() { return autoPlaced; }
 
     public void moveUp()    {
         cursor = cursor.moveUpBounded();
@@ -60,10 +63,9 @@ public class PlacementModel {
     }
 
     public void placeCurrentBoat() {
+        autoPlaced = false;
         Boat current = getCurrentBoat();
-
         if (current == null) return;
-
         if (board.canPlaceBoat(current, cursor, current.isHorizontal())) {
             board.placeBoat(current, cursor, current.isHorizontal());
             adjustCursorBounds();
@@ -82,6 +84,7 @@ public class PlacementModel {
     }
 
     public void autoPlaceFleet() {
+        autoPlaced = true;
         for (Boat b : board.getFleet()) {
             for (Position pos : b.getPositions()) {
                 board.markWater(pos);
@@ -92,22 +95,31 @@ public class PlacementModel {
     }
 
     public void undoLastBoat() {
+        if (autoPlaced) {
+            autoPlaced = false;
+            for (Boat b : board.getFleet()) {
+                for (Position p : b.getPositions()) board.markWater(p);
+                b.clearPositions();
+            }
+            return;
+        }
+        Boat last = null;
         Boat current = getCurrentBoat();
         current.setHorizontal(true);
-        Boat toRemove = null;
         for (int i = board.getFleet().size() - 1; i >= 0; i--) {
             Boat b = board.getFleet().get(i);
             if (b.isPlaced()) {
-                toRemove = b;
+                last = b;
                 break;
             }
         }
-        if (toRemove == null) return;
-        for (Position p : toRemove.getPositions()) {
+        if (last == null) return;
+        for (Position p : last.getPositions()) {
             board.markWater(p);
         }
-        toRemove.clearPositions();
-        toRemove.setHorizontal(true);
+        last.setHorizontal(true);
+        last.clearPositions();
         adjustCursorBounds();
     }
+
 }
