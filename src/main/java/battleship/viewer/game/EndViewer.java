@@ -82,7 +82,7 @@ public class EndViewer extends Viewer<Boolean> {
         t = "Duration: " + stats.getDurationSeconds() + "s";
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
         y++;y++;
-        String msg = "Press Q to return | Press T to view final boards";
+        String msg = "Q = return | T = view final boards";
         gui.drawText(new Position(centerX(msg, screenWidth), y), msg, "#AAAAAA");
     }
 
@@ -92,7 +92,7 @@ public class EndViewer extends Viewer<Boolean> {
         int screenWidth = gui.getWidth();
         int screenHeight = gui.getHeight();
 
-        String msg = "Press Q to return | Press T to view statistics";
+        String msg = "Q = return | T = view statistics";
         gui.drawText(new Position(centerX(msg, screenWidth), (screenHeight+model.getPlayerBoard().getHeigth())/2+2), msg, "#AAAAAA");
         String t = "===== FINAL BOARDS =====";
         gui.drawText(new Position(centerX(t, screenWidth), (screenHeight-model.getPlayerBoard().getHeigth())/2-2), t, "#00FF9D");

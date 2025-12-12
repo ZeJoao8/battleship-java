@@ -19,7 +19,7 @@ public class BattleViewer extends Viewer<BattleModel> {
         BattleModel model = getModel();
         Board player = model.getPlayerBoard();
         Board enemy  = model.getEnemyBoard();
-        String instruct = "Batalha Naval - Q = voltar ao menu | Enter = disparar";
+        String instruct = "Q = return | ENTER = shoot";
         gui.drawText(new Position((gui.getWidth()- instruct.length() ) / 2,(gui.getHeight() + player.getHeigth()) / 2 + 2), instruct, "#AAAAAA");
 
         int W = gui.getWidth();

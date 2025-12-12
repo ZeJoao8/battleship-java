@@ -29,7 +29,7 @@ public class PlacementViewer extends Viewer<PlacementModel> {
         Boat current = getModel().getCurrentBoat();
         String s5 =  "To place: " + (current != null ? current.getName() : "None");
         gui.drawText(new Position(((gui.getWidth() - s5.length()) / 2),(gui.getHeight() - boardViewer.getModel().getBoard().getHeigth()) / 2 - 2), s5, "#00FF9D");
-        String s6="Arrows = Move | R = Rotate | Enter = Place | A = Place randomly | U = Undo | Q = return";
+        String s6="ARROWS = Move | R = Rotate | ENTER = Place | A = Place randomly | U = Undo | Q = return";
         gui.drawText(new Position(((gui.getWidth() - s6.length()) / 2),(gui.getHeight() + boardViewer.getModel().getBoard().getHeigth()) / 2 + 2), s6, "#AAAAAA");
 
 
