@@ -17,13 +17,20 @@ public class PlacementViewer extends Viewer<PlacementModel> {
 
     @Override
     protected void drawElements(GUI gui) {
-        Position p= new Position(2,1);
-        gui.drawText(p, "Place your fleet", "#FFFFFF");
-        Boat current = getModel().getCurrentBoat();
-        String s1 =  "To place: " + (current != null ? current.getName() : "None");
+        String s1 ="▗▄▄▖ ▗▖    ▗▄▖  ▗▄▄▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖";
+        String s2 ="▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌   ▐▌   ▐▛▚▞▜▌▐▌   ▐▛▚▖▐▌  █  ";
+        String s3 ="▐▛▀▘ ▐▌   ▐▛▀▜▌▐▌   ▐▛▀▀▘▐▌  ▐▌▐▛▀▀▘▐▌ ▝▜▌  █  ";
+        String s4 ="▐▌   ▐▙▄▄▖▐▌ ▐▌▝▚▄▄▖▐▙▄▄▖▐▌  ▐▌▐▙▄▄▖▐▌  ▐▌  █  ";
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),6), s1, "#FFFFFF");
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),7), s2, "#FFFFFF");
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),8), s3, "#FFFFFF");
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),9), s4, "#FFFFFF");
 
-        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),(gui.getHeight() - boardViewer.getModel().getBoard().getHeigth()) / 2 - 2), s1, "#00FF9D");
-        gui.drawText(new Position(p.getX(),p.getY()+3), "Arrows = Move | R = Rotate | Enter = Place | A = Place randomly | U = Undo | Q to return", "#AAAAAA");
+        Boat current = getModel().getCurrentBoat();
+        String s5 =  "To place: " + (current != null ? current.getName() : "None");
+        gui.drawText(new Position(((gui.getWidth() - s5.length()) / 2),(gui.getHeight() - boardViewer.getModel().getBoard().getHeigth()) / 2 - 2), s5, "#00FF9D");
+        String s6="Arrows = Move | R = Rotate | Enter = Place | A = Place randomly | U = Undo | Q = return";
+        gui.drawText(new Position(((gui.getWidth() - s6.length()) / 2),(gui.getHeight() + boardViewer.getModel().getBoard().getHeigth()) / 2 + 2), s6, "#AAAAAA");
 
 
         int offSetX = (gui.getWidth() - boardViewer.getModel().getBoard().getWidth()*2) / 2;
@@ -32,9 +39,10 @@ public class PlacementViewer extends Viewer<PlacementModel> {
         boardViewer.draw(gui, new Position(offSetX,offSetY));
 
         if (getModel().allBoatsPlaced()) {
+            String s7="All boats placed! Press ENTER to start.";
             gui.drawText(
-                    new Position(p.getX(), p.getY()+6+ boardViewer.getModel().getBoard().getHeigth()+1),
-                    "All boats placed! Press ENTER to start.",
+                    new Position(((gui.getWidth() - s7.length()) / 2),(gui.getHeight() + boardViewer.getModel().getBoard().getHeigth()) / 2 + 4),
+                    s7,
                     "#FFFFFF"
             );
         }
