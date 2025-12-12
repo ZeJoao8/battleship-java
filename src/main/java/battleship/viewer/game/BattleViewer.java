@@ -19,11 +19,29 @@ public class BattleViewer extends Viewer<BattleModel> {
         BattleModel model = getModel();
         Board player = model.getPlayerBoard();
         Board enemy  = model.getEnemyBoard();
+        String instruct = "Batalha Naval - Q = voltar ao menu | Enter = disparar";
+        gui.drawText(new Position((gui.getWidth()- instruct.length() ) / 2,(gui.getHeight() + player.getHeigth()) / 2 + 2), instruct, "#AAAAAA");
 
-        gui.drawText(new Position(2,1), "Batalha Naval - Q = voltar ao menu | Enter = disparar", "#FFFFFF");
+        int W = gui.getWidth();
+        int H = gui.getHeight();
 
-        Position p = new Position(2, 4);
-        Position e = new Position(p.getX() + player.getWidth() * 2 + 6, p.getY());
+        int pW = player.getWidth() * 2;
+        int pH = player.getHeigth();
+
+        int eW = enemy.getWidth() * 2;
+        int eH = enemy.getHeigth();
+
+        int gap = 6;
+
+        int totalW = pW + gap + eW;
+        int totalH = Math.max(pH, eH);
+
+        int offX = Math.max(0, (W - totalW) / 2);
+        int offY = Math.max(0, (H - totalH) / 2);
+
+        Position p = new Position(offX, offY);
+        Position e = new Position(offX + pW + gap, offY);
+
         new BoardViewer(player).draw(gui, p);
         new BoardViewer(enemy).draw(gui, e);
         for (Boat b : player.getFleet()) {
@@ -42,6 +60,17 @@ public class BattleViewer extends Viewer<BattleModel> {
         String color = already ? "#FF4444" : "#00FF9D";
         gui.drawCharacter(new Position(cx - 1, cy), '[', color);
         gui.drawCharacter(new Position(cx + 1, cy), ']', color);
+
+        String s1 ="▗▄▄▖  ▗▄▖▗▄▄▄▖▗▄▄▄▖▗▖   ▗▄▄▄▖";
+        String s2 ="▐▌ ▐▌▐▌ ▐▌ █    █  ▐▌   ▐▌   ";
+        String s3 ="▐▛▀▚▖▐▛▀▜▌ █    █  ▐▌   ▐▛▀▀▘";
+        String s4 ="▐▙▄▞▘▐▌ ▐▌ █    █  ▐▙▄▄▖▐▙▄▄▖";
+
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),6), s1, "#FFFFFF");
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),7), s2, "#FFFFFF");
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),8), s3, "#FFFFFF");
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),9), s4, "#FFFFFF");
+
 
     }
 }
