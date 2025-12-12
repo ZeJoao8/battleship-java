@@ -59,25 +59,26 @@ public class EndViewer extends Viewer<Boolean> {
         int y = 14;
         String t;
         t = "===== GAME STATS =====";
+        y++;
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#00FF9D");
 
-        t = "Tiros do jogador: " + stats.getPlayerShots();
+        t = "Player shots: " + stats.getPlayerShots();
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = "Acertos do jogador: " + stats.getPlayerHits();
+        t = "Player hits: " + stats.getPlayerHits();
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = String.format("Precisão do jogador: %.1f%%", stats.getPlayerAccuracy());
+        t = String.format("Player precision: %.1f%%", stats.getPlayerAccuracy());
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
 
         y++;
-        t = "Tiros do bot: " + stats.getBotShots();
+        t = "Bot shots: " + stats.getBotShots();
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = "Acertos do bot: " + stats.getBotHits();
+        t = "Bot hits: " + stats.getBotHits();
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = String.format("Precisão do bot: %.1f%%", stats.getBotAccuracy());
+        t = String.format("Bot precision: %.1f%%", stats.getBotAccuracy());
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
         y++;
 
-        t = "Duração: " + stats.getDurationSeconds() + "s";
+        t = "Duration: " + stats.getDurationSeconds() + "s";
         gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
     }
 
@@ -85,7 +86,7 @@ public class EndViewer extends Viewer<Boolean> {
         BattleModel model = stats.getFinalModel();
 
         gui.drawText(new Position(2,2),
-                "TABULEIROS FINAIS — Pressiona T para voltar",
+                "FINAL BOARDS — Press T to return",
                 "#FFFFFF");
 
         int px = 4;

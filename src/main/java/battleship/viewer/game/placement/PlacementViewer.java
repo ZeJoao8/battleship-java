@@ -18,15 +18,15 @@ public class PlacementViewer extends Viewer<PlacementModel> {
     @Override
     protected void drawElements(GUI gui) {
         Position p= new Position(2,1);
-        gui.drawText(p, "Posicione a sua frota (Q = sair)", "#FFFFFF");
+        gui.drawText(p, "Place your fleet", "#FFFFFF");
         Boat current = getModel().getCurrentBoat();
-        gui.drawText(new Position(p.getX(),p.getY()+2), "A colocar: " + (current != null ? current.getName() : "Nenhum"), "#00FF9D");
-        gui.drawText(new Position(p.getX(),p.getY()+3), "Setas = mover | R = rodar | Enter = colocar | A = Colocar aleatoriamente | U = Undo", "#AAAAAA");
+        gui.drawText(new Position(p.getX(),p.getY()+2), "To place: " + (current != null ? current.getName() : "None"), "#00FF9D");
+        gui.drawText(new Position(p.getX(),p.getY()+3), "Arrows = Move | R = Rotate | Enter = Place | A = Place randomly | U = Undo | Q to return", "#AAAAAA");
         boardViewer.draw(gui, new Position(5,6));
         if (getModel().allBoatsPlaced()) {
             gui.drawText(
                     new Position(p.getX(), p.getY()+6+ boardViewer.getModel().getBoard().getHeigth()+1),
-                    "Todos os barcos colocados! Pressiona ENTER para começar.",
+                    "All boats placed! Press ENTER so start.",
                     "#FFFFFF"
             );
         }

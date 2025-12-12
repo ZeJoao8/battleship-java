@@ -33,7 +33,7 @@ public class SettingsViewer extends Viewer<Settings> {
         y++;
         gui.drawText(new Position(centerX(gui, op3), y++), op3, sel == 2 ? "#00FF9D" : "#FFFFFF");
         String h1 = "Use ↑/↓ to choose field | ←/→ to change value";
-        String h2 = "Q = return to menu";
+        String h2 = "Press Q to return";
         y++; y++;
         gui.drawText(new Position(centerX(gui, h1), y++), h1, "#AAAAAA");
         y++; y++;
