@@ -20,13 +20,21 @@ public class PlacementViewer extends Viewer<PlacementModel> {
         Position p= new Position(2,1);
         gui.drawText(p, "Place your fleet", "#FFFFFF");
         Boat current = getModel().getCurrentBoat();
-        gui.drawText(new Position(p.getX(),p.getY()+2), "To place: " + (current != null ? current.getName() : "None"), "#00FF9D");
+        String s1 =  "To place: " + (current != null ? current.getName() : "None");
+
+        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),(gui.getHeight() - boardViewer.getModel().getBoard().getHeigth()) / 2 - 2), s1, "#00FF9D");
         gui.drawText(new Position(p.getX(),p.getY()+3), "Arrows = Move | R = Rotate | Enter = Place | A = Place randomly | U = Undo | Q to return", "#AAAAAA");
-        boardViewer.draw(gui, new Position(5,6));
+
+
+        int offSetX = (gui.getWidth() - boardViewer.getModel().getBoard().getWidth()*2) / 2;
+        int offSetY = (gui.getHeight() - boardViewer.getModel().getBoard().getHeigth()) / 2;
+
+        boardViewer.draw(gui, new Position(offSetX,offSetY));
+
         if (getModel().allBoatsPlaced()) {
             gui.drawText(
                     new Position(p.getX(), p.getY()+6+ boardViewer.getModel().getBoard().getHeigth()+1),
-                    "All boats placed! Press ENTER so start.",
+                    "All boats placed! Press ENTER to start.",
                     "#FFFFFF"
             );
         }
