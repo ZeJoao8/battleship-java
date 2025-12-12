@@ -50,10 +50,10 @@ public class EndViewer extends Viewer<Boolean> {
             s4 = "▐▙▄▄▀▐▙▄▄▖▐▌   ▐▙▄▄▖▐▌ ▐▌ █  ";
         }
         int screenWidth = gui.getWidth();
-        gui.drawText(new Position(centerX(s1, screenWidth), 6), s1, "#FFFFFF");
-        gui.drawText(new Position(centerX(s2, screenWidth), 7), s2, "#FFFFFF");
-        gui.drawText(new Position(centerX(s3, screenWidth), 8), s3, "#FFFFFF");
-        gui.drawText(new Position(centerX(s4, screenWidth), 9), s4, "#FFFFFF");
+        gui.drawText(new Position(centerX(s1, screenWidth), 5), s1, "#FFFFFF");
+        gui.drawText(new Position(centerX(s2, screenWidth), 6), s2, "#FFFFFF");
+        gui.drawText(new Position(centerX(s3, screenWidth), 7), s3, "#FFFFFF");
+        gui.drawText(new Position(centerX(s4, screenWidth), 8), s4, "#FFFFFF");
     }
 
     private void drawStats(GUI gui) {
@@ -95,7 +95,8 @@ public class EndViewer extends Viewer<Boolean> {
         String msg = "Q = return | T = view statistics";
         gui.drawText(new Position(centerX(msg, screenWidth), (screenHeight+model.getPlayerBoard().getHeigth())/2+2), msg, "#AAAAAA");
         String t = "===== FINAL BOARDS =====";
-        gui.drawText(new Position(centerX(t, screenWidth), (screenHeight-model.getPlayerBoard().getHeigth())/2-2), t, "#00FF9D");
+        gui.drawText(new Position(centerX(t, screenWidth), (screenHeight-model.getPlayerBoard().getHeigth())/2-4), t, "#00FF9D");
+
         int boardW = model.getPlayerBoard().getWidth() * 2;
         int boardH = model.getPlayerBoard().getHeigth();
         int gap = 8;
@@ -114,5 +115,16 @@ public class EndViewer extends Viewer<Boolean> {
         new BoardViewer(model.getEnemyBoard()).draw(gui, new Position(enemyX, posY));
         for (var b : model.getEnemyBoard().getFleet())
             new BoatViewer(b).draw(gui, new Position(enemyX, posY));
+
+        String playerLabel = " Player ";
+        String enemyLabel  = " Enemy ";
+
+        int labelXPlayer = playerX + (boardW - playerLabel.length()) / 2;
+        int labelXEnemy  = enemyX  + (boardW - enemyLabel.length()) / 2;
+        int labelY = posY - 2;
+
+        gui.drawText(new Position(labelXPlayer, labelY), playerLabel, "#00FF9D");
+        gui.drawText(new Position(labelXEnemy,  labelY), enemyLabel,  "#FF4444");
+
     }
 }

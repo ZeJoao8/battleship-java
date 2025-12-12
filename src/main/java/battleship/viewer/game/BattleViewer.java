@@ -42,6 +42,16 @@ public class BattleViewer extends Viewer<BattleModel> {
         Position p = new Position(offX, offY);
         Position e = new Position(offX + pW + gap, offY);
 
+        String playerLabel = " Player ";
+        String enemyLabel  = " Enemy  ";
+
+        int labelXPlayer = p.getX() + (pW - playerLabel.length()) / 2;
+        int labelXEnemy  = e.getX() + (eW - enemyLabel.length()) / 2;
+        int labelY = offY - 2;
+
+        gui.drawText(new Position(labelXPlayer, labelY), playerLabel, "#00FF9D" );
+        gui.drawText(new Position(labelXEnemy,  labelY), enemyLabel,  "#FF4444");
+
         new BoardViewer(player).draw(gui, p);
         new BoardViewer(enemy).draw(gui, e);
         for (Boat b : player.getFleet()) {
