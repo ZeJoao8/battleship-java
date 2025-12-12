@@ -45,16 +45,16 @@ class BoardTest {
 
     @Test
     void canPlaceBoatReturnsTrueAndFalseCorrectly() {
-        Boat b = new NavioTanque();
+        Boat b = new Battleship();
         assertTrue(board.canPlaceBoat(b,new Position(2,2),true));
         assertFalse(board.canPlaceBoat(b,new Position(9,9),true));
         board.placeBoat(b,new Position(2,2),true);
-        assertFalse(board.canPlaceBoat(new Submarino(),new Position(2,2),true));
+        assertFalse(board.canPlaceBoat(new Destroyer(),new Position(2,2),true));
     }
 
     @Test
     void placeBoatMarksShipCellsOrIgnoresInvalidPlacement() {
-        Boat b = new NavioTanque();
+        Boat b = new Battleship();
         board.placeBoat(b,new Position(1,5),true);
         assertTrue(board.isShip(new Position(1,5)));
         assertTrue(board.isShip(new Position(2,5)));
@@ -81,7 +81,7 @@ class BoardTest {
         board.markMiss(miss);
         assertTrue(board.isMiss(miss));
         assertFalse(board.isHit(miss));
-        Boat b = new Submarino();
+        Boat b = new Destroyer();
         board.placeBoat(b,new Position(4,1),true);
         Position hp = b.getPositions().get(0);
         board.markHit(hp);
@@ -93,7 +93,7 @@ class BoardTest {
     void validBotTargetAllowsWaterOrUnhitShipOnly() {
         Position p = new Position(5,5);
         assertTrue(board.isValidBotTarget(p));
-        Boat sub = new Submarino();
+        Boat sub = new Destroyer();
         board.placeBoat(sub,p,true);
         assertTrue(board.isValidBotTarget(p));
         board.markHit(p);

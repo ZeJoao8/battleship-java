@@ -6,13 +6,13 @@ import battleship.model.game.common.Bot;
 
 import java.util.*;
 
-public class HuntTargetBot extends Bot {
+public class Hunt extends Bot {
 
     private final Queue<Position> queue = new LinkedList<>();
-    private final Random rnd = new Random();
+    private final java.util.Random rnd = new java.util.Random();
 
-    public HuntTargetBot() {
-        super("Hunt Target", "Médio");
+    public Hunt() {
+        super("Hunt", "Medium");
     }
 
     @Override

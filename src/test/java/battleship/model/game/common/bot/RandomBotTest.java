@@ -6,22 +6,21 @@ import battleship.model.game.common.Board;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RandomBotTest {
 
-    private void injectMockRandom(RandomBot bot, Random mockRand) throws Exception {
-        Field f = RandomBot.class.getDeclaredField("rnd");
+    private void injectMockRandom(Random bot, java.util.Random mockRand) throws Exception {
+        Field f = Random.class.getDeclaredField("rnd");
         f.setAccessible(true);
         f.set(bot, mockRand);
     }
 
     @Test
     void nameAndDifficultyMatchSpecification() {
-        RandomBot bot = new RandomBot();
+        Random bot = new Random();
         assertEquals("Random Bot", bot.getName());
         assertEquals("Fácil", bot.getDifficulty());
     }
@@ -29,9 +28,9 @@ class RandomBotTest {
     @Test
     void chooseMoveReturnsOnlyValidCells() throws Exception {
         Board board = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM));
-        Random mockedRng = mock(Random.class);
+        java.util.Random mockedRng = mock(java.util.Random.class);
         when(mockedRng.nextInt(anyInt())).thenReturn(3);
-        RandomBot bot = new RandomBot();
+        Random bot = new Random();
         injectMockRandom(bot, mockedRng);
         Position p = bot.chooseMove(board);
         assertTrue(board.isValidBotTarget(p));
@@ -42,9 +41,9 @@ class RandomBotTest {
     void repeatsUntilValidTargetFound() throws Exception {
         Board board = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM));
         board.markHit(new Position(5,5));
-        Random mocked = mock(Random.class);
+        java.util.Random mocked = mock(java.util.Random.class);
         when(mocked.nextInt(anyInt())).thenReturn(5).thenReturn(5).thenReturn(2).thenReturn(2);
-        RandomBot bot = new RandomBot();
+        Random bot = new Random();
         injectMockRandom(bot, mocked);
         Position result = bot.chooseMove(board);
         assertEquals(new Position(2,2), result);

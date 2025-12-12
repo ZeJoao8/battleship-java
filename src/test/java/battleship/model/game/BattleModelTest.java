@@ -29,9 +29,9 @@ public class BattleModelTest {
 
     @Test
     void selectsCorrectBotForDifficulty() {
-        assertInstanceOf(RandomBot.class, new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.RANDOM)).bot);
-        assertInstanceOf(HuntTargetBot.class,new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.HUNT)).bot);
-        assertInstanceOf(PerfectBot.class, new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.PERFECT)).bot);
+        assertInstanceOf(Random.class, new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.RANDOM)).bot);
+        assertInstanceOf(Hunt.class,new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.HUNT)).bot);
+        assertInstanceOf(Perfect.class, new BattleModel(b(6), b(6), new Settings(6,6,BotDifficulty.PERFECT)).bot);
     }
 
     @Test

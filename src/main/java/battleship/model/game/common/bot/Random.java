@@ -4,14 +4,12 @@ import battleship.model.Position;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Bot;
 
-import java.util.Random;
+public class Random extends Bot {
 
-public class RandomBot extends Bot {
+    private final java.util.Random rnd = new java.util.Random();
 
-    private final Random rnd = new Random();
-
-    public RandomBot() {
-        super("Random Bot", "Fácil");
+    public Random() {
+        super("Random", "Easy");
     }
 
     @Override

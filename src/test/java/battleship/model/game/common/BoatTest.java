@@ -1,9 +1,8 @@
 package battleship.model.game.common;
 
 import battleship.model.Position;
-import battleship.model.game.common.boats.NavioTanque;
-import battleship.model.game.common.boats.PortaAvioes;
-import battleship.model.game.common.boats.Submarino;
+import battleship.model.game.common.boats.Carrier;
+import battleship.model.game.common.boats.Destroyer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,8 +15,8 @@ class BoatTest {
 
     @BeforeEach
     void setup() {
-        smallBoat = new Submarino();
-        bigBoat   = new PortaAvioes();
+        smallBoat = new Destroyer();
+        bigBoat   = new Carrier();
     }
 
     @Test

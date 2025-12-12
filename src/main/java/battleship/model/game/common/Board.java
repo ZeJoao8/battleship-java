@@ -31,11 +31,11 @@ public class Board {
     }
 
     private void createFleet() {
-        fleet.add(new PortaAvioes());
-        fleet.add(new NavioTanque());
-        fleet.add(new ContraTorpedeiro());
-        fleet.add(new ContraTorpedeiro());
-        fleet.add(new Submarino());
+        fleet.add(new Carrier());
+        fleet.add(new Battleship());
+        fleet.add(new Cruiser());
+        fleet.add(new Cruiser());
+        fleet.add(new Destroyer());
     }
 
     public int getWidth()  { return width; }

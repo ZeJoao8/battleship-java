@@ -4,10 +4,10 @@ import battleship.model.Position;
 import battleship.model.Settings;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
-import battleship.model.game.common.bot.PerfectBot;
-import battleship.model.game.common.bot.HuntTargetBot;
-import battleship.model.game.common.bot.ProbabilityBot;
-import battleship.model.game.common.bot.RandomBot;
+import battleship.model.game.common.bot.Perfect;
+import battleship.model.game.common.bot.Hunt;
+import battleship.model.game.common.bot.Probability;
+import battleship.model.game.common.bot.Random;
 import battleship.model.game.common.BotStrategy;
 
 
@@ -26,11 +26,12 @@ public class BattleModel {
         this.settings = settings;
         this.stats= new GameStats();
         this.bot = switch (settings.getDifficulty()) {
-            case RANDOM ->  new RandomBot();
-            case HUNT   -> new HuntTargetBot();
-            case PROBABILITY -> new ProbabilityBot();
-            case PERFECT   -> new PerfectBot();
+            case EASY        -> new Random();
+            case MEDIUM      -> new Hunt();
+            case HARD        -> new Probability();
+            case IMPOSSIBLE  -> new Perfect();
         };
+
     }
 
     public Board getPlayerBoard() { return playerBoard; }

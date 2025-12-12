@@ -7,13 +7,13 @@ import battleship.model.game.common.Bot;
 
 import java.util.*;
 
-public class ProbabilityBot extends Bot {
+public class Probability extends Bot {
 
     private final Queue<Position> targetQueue = new LinkedList<>();
     private final List<Position> hitsCluster = new ArrayList<>();
 
-    public ProbabilityBot() {
-        super("Smart Probability Bot", "Difícil");
+    public Probability() {
+        super("Probability", "Hard");
     }
 
     @Override

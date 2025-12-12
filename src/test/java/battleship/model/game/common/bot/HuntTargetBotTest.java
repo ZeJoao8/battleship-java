@@ -15,10 +15,10 @@ class HuntTargetBotTest {
     void hitsShipQueuesCellsforNextShot() throws Exception {
         Board b = new Board(new Settings(10,10, Settings.BotDifficulty.HUNT));
         b.placeBoat(b.getFleet().get(0), new Position(5,5), true);
-        HuntTargetBot bot = new HuntTargetBot();
+        Hunt bot = new Hunt();
         Random mockRand = mock(Random.class);
         when(mockRand.nextInt(anyInt())).thenReturn(5);
-        Field rndField = HuntTargetBot.class.getDeclaredField("rnd");
+        Field rndField = Hunt.class.getDeclaredField("rnd");
         rndField.setAccessible(true);
         rndField.set(bot, mockRand);
         Position first = bot.chooseMove(b);
@@ -35,7 +35,7 @@ class HuntTargetBotTest {
 
     @Test
     void withEmptyQueueSelectsValidRandomTarget() {
-        HuntTargetBot bot = new HuntTargetBot();
+        Hunt bot = new Hunt();
         Board b = new Board(new Settings(10,10, Settings.BotDifficulty.HUNT));
         Position p = bot.chooseMove(b);
         assertTrue(b.isValidBotTarget(p));

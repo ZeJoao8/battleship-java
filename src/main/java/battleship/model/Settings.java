@@ -2,7 +2,7 @@ package battleship.model;
 
 public class Settings {
 
-    public enum BotDifficulty { RANDOM, HUNT, PROBABILITY, PERFECT }
+    public enum BotDifficulty { EASY, MEDIUM, HARD, IMPOSSIBLE }
 
     private int width;
     private int height;
@@ -13,10 +13,10 @@ public class Settings {
     public Settings() {
         this.width = 10;
         this.height = 10;
-        this.difficulty = BotDifficulty.RANDOM;
+        this.difficulty = BotDifficulty.EASY;
     }
 
-    public Settings(int width, int height,  BotDifficulty difficulty) {
+    public Settings(int width, int height, BotDifficulty difficulty) {
         this.width = width;
         this.height = height;
         this.difficulty = difficulty;
@@ -29,7 +29,6 @@ public class Settings {
     public BotDifficulty getDifficulty() { return difficulty; }
     public void setDifficulty(BotDifficulty difficulty) { this.difficulty = difficulty; }
     public int getSelector() { return selector; }
-
     public void setSelector(int selector) {
         this.selector = ((selector % 3) + 3) % 3;
     }
