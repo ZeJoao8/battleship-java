@@ -22,5 +22,9 @@ public abstract class Viewer<T> {
         gui.refresh();
     }
 
+    public int centerX(GUI gui, String text) {
+        return (gui.getWidth() - text.length()) / 2;
+    }
+
     protected abstract void drawElements(GUI gui);
 }
