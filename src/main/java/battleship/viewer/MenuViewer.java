@@ -18,7 +18,7 @@ public class MenuViewer extends Viewer<Menu> {
         // título
         int screenWidth = gui.getWidth();
         int titleCol = (screenWidth - s1.length()) / 2;
-        Position p1 = new Position(titleCol, 4);
+        Position p1 = new Position(titleCol, 6);
         gui.drawText(p1, s1, "#FFFFFF");
         gui.drawText(new Position(p1.getX(),p1.getY()+1), s2, "#FFFFFF");
         gui.drawText(new Position(p1.getX(),p1.getY()+2), s3, "#FFFFFF");

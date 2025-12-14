@@ -81,6 +81,12 @@ public class BattleViewer extends Viewer<BattleModel> {
         gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),8), s3, "#FFFFFF");
         gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),9), s4, "#FFFFFF");
 
-
+        int time = getModel().getStats().getDurationSeconds();
+        String timerText = "Time: " + time + "s";
+        gui.drawText(
+                new Position((gui.getWidth() - timerText.length() - 2)/2, labelY-1),
+                timerText,
+                "#FFFFFF"
+        );
     }
 }
