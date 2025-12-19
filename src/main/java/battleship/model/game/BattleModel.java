@@ -1,5 +1,6 @@
 package battleship.model.game;
 
+import battleship.controller.game.TurnResult;
 import battleship.model.Position;
 import battleship.model.Settings;
 import battleship.model.game.common.Board;
@@ -68,4 +69,22 @@ public class BattleModel {
     public boolean shouldRevealBoat(Boat b) { return b.isSunk(); }
     public boolean enemyLost() { return enemyBoard.hasLost(); }
     public boolean playerLost() { return playerBoard.hasLost(); }
+
+    public TurnResult playTurn(Position p) {
+        if (alreadyShotEnemy(p))
+            return TurnResult.CONTINUE;
+        shootPlayer(p);
+        if (enemyLost()) {
+            stats.finish();
+            stats.setFinalModel(this);
+            return TurnResult.PLAYER_WON;
+        }
+        makeBotMove();
+        if (playerLost()) {
+            stats.finish();
+            stats.setFinalModel(this);
+            return TurnResult.BOT_WON;
+        }
+        return TurnResult.CONTINUE;
+    }
 }

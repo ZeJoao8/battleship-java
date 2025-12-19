@@ -36,20 +36,12 @@ public class BattleController extends Controller<BattleModel> {
 
     private void handleSelect(Game game) {
         BattleModel model = getModel();
-        Position p = model.getCursor();
-        if (model.alreadyShotEnemy(p)) return;
-        model.shootPlayer(p);
-        if (model.enemyLost()) {
-            model.getStats().finish();
-            model.getStats().setFinalModel(model);
-            game.setState(new EndState(true, model.getStats()));
-            return;
-        }
-        model.makeBotMove();
-        if (model.playerLost()) {
-            model.getStats().finish();
-            model.getStats().setFinalModel(model);
-            game.setState(new EndState(false, model.getStats()));
+        TurnResult result = model.playTurn(model.getCursor());
+        switch (result) {
+            case PLAYER_WON -> game.setState(new EndState(true, model.getStats()));
+            case BOT_WON -> game.setState(new EndState(false, model.getStats()));
+            default -> {}
         }
     }
+
 }
