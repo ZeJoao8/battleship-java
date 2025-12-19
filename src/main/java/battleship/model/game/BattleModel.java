@@ -16,24 +16,17 @@ public class BattleModel {
 
     private final Board playerBoard;
     private final Board enemyBoard;
-    private final Settings settings;
     final BotStrategy bot;
     private final GameStats stats;
     private Position cursor = new Position(0, 0);
 
-    public BattleModel(Board playerBoard, Board enemyBoard, Settings settings) {
+    public BattleModel(Board playerBoard, Board enemyBoard, BotStrategy bot) {
         this.playerBoard = playerBoard;
         this.enemyBoard = enemyBoard;
-        this.settings = settings;
-        this.stats= new GameStats();
-        this.bot = switch (settings.getDifficulty()) {
-            case EASY        -> new Random();
-            case MEDIUM      -> new Hunt();
-            case HARD        -> new Probability();
-            case IMPOSSIBLE  -> new Perfect();
-        };
-
+        this.bot = bot;
+        this.stats = new GameStats();
     }
+
 
     public Board getPlayerBoard() { return playerBoard; }
     public Board getEnemyBoard()  { return enemyBoard; }

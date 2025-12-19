@@ -4,11 +4,13 @@ import battleship.Game;
 import battleship.controller.Controller;
 import battleship.gui.GUI;
 import battleship.model.game.BattleModel;
+import battleship.model.game.BotFactory;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
 import battleship.model.Menu;
 import battleship.model.game.PlacementModel;
 import battleship.model.Settings;
+import battleship.model.game.common.BotStrategy;
 import battleship.states.game.BattleState;
 import battleship.states.MenuState;
 
@@ -65,7 +67,7 @@ public class PlacementController extends Controller<PlacementModel> {
         Settings s = (settings != null) ? settings : game.getSettings();
         Board enemy = new Board(s);
         enemy.placeFleetRandomly();
-        assert settings != null;
-        game.setState(new BattleState(new BattleModel(playerBoard, enemy, s)));
+        BotStrategy bot = BotFactory.create(settings.getDifficulty());
+        game.setState(new BattleState(new BattleModel(playerBoard, enemy, bot)));
     }
 }
