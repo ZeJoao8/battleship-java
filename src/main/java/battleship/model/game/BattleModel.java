@@ -25,6 +25,7 @@ public class BattleModel {
         this.enemyBoard = enemyBoard;
         this.bot = bot;
         this.stats = new GameStats();
+        this.stats.start();
     }
 
 

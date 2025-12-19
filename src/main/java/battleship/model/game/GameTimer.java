@@ -2,12 +2,17 @@ package battleship.model.game;
 
 public class GameTimer implements Runnable {
 
-    private volatile boolean running = true;
+    private volatile boolean running = false;
     private int seconds = 0;
     private Thread thread;
 
     public GameTimer() {
-        thread = new Thread(this, "GameTimerThread");
+        this.thread = new Thread(this, "GameTimerThread");
+    }
+
+    public void start() {
+        if (running) return;
+        running = true;
         thread.start();
     }
 
