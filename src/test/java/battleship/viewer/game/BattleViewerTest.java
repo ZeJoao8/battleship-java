@@ -6,6 +6,7 @@ import battleship.model.game.BattleModel;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
 import battleship.model.game.common.CellState;
+import battleship.viewer.game.battle.BattleViewer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

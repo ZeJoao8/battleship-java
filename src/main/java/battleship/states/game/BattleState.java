@@ -5,7 +5,7 @@ import battleship.controller.game.BattleController;
 import battleship.model.game.BattleModel;
 import battleship.states.State;
 import battleship.viewer.Viewer;
-import battleship.viewer.game.BattleViewer;
+import battleship.viewer.game.battle.BattleViewer;
 
 public class BattleState extends State<BattleModel> {
     public BattleState(BattleModel model) { super(model); }

@@ -1,50 +1,60 @@
 package battleship.viewer.game.placement;
 
-
 import battleship.gui.GUI;
 import battleship.model.Position;
 import battleship.model.game.common.Boat;
-import battleship.model.game.PlacementModel;
 import battleship.viewer.Viewer;
+import battleship.viewer.ViewerUtils;
 
-public class PlacementViewer extends Viewer<PlacementModel> {
+public class PlacementViewer extends Viewer<battleship.model.game.PlacementModel> {
+
     private final PlacementBoardViewer boardViewer;
 
-    public PlacementViewer(PlacementModel model) {
+    public PlacementViewer(battleship.model.game.PlacementModel model) {
         super(model);
         this.boardViewer = new PlacementBoardViewer(model);
     }
 
     @Override
     protected void drawElements(GUI gui) {
-        String s1 ="▗▄▄▖ ▗▖    ▗▄▖  ▗▄▄▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖";
-        String s2 ="▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌   ▐▌   ▐▛▚▞▜▌▐▌   ▐▛▚▖▐▌  █  ";
-        String s3 ="▐▛▀▘ ▐▌   ▐▛▀▜▌▐▌   ▐▛▀▀▘▐▌  ▐▌▐▛▀▀▘▐▌ ▝▜▌  █  ";
-        String s4 ="▐▌   ▐▙▄▄▖▐▌ ▐▌▝▚▄▄▖▐▙▄▄▖▐▌  ▐▌▐▙▄▄▖▐▌  ▐▌  █  ";
-        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),6), s1, "#FFFFFF");
-        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),7), s2, "#FFFFFF");
-        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),8), s3, "#FFFFFF");
-        gui.drawText(new Position(((gui.getWidth() - s1.length()) / 2),9), s4, "#FFFFFF");
+        drawTitle(gui);
+        drawCurrentBoatInfo(gui);
+        drawInstructions(gui);
+        drawBoard(gui);
+        drawReadyMessage(gui);
+    }
 
+    private void drawTitle(GUI gui) {
+        String[] t = {
+                "▗▄▄▖ ▗▖    ▗▄▖  ▗▄▄▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖",
+                "▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌   ▐▌   ▐▛▚▞▜▌▐▌   ▐▛▚▖▐▌  █  ",
+                "▐▛▀▘ ▐▌   ▐▛▀▜▌▐▌   ▐▛▀▀▘▐▌  ▐▌▐▛▀▀▘▐▌ ▝▜▌  █  ",
+                "▐▌   ▐▙▄▄▖▐▌ ▐▌▝▚▄▄▖▐▙▄▄▖▐▌  ▐▌▐▙▄▄▖▐▌  ▐▌  █  "
+        };
+        for (int i = 0; i < t.length; i++)
+            gui.drawText(new Position(ViewerUtils.centerX(gui, t[i]), 6 + i), t[i], "#FFFFFF");
+    }
+
+    private void drawCurrentBoatInfo(GUI gui) {
         Boat current = getModel().getCurrentBoat();
-        String s5 =  "To place: " + (current != null ? current.getName() : "None");
-        gui.drawText(new Position(((gui.getWidth() - s5.length()) / 2),(gui.getHeight() - boardViewer.getModel().getBoard().getHeigth()) / 2 - 2), s5, "#00FF9D");
-        String s6="ARROWS = Move | R = Rotate | ENTER = Place | A = Place randomly | U = Undo | Q = return";
-        gui.drawText(new Position(((gui.getWidth() - s6.length()) / 2),(gui.getHeight() + boardViewer.getModel().getBoard().getHeigth()) / 2 + 2), s6, "#AAAAAA");
+        String text = "To place: " + (current != null ? current.getName() : "None");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, text), ViewerUtils.centerY(gui, getModel().getBoard().getHeigth()) - 2), text, "#00FF9D");
+    }
 
+    private void drawInstructions(GUI gui) {
+        String s = "ARROWS = Move | R = Rotate | ENTER = Place | A = Place randomly | U = Undo | Q = return";
+        gui.drawText(new Position(ViewerUtils.centerX(gui, s), ViewerUtils.centerY(gui, getModel().getBoard().getHeigth())+getModel().getBoard().getHeigth()+2), s, "#AAAAAA");
+    }
 
-        int offSetX = (gui.getWidth() - boardViewer.getModel().getBoard().getWidth()*2) / 2;
-        int offSetY = (gui.getHeight() - boardViewer.getModel().getBoard().getHeigth()) / 2;
+    private void drawBoard(GUI gui) {
+        int x = (gui.getWidth() - getModel().getBoard().getWidth() * 2) / 2;
+        int y = ViewerUtils.centerY(gui, getModel().getBoard().getHeigth());
+        boardViewer.draw(gui, new Position(x, y));
+    }
 
-        boardViewer.draw(gui, new Position(offSetX,offSetY));
-
-        if (getModel().allBoatsPlaced()) {
-            String s7="All boats placed! Press ENTER to start.";
-            gui.drawText(
-                    new Position(((gui.getWidth() - s7.length()) / 2),(gui.getHeight() + boardViewer.getModel().getBoard().getHeigth()) / 2 + 4),
-                    s7,
-                    "#FFFFFF"
-            );
-        }
+    private void drawReadyMessage(GUI gui) {
+        if (!getModel().allBoatsPlaced()) return;
+        String s = "All boats placed! Press ENTER to start.";
+        gui.drawText(new Position(ViewerUtils.centerX(gui, s), ViewerUtils.centerY(gui, getModel().getBoard().getHeigth())+getModel().getBoard().getHeigth()+4), s, "#FFFFFF");
     }
 }

@@ -8,6 +8,7 @@ import battleship.states.game.EndState;
 import battleship.viewer.Viewer;
 import battleship.viewer.game.common.BoardViewer;
 import battleship.viewer.game.common.BoatViewer;
+import battleship.viewer.ViewerUtils;
 
 public class EndViewer extends Viewer<Boolean> {
 
@@ -20,111 +21,88 @@ public class EndViewer extends Viewer<Boolean> {
         this.state = state;
     }
 
-    private int centerX(String text, int width) {
-        return (width - text.length()) / 2;
-    }
-
     @Override
     protected void drawElements(GUI gui) {
-
         if (state.isShowingBoards()) {
             drawFinalBoards(gui);
-        }
-        else{
+        } else {
             drawStats(gui);
         }
+        drawVictoryOrDefeat(gui);
+    }
 
+    private void drawVictoryOrDefeat(GUI gui) {
         boolean won = getModel();
-        String s1, s2, s3, s4;
+        String[] title = won ? victoryTitle() : defeatTitle();
+        for (int i = 0; i < title.length; i++) {
+            gui.drawText(new Position(ViewerUtils.centerX(gui, title[i]), 5 + i), title[i], "#FFFFFF");
+        }
+    }
 
-        if(won){
-            s1 = "▗▖  ▗▖▗▄▄▄▖ ▗▄▄▖▗▄▄▄▖▗▄▖ ▗▄▄▖▗▖  ▗▖";
-            s2 = "▐▌  ▐▌  █  ▐▌     █ ▐▌ ▐▌▐▌ ▐▌▝▚▞▘ ";
-            s3 = "▐▌  ▐▌  █  ▐▌     █ ▐▌ ▐▌▐▛▀▚▖ ▐▌  ";
-            s4 = " ▝▚▞▘ ▗▄█▄▖▝▚▄▄▖  █ ▝▚▄▞▘▐▌ ▐▌ ▐▌  ";
-        }
-        else{
-            s1 = "▗▄▄▄ ▗▄▄▄▖▗▄▄▄▖▗▄▄▄▖ ▗▄▖▗▄▄▄▖";
-            s2 = "▐▌  █▐▌   ▐▌   ▐▌   ▐▌ ▐▌ █  ";
-            s3 = "▐▌  █▐▛▀▀▘▐▛▀▀▘▐▛▀▀▘▐▛▀▜▌ █  ";
-            s4 = "▐▙▄▄▀▐▙▄▄▖▐▌   ▐▙▄▄▖▐▌ ▐▌ █  ";
-        }
-        int screenWidth = gui.getWidth();
-        gui.drawText(new Position(centerX(s1, screenWidth), 5), s1, "#FFFFFF");
-        gui.drawText(new Position(centerX(s2, screenWidth), 6), s2, "#FFFFFF");
-        gui.drawText(new Position(centerX(s3, screenWidth), 7), s3, "#FFFFFF");
-        gui.drawText(new Position(centerX(s4, screenWidth), 8), s4, "#FFFFFF");
+    private String[] victoryTitle() {
+        return new String[]{
+                "▗▖  ▗▖▗▄▄▄▖ ▗▄▄▖▗▄▄▄▖▗▄▖ ▗▄▄▖▗▖  ▗▖",
+                "▐▌  ▐▌  █  ▐▌     █ ▐▌ ▐▌▐▌ ▐▌▝▚▞▘ ",
+                "▐▌  ▐▌  █  ▐▌     █ ▐▌ ▐▌▐▛▀▚▖ ▐▌  ",
+                " ▝▚▞▘ ▗▄█▄▖▝▚▄▄▖  █ ▝▚▄▞▘▐▌ ▐▌ ▐▌  "
+        };
+    }
+
+    private String[] defeatTitle() {
+        return new String[]{
+                "▗▄▄▄ ▗▄▄▄▖▗▄▄▄▖▗▄▄▄▖ ▗▄▖▗▄▄▄▖",
+                "▐▌  █▐▌   ▐▌   ▐▌   ▐▌ ▐▌ █  ",
+                "▐▌  █▐▛▀▀▘▐▛▀▀▘▐▛▀▀▘▐▛▀▜▌ █  ",
+                "▐▙▄▄▀▐▙▄▄▖▐▌   ▐▙▄▄▖▐▌ ▐▌ █  "
+        };
     }
 
     private void drawStats(GUI gui) {
-        int screenWidth = gui.getWidth();
         int y = 14;
-        String t;
-        t = "===== GAME STATS =====";
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#00FF9D");
-        y++;
-        t = "Player shots: " + stats.getPlayerShots();
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = "Player hits: " + stats.getPlayerHits();
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = String.format("Player precision: %.1f%%", stats.getPlayerAccuracy());
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
 
+        gui.drawText(new Position(ViewerUtils.centerX(gui, "===== GAME STATS ====="), y++), "===== GAME STATS =====", "#00FF9D");
         y++;
-        t = "Bot shots: " + stats.getBotShots();
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = "Bot hits: " + stats.getBotHits();
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        t = String.format("Bot precision: %.1f%%", stats.getBotAccuracy());
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, "Player shots: " + stats.getPlayerShots()), y++), "Player shots: " + stats.getPlayerShots(), "#FFFFFF");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, "Player hits: " + stats.getPlayerHits()), y++), "Player hits: " + stats.getPlayerHits(), "#FFFFFF");
+        String accP = String.format("Player precision: %.1f%%", stats.getPlayerAccuracy());
+        gui.drawText(new Position(ViewerUtils.centerX(gui, accP), y++), accP, "#FFFFFF");
         y++;
-
-        t = "Duration: " + stats.getDurationSeconds() + "s";
-        gui.drawText(new Position(centerX(t, screenWidth), y++), t, "#FFFFFF");
-        y++;y++;
-        String msg = "Q = return | T = view final boards";
-        gui.drawText(new Position(centerX(msg, screenWidth), y), msg, "#AAAAAA");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, "Bot shots: " + stats.getBotShots()), y++), "Bot shots: " + stats.getBotShots(), "#FFFFFF");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, "Bot hits: " + stats.getBotHits()), y++), "Bot hits: " + stats.getBotHits(), "#FFFFFF");
+        String accB = String.format("Bot precision: %.1f%%", stats.getBotAccuracy());
+        gui.drawText(new Position(ViewerUtils.centerX(gui, accB), y++), accB, "#FFFFFF");
+        y += 2;
+        String dur = "Duration: " + stats.getDurationSeconds() + "s";
+        gui.drawText(new Position(ViewerUtils.centerX(gui, dur), y++), dur, "#FFFFFF");
+        y += 2;
+        String hint = "Q = return | T = view final boards";
+        gui.drawText(new Position(ViewerUtils.centerX(gui, hint), y), hint, "#AAAAAA");
     }
 
     private void drawFinalBoards(GUI gui) {
         BattleModel model = stats.getFinalModel();
-
-        int screenWidth = gui.getWidth();
-        int screenHeight = gui.getHeight();
-
-        String msg = "Q = return | T = view statistics";
-        gui.drawText(new Position(centerX(msg, screenWidth), (screenHeight+model.getPlayerBoard().getHeigth())/2+2), msg, "#AAAAAA");
-        String t = "===== FINAL BOARDS =====";
-        gui.drawText(new Position(centerX(t, screenWidth), (screenHeight-model.getPlayerBoard().getHeigth())/2-4), t, "#00FF9D");
-
         int boardW = model.getPlayerBoard().getWidth() * 2;
         int boardH = model.getPlayerBoard().getHeigth();
         int gap = 8;
+        int totalW = boardW * 2 + gap;
+        int startX = (gui.getWidth() - totalW) / 2;
+        int startY = ViewerUtils.centerY(gui, boardH);
 
-        int totalWidth = boardW + gap + boardW;
+        String title = "===== FINAL BOARDS =====";
+        gui.drawText(new Position(ViewerUtils.centerX(gui, title), startY - 4), title, "#00FF9D");
+        String hint = "Q = return | T = view statistics";
+        gui.drawText(new Position(ViewerUtils.centerX(gui, hint), startY + boardH + 2), hint, "#AAAAAA");
 
-        int startX = (screenWidth - totalWidth) / 2;
-        int posY = (screenHeight - boardH) / 2;
+        Position pPos = new Position(startX, startY);
+        Position ePos = new Position(startX + boardW + gap, startY);
+        new BoardViewer(model.getPlayerBoard()).draw(gui, pPos);
+        model.getPlayerBoard().getFleet().forEach(b -> new BoatViewer(b).draw(gui, pPos));
+        new BoardViewer(model.getEnemyBoard()).draw(gui, ePos);
+        model.getEnemyBoard().getFleet().forEach(b -> new BoatViewer(b).draw(gui, ePos));
 
-        int playerX = startX;
-        int enemyX  = startX + boardW + gap;
-        new BoardViewer(model.getPlayerBoard()).draw(gui, new Position(playerX, posY));
-        for (var b : model.getPlayerBoard().getFleet())
-            new BoatViewer(b).draw(gui, new Position(playerX, posY));
-
-        new BoardViewer(model.getEnemyBoard()).draw(gui, new Position(enemyX, posY));
-        for (var b : model.getEnemyBoard().getFleet())
-            new BoatViewer(b).draw(gui, new Position(enemyX, posY));
-
-        String playerLabel = " Player ";
-        String enemyLabel  = " Enemy ";
-
-        int labelXPlayer = playerX + (boardW - playerLabel.length()) / 2;
-        int labelXEnemy  = enemyX  + (boardW - enemyLabel.length()) / 2;
-        int labelY = posY - 2;
-
-        gui.drawText(new Position(labelXPlayer, labelY), playerLabel, "#00FF9D");
-        gui.drawText(new Position(labelXEnemy,  labelY), enemyLabel,  "#FF4444");
-
+        String pLabel = " Player ";
+        String eLabel = " Enemy ";
+        gui.drawText(new Position(pPos.getX() + (boardW - pLabel.length()) / 2, pPos.getY() - 2), pLabel, "#00FF9D");
+        gui.drawText(new Position(ePos.getX() + (boardW - eLabel.length()) / 2, ePos.getY() - 2), eLabel, "#FF4444");
     }
 }
