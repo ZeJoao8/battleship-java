@@ -2,13 +2,8 @@ package battleship.model.game;
 
 import battleship.controller.game.TurnResult;
 import battleship.model.Position;
-import battleship.model.Settings;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
-import battleship.model.game.common.bot.Perfect;
-import battleship.model.game.common.bot.Hunt;
-import battleship.model.game.common.bot.Probability;
-import battleship.model.game.common.bot.Random;
 import battleship.model.game.common.BotStrategy;
 
 
@@ -40,7 +35,7 @@ public class BattleModel {
         return enemyBoard.isHit(p) || enemyBoard.isMiss(p);
     }
 
-    public void shootPlayer(Position p) {
+    public void playerShoot(Position p) {
         if (enemyBoard.isWater(p)) enemyBoard.markMiss(p);
         else if (enemyBoard.isShip(p)) enemyBoard.markHit(p);
         boolean hit = enemyBoard.isHit(p);
@@ -67,7 +62,7 @@ public class BattleModel {
     public TurnResult playTurn(Position p) {
         if (alreadyShotEnemy(p))
             return TurnResult.CONTINUE;
-        shootPlayer(p);
+        playerShoot(p);
         if (enemyLost()) {
             stats.finish();
             stats.setFinalModel(this);

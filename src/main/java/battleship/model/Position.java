@@ -13,12 +13,12 @@ public final class Position {
     public int getY() { return y; }
 
     public Position moveUpBounded() {
-        if(y-1>0){return new Position(x, y-1);}
+        if(y-1>=0){return new Position(x, y-1);}
         else return new Position(x, 0);
     }
 
     public Position moveLeftBounded() {
-        if(x-1>0){return new Position(x-1, y);}
+        if(x-1>=0){return new Position(x-1, y);}
         else{return new Position(0, y);}
     }
 

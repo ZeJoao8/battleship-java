@@ -86,7 +86,7 @@ public class BattleControllerTest {
 
         controller.step(game, GUI.ACTION.SELECT);
 
-        verify(model, never()).shootPlayer(any());
+        verify(model, never()).playerShoot(any());
         verify(model, never()).makeBotMove();
         verify(game, never()).setState(any());
     }
@@ -107,7 +107,7 @@ public class BattleControllerTest {
 
         controller.step(game, GUI.ACTION.SELECT);
 
-        verify(model).shootPlayer(cursor);
+        verify(model).playerShoot(cursor);
         verify(model, never()).makeBotMove();
 
         ArgumentCaptor<State> stateCaptor = ArgumentCaptor.forClass(State.class);
@@ -133,7 +133,7 @@ public class BattleControllerTest {
 
         controller.step(game, GUI.ACTION.SELECT);
 
-        verify(model).shootPlayer(cursor);
+        verify(model).playerShoot(cursor);
         verify(model).makeBotMove();
         verify(game, never()).setState(any());
     }
@@ -155,7 +155,7 @@ public class BattleControllerTest {
 
         controller.step(game, GUI.ACTION.SELECT);
 
-        verify(model).shootPlayer(cursor);
+        verify(model).playerShoot(cursor);
         verify(model).makeBotMove();
 
         ArgumentCaptor<State> stateCaptor = ArgumentCaptor.forClass(State.class);

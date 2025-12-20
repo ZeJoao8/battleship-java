@@ -76,9 +76,9 @@ public class BattleModelTest {
         enemy.placeBoat(boat,new Position(2,3),true);
         Position HIT = boat.getPositions().get(0);
         Position MISS = new Position(9,9);
-        m.shootPlayer(MISS); assertTrue(enemy.isMiss(MISS));
-        m.shootPlayer(HIT);  assertTrue(enemy.isHit(HIT));
-        m.shootPlayer(HIT);  assertTrue(enemy.isHit(HIT));
+        m.playerShoot(MISS); assertTrue(enemy.isMiss(MISS));
+        m.playerShoot(HIT);  assertTrue(enemy.isHit(HIT));
+        m.playerShoot(HIT);  assertTrue(enemy.isHit(HIT));
     }
 
     @Test
