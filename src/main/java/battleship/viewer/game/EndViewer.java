@@ -82,7 +82,7 @@ public class EndViewer extends Viewer<Boolean> {
     private void drawFinalBoards(GUI gui) {
         BattleModel model = stats.getFinalModel();
         int boardW = model.getPlayerBoard().getWidth() * 2;
-        int boardH = model.getPlayerBoard().getHeigth();
+        int boardH = model.getPlayerBoard().getHeight();
         int gap = 8;
         int totalW = boardW * 2 + gap;
         int startX = (gui.getWidth() - totalW) / 2;

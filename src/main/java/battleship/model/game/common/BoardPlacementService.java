@@ -37,7 +37,7 @@ public class BoardPlacementService {
             boolean placed = false;
             while (!placed) {
                 boolean horizontal = rnd.nextBoolean();
-                Position p = new Position(rnd.nextInt(board.getWidth()), rnd.nextInt(board.getHeigth()));
+                Position p = new Position(rnd.nextInt(board.getWidth()), rnd.nextInt(board.getHeight()));
                 if (canPlace(board, boat, p, horizontal)) {
                     place(board, boat, p, horizontal);
                     placed = true;

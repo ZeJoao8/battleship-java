@@ -20,14 +20,11 @@ public class MenuController extends Controller<Menu> {
             case DOWN -> getModel().next();
             case SELECT -> {
                 if (getModel().isSelectedPlay()) {
-                    // usa as settings partilhadas do Game
                     Settings settings = game.getSettings();
                     Board player = new Board(settings);
                     PlacementModel pm = new PlacementModel(player);
-                    // passamos Settings para o PlacementState (não o enemyBoard)
                     game.setState(new PlacementState(pm, settings));
                 } else if (getModel().isSelectedSettings()) {
-                    // abre as settings usando as settings partilhadas
                     game.setState(new SettingsState(game.getSettings()));
                 } else if (getModel().isSelectedQuit()) {
                     game.setState(null);

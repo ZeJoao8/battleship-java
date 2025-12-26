@@ -35,7 +35,7 @@ public class BattleBoardViewer {
             if (model == null) {
                 new BoatViewer(b).draw(gui, pos);
             }
-            else if (model.shouldRevealBoat(b)) {
+            else if (model.isEnemyBoatVisible(b)) {
                 new BoatViewer(b).draw(gui, pos);
             }
         }

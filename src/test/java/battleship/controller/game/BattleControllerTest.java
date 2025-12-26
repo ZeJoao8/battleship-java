@@ -38,7 +38,7 @@ public class BattleControllerTest {
             case UP -> when(cursor.moveUpBounded()).thenReturn(moved);
             case LEFT -> when(cursor.moveLeftBounded()).thenReturn(moved);
             case DOWN -> {
-                when(enemy.getHeigth()).thenReturn(10);
+                when(enemy.getHeight()).thenReturn(10);
                 when(cursor.moveDownBounded(9)).thenReturn(moved);
             }
             case RIGHT -> {

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class BoardViewerTest {
 
@@ -22,7 +21,7 @@ class BoardViewerTest {
         gui = mock(GUI.class);
         board = mock(Board.class);
         when(board.getWidth()).thenReturn(6);
-        when(board.getHeigth()).thenReturn(6);
+        when(board.getHeight()).thenReturn(6);
         viewer = new BoardViewer(board);
     }
 

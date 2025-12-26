@@ -26,7 +26,7 @@ public class PlacementModel {
     }
 
     public void moveDown() {
-        cursor = cursor.moveDownBounded(board.getHeigth() - 1);
+        cursor = cursor.moveDownBounded(board.getHeight() - 1);
         adjustCursorBounds();
     }
 
@@ -86,7 +86,7 @@ public class PlacementModel {
             if (cursor.getX() > maxX)
                 cursor = new Position(maxX, cursor.getY());
         } else {
-            int maxY = board.getHeigth() - size;
+            int maxY = board.getHeight() - size;
             if (cursor.getY() > maxY)
                 cursor = new Position(cursor.getX(), maxY);
         }

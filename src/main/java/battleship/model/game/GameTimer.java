@@ -6,13 +6,11 @@ public class GameTimer implements Runnable {
     private int seconds = 0;
     private Thread thread;
 
-    public GameTimer() {
-        this.thread = new Thread(this, "GameTimerThread");
-    }
-
     public void start() {
         if (running) return;
         running = true;
+        seconds = 0;
+        thread = new Thread(this, "GameTimerThread");
         thread.start();
     }
 

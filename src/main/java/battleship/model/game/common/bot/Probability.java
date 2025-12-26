@@ -30,7 +30,7 @@ public class Probability extends Bot {
 
     private Position chooseHuntMove(Board board) {
         int W = board.getWidth();
-        int H = board.getHeigth();
+        int H = board.getHeight();
         int[][] heat = new int[W][H];
         for (Boat boat : board.getFleet()) {
             if (boat.isSunk()) continue;

@@ -16,7 +16,7 @@ public class Random extends Bot {
     public Position chooseMove(Board board) {
         Position p;
         do {
-            p = new Position(rnd.nextInt(board.getWidth()), rnd.nextInt(board.getHeigth()));
+            p = new Position(rnd.nextInt(board.getWidth()), rnd.nextInt(board.getHeight()));
         } while (!board.isValidBotTarget(p));
 
         return p;

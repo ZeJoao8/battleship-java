@@ -76,4 +76,8 @@ public class BattleModel {
         }
         return TurnResult.CONTINUE;
     }
+
+    public boolean isEnemyBoatVisible(Boat b) {
+        return b.isSunk();
+    }
 }

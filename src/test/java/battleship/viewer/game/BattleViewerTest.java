@@ -17,7 +17,7 @@ class BattleViewerTest {
 
     private void setupBoard(Board board) {
         when(board.getWidth()).thenReturn(5);
-        when(board.getHeigth()).thenReturn(5);
+        when(board.getHeight()).thenReturn(5);
         when(board.getFleet()).thenReturn(List.of());
         when(board.getState(any())).thenReturn(CellState.WATER);
     }

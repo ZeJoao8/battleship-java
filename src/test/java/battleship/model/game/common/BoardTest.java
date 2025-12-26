@@ -116,7 +116,7 @@ class BoardTest {
         board.placeFleetRandomly();
         assertFalse(board.hasLost());
         for(int x=0;x<board.getWidth();x++)
-            for(int y=0;y<board.getHeigth();y++)
+            for(int y = 0; y<board.getHeight(); y++)
                 if(board.isShip(new Position(x,y)))
                     board.markHit(new Position(x,y));
         assertTrue(board.hasLost());

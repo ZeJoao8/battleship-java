@@ -41,7 +41,7 @@ public class BattleViewer extends Viewer<BattleModel> {
     private void drawBoards(GUI gui) {
         BattleModel model = getModel();
         boardPixelW = model.getPlayerBoard().getWidth() * 2;
-        boardPixelH = model.getPlayerBoard().getHeigth();
+        boardPixelH = model.getPlayerBoard().getHeight();
         int gap = 6;
         int totalW = boardPixelW * 2 + gap;
         int startX = (gui.getWidth() - totalW) / 2;

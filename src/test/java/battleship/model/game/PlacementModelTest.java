@@ -53,7 +53,7 @@ class PlacementModelTest {
         b.rotate();
         model.setCursor(new Position(0,99));
         model.moveDown();
-        assertEquals(board.getHeigth() - b.getSize(), model.getCursor().getY());
+        assertEquals(board.getHeight() - b.getSize(), model.getCursor().getY());
     }
 
     @Test
@@ -88,7 +88,7 @@ class PlacementModelTest {
         model.setCursor(new Position(9,5));
         model.rotateCurrentBoat();
         assertEquals(
-                new Position(9, Math.min(5, board.getHeigth()-b.getSize())),
+                new Position(9, Math.min(5, board.getHeight()-b.getSize())),
                 model.getCursor()
         );
     }

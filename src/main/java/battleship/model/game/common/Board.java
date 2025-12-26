@@ -30,7 +30,7 @@ public class Board {
     }
 
     public int getWidth()  { return width; }
-    public int getHeigth() { return height; }
+    public int getHeight() { return height; }
 
     public List<Boat> getFleet() { return fleet; }
 

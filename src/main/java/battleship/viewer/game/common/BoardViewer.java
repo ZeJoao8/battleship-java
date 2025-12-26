@@ -16,7 +16,7 @@ public class BoardViewer extends ElementViewer<Board> {
     public void draw(GUI gui, Position pos) {
         Board board = getModel();
         if (board == null) return;
-        for (int y = 0; y < board.getHeigth(); y++) {
+        for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
                 Position p = new Position(x, y);
                 CellState cs = board.getState(p);

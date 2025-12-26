@@ -26,7 +26,7 @@ public class BattleController extends Controller<BattleModel> {
         switch (action) {
             case UP -> model.setCursor(cursor.moveUpBounded());
             case LEFT -> model.setCursor(cursor.moveLeftBounded());
-            case DOWN -> model.setCursor(cursor.moveDownBounded(enemy.getHeigth() - 1));
+            case DOWN -> model.setCursor(cursor.moveDownBounded(enemy.getHeight() - 1));
             case RIGHT -> model.setCursor(cursor.moveRightBounded(enemy.getWidth() - 1));
             case SELECT -> handleSelect(game);
             case QUIT -> game.setState(new MenuState(new Menu()));

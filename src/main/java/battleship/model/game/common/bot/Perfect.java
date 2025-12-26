@@ -13,7 +13,7 @@ public class Perfect extends Bot {
     @Override
     public Position chooseMove(Board board) {
         int width = board.getWidth();
-        int height = board.getHeigth();
+        int height = board.getHeight();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

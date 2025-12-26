@@ -17,7 +17,7 @@ class PlacementViewerTest {
     private void fullyMockModel(PlacementModel model) {
         Board board = mock(Board.class);
         when(board.getWidth()).thenReturn(5);
-        when(board.getHeigth()).thenReturn(5);
+        when(board.getHeight()).thenReturn(5);
         when(board.getFleet()).thenReturn(Collections.emptyList());
         when(board.getState(any())).thenReturn(CellState.WATER);
         when(model.getBoard()).thenReturn(board);

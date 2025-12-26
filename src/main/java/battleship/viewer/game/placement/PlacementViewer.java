@@ -38,23 +38,23 @@ public class PlacementViewer extends Viewer<battleship.model.game.PlacementModel
     private void drawCurrentBoatInfo(GUI gui) {
         Boat current = getModel().getCurrentBoat();
         String text = "To place: " + (current != null ? current.getName() : "None");
-        gui.drawText(new Position(ViewerUtils.centerX(gui, text), ViewerUtils.centerY(gui, getModel().getBoard().getHeigth()) - 2), text, "#00FF9D");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, text), ViewerUtils.centerY(gui, getModel().getBoard().getHeight()) - 2), text, "#00FF9D");
     }
 
     private void drawInstructions(GUI gui) {
         String s = "ARROWS = Move | R = Rotate | ENTER = Place | A = Place randomly | U = Undo | Q = return";
-        gui.drawText(new Position(ViewerUtils.centerX(gui, s), ViewerUtils.centerY(gui, getModel().getBoard().getHeigth())+getModel().getBoard().getHeigth()+2), s, "#AAAAAA");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, s), ViewerUtils.centerY(gui, getModel().getBoard().getHeight())+getModel().getBoard().getHeight()+2), s, "#AAAAAA");
     }
 
     private void drawBoard(GUI gui) {
         int x = (gui.getWidth() - getModel().getBoard().getWidth() * 2) / 2;
-        int y = ViewerUtils.centerY(gui, getModel().getBoard().getHeigth());
+        int y = ViewerUtils.centerY(gui, getModel().getBoard().getHeight());
         boardViewer.draw(gui, new Position(x, y));
     }
 
     private void drawReadyMessage(GUI gui) {
         if (!getModel().allBoatsPlaced()) return;
         String s = "All boats placed! Press ENTER to start.";
-        gui.drawText(new Position(ViewerUtils.centerX(gui, s), ViewerUtils.centerY(gui, getModel().getBoard().getHeigth())+getModel().getBoard().getHeigth()+4), s, "#FFFFFF");
+        gui.drawText(new Position(ViewerUtils.centerX(gui, s), ViewerUtils.centerY(gui, getModel().getBoard().getHeight())+getModel().getBoard().getHeight()+4), s, "#FFFFFF");
     }
 }
