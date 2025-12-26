@@ -11,20 +11,27 @@ public class GameStats {
     private BattleModel finalModel;
 
     public GameStats() {
-        this.timer = new GameTimer();
+        this(new GameTimer());
+    }
+
+    public GameStats(GameTimer timer) {
+        this.timer = timer;
     }
 
     public void start() {
-        timer.start();
+        if (timer != null)
+            timer.start();
     }
 
     public void finish() {
-        timer.stop();
-        finalSeconds = timer.getSeconds();
+        if (timer != null) {
+            timer.stop();
+            finalSeconds = timer.getSeconds();
+        }
     }
 
     public int getDurationSeconds() {
-        return finalSeconds >= 0 ? finalSeconds : timer.getSeconds();
+        return finalSeconds >= 0 ? finalSeconds : (timer != null ? timer.getSeconds() : 0);
     }
 
     public void registerPlayerShot(boolean hit) {
@@ -43,11 +50,11 @@ public class GameStats {
     public int getBotHits() { return botHits; }
 
     public double getPlayerAccuracy() {
-        return playerShots == 0 ? 0 : (100.0 * playerHits / playerShots);
+        return playerShots == 0 ? 0 : 100.0 * playerHits / playerShots;
     }
 
     public double getBotAccuracy() {
-        return botShots == 0 ? 0 : (100.0 * botHits / botShots);
+        return botShots == 0 ? 0 : 100.0 * botHits / botShots;
     }
 
     public void setFinalModel(BattleModel model) {

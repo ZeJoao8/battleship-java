@@ -16,13 +16,16 @@ public class BattleModel {
     private Position cursor = new Position(0, 0);
 
     public BattleModel(Board playerBoard, Board enemyBoard, BotStrategy bot) {
+        this(playerBoard, enemyBoard, bot, new GameStats());
+    }
+
+    public BattleModel(Board playerBoard, Board enemyBoard, BotStrategy bot, GameStats stats) {
         this.playerBoard = playerBoard;
         this.enemyBoard = enemyBoard;
         this.bot = bot;
-        this.stats = new GameStats();
+        this.stats = stats;
         this.stats.start();
     }
-
 
     public Board getPlayerBoard() { return playerBoard; }
     public Board getEnemyBoard()  { return enemyBoard; }

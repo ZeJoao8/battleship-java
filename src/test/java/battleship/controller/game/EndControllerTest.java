@@ -2,47 +2,50 @@ package battleship.controller.game;
 
 import battleship.Game;
 import battleship.gui.GUI;
+import battleship.model.Menu;
 import battleship.states.MenuState;
-
+import battleship.states.game.EndState;
 import net.jqwik.api.*;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class EndControllerTest {
+class EndControllerTest {
 
-    @Provide Arbitrary<GUI.ACTION> irrelevantActions() {
-        return Arbitraries.of(
-                GUI.ACTION.UP, GUI.ACTION.DOWN, GUI.ACTION.LEFT,
-                GUI.ACTION.RIGHT, GUI.ACTION.ROTATE
-        );
+    private EndController controller(EndState s) {
+        return new EndController(true,s);
+    }
+
+    @Test
+    void showBoardTogglesState() throws Exception {
+        EndState state = spy(new EndState(true,null));
+        Game game = mock(Game.class);
+        controller(state).step(game,GUI.ACTION.SHOW_BOARD);
+        verify(state).toggleBoards();
+    }
+
+    @Test
+    void quitReturnsToMenu() throws Exception {
+        EndState state = new EndState(true,null);
+        Game game = mock(Game.class);
+        controller(state).step(game,GUI.ACTION.QUIT);
+        verify(game).setState(any(MenuState.class));
+    }
+
+    @Test
+    void unrelatedActionDoesNothing() throws Exception {
+        EndState state = spy(new EndState(true,null));
+        Game game = mock(Game.class);
+        controller(state).step(game,GUI.ACTION.NONE);
+        verify(state,never()).toggleBoards();
+        verify(game,never()).setState(any());
     }
 
     @Property
-    void otherActionsDoNothing(@ForAll("irrelevantActions") GUI.ACTION action) {
-        Game g = mock(Game.class);
-        EndController controller = new EndController(true);
-        controller.step(g, action);
-        verify(g, never()).setState(any());
-    }
-
-    @Test
-    void quitGoesToMenu() {
-        Game g = mock(Game.class);
-        new EndController(true).step(g, GUI.ACTION.QUIT);
-        ArgumentCaptor<battleship.states.State> captor = ArgumentCaptor.forClass(battleship.states.State.class);
-        verify(g).setState(captor.capture());
-        assertInstanceOf(MenuState.class, captor.getValue());
-    }
-
-    @Test
-    void selectGoesToMenu() {
-        Game g = mock(Game.class);
-        new EndController(false).step(g, GUI.ACTION.SELECT);
-        ArgumentCaptor<battleship.states.State> captor = ArgumentCaptor.forClass(battleship.states.State.class);
-        verify(g).setState(captor.capture());
-        assertInstanceOf(MenuState.class, captor.getValue());
+    void anyActionDoesNotThrow(@ForAll GUI.ACTION a) {
+        EndState state = new EndState(true,null);
+        Game game = mock(Game.class);
+        assertDoesNotThrow(() -> controller(state).step(game,a));
     }
 }

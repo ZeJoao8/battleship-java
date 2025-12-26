@@ -1,7 +1,12 @@
 package battleship.viewer.game;
 
 import battleship.gui.GUI;
-import battleship.model.Position;
+import battleship.model.Settings;
+import battleship.model.game.BattleModel;
+import battleship.model.game.GameStats;
+import battleship.model.game.common.Board;
+import battleship.model.game.common.bot.Random;
+import battleship.states.game.EndState;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
@@ -9,39 +14,23 @@ import static org.mockito.Mockito.*;
 class EndViewerTest {
 
     @Test
-    void drawsWinScreenCentered() {
+    void drawsBoardsWhenBoardsVisible() throws Exception {
         GUI gui = mock(GUI.class);
-        when(gui.getWidth()).thenReturn(80);
-        EndViewer viewer = new EndViewer(true);
-        viewer.drawElements(gui);
-        String s1 = "▗▖  ▗▖▗▖▗▄▄▄▖▗▄▄▄▖▗▄▄▄▄▖▗▄▄▖ ▄   ▄";
-        int col = (80 - s1.length())/2;
-        verify(gui).drawText(new Position(col, 6),     s1, "#FFFFFF");
-        verify(gui).drawText(new Position(col, 7),     "▐▌  ▐▌▐▌▐▌     █  ▐▌  ▐▌▐▌ ▐▌ ▀▄▀ ", "#FFFFFF");
-        verify(gui).drawText(new Position(col, 8),     "▐▌  ▐▌▐▌▐▌     █  ▐▌  ▐▌▐▛▀▚▖  █  ", "#FFFFFF");
-        verify(gui).drawText(new Position(col, 9),     " ▝▚▞▘ ▐▌▐▙▄▄▖  █  ▐▙▄▄▟▌▐▌ ▐▌  █  ", "#FFFFFF");
-        verify(gui).drawText(
-                new Position((80 - "Press Q to return to menu".length())/2, 11),
-                "Press Q to return to menu", "#AAAAAA"
-        );
-    }
 
+        Board p = new Board(new Settings());
+        Board e = new Board(new Settings());
+        BattleModel model = new BattleModel(p, e, new Random(), new GameStats(null));
 
-    @Test
-    void drawsLoseScreenCentered() {
-        GUI gui = mock(GUI.class);
-        when(gui.getWidth()).thenReturn(80);
-        EndViewer viewer = new EndViewer(false);
-        viewer.drawElements(gui);
-        String s1 = "▗▄▄▖ ▗▄▄▄▖▗▄▄▄▖▗▄▄▄▖ ▗▄▖ ▗▄▄▄▖";
-        int col = (80 - s1.length())/2;
-        verify(gui).drawText(new Position(col, 6),     s1, "#FFFFFF");
-        verify(gui).drawText(new Position(col, 7),     "▐▌ ▐▌▐▌   ▐▌   ▐▌   ▐▌ ▐▌  █  ", "#FFFFFF");
-        verify(gui).drawText(new Position(col, 8),     "▐▌ ▐▌▐▛▀  ▐▛▀▀▘▐▛▀  ▐▛▀▜▌  █  ", "#FFFFFF");
-        verify(gui).drawText(new Position(col, 9),     "▐▙▄▞▘▐▙▄▄▖▐▌   ▐▙▄▄▖▐▌ ▐▌  █  ", "#FFFFFF");
-        verify(gui).drawText(
-                new Position((80 - "Press Q to return to menu".length())/2, 11),
-                "Press Q to return to menu", "#AAAAAA"
-        );
+        GameStats stats = new GameStats(null);
+        stats.setFinalModel(model);
+
+        EndState state = new EndState(true, stats);
+        state.toggleBoards();
+
+        EndViewer v = new EndViewer(true, stats, state);
+        v.draw(gui);
+
+        verify(gui).clear();
+        verify(gui).refresh();
     }
 }

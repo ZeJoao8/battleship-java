@@ -2,70 +2,77 @@ package battleship.controller;
 
 import battleship.Game;
 import battleship.gui.GUI;
+import battleship.model.Menu;
 import battleship.model.Settings;
 import battleship.states.MenuState;
-
 import net.jqwik.api.*;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class SettingsControllerTest {
+class SettingsControllerTest {
+
+    private SettingsController controller(Settings s) {
+        return new SettingsController(s);
+    }
+
+    @Test
+    void upAndDownChangeSelector() {
+        Settings s = new Settings();
+        Game g = mock(Game.class);
+
+        int start = s.getSelector();
+        controller(s).step(g,GUI.ACTION.DOWN);
+        assertEquals((start+1)%3,s.getSelector());
+
+        controller(s).step(g,GUI.ACTION.UP);
+        assertEquals(start,s.getSelector());
+    }
+
+    @Test
+    void leftRightChangeWidthHeightAndDifficulty() {
+        Settings s = new Settings(10,10, Settings.BotDifficulty.EASY);
+        Game g = mock(Game.class);
+
+        s.setSelector(0);
+        controller(s).step(g,GUI.ACTION.RIGHT);
+        assertEquals(11,s.getWidth());
+
+        controller(s).step(g,GUI.ACTION.LEFT);
+        assertEquals(10,s.getWidth());
+
+        s.setSelector(1);
+        controller(s).step(g,GUI.ACTION.RIGHT);
+        assertEquals(11,s.getHeight());
+
+        controller(s).step(g,GUI.ACTION.LEFT);
+        assertEquals(10,s.getHeight());
+
+        s.setSelector(2);
+        controller(s).step(g,GUI.ACTION.RIGHT);
+        assertEquals(Settings.BotDifficulty.MEDIUM,s.getDifficulty());
+
+        controller(s).step(g,GUI.ACTION.LEFT);
+        assertEquals(Settings.BotDifficulty.EASY,s.getDifficulty());
+    }
+
+    @Test
+    void quitAndSelectReturnToMenu() {
+        Settings s = new Settings();
+        Game g = mock(Game.class);
+
+        controller(s).step(g,GUI.ACTION.QUIT);
+        verify(g).setState(any(MenuState.class));
+
+        controller(s).step(g,GUI.ACTION.SELECT);
+        verify(g,times(2)).setState(any(MenuState.class));
+    }
 
     @Property
-    void selectorMovesCorrectly(@ForAll boolean moveUp) {
+    void anyActionNeverThrows(@ForAll GUI.ACTION a) {
         Settings s = new Settings();
-        SettingsController c = new SettingsController(s);
-        int expected = moveUp ? 2 : 1;
-        c.step(null, moveUp ? GUI.ACTION.UP : GUI.ACTION.DOWN);
-        assertEquals(expected, s.getSelector());
-    }
-
-    @Test
-    void widthIncrementsAndDecrements() {
-        Settings s = new Settings(10,10, Settings.BotDifficulty.RANDOM);
-        SettingsController c = new SettingsController(s);
-        s.setSelector(0);
-        c.step(null, GUI.ACTION.RIGHT);
-        assertEquals(11, s.getWidth());
-        c.step(null, GUI.ACTION.LEFT);
-        assertEquals(10, s.getWidth());
-    }
-
-    @Test
-    void heightIncrementsAndDecrements() {
-        Settings s = new Settings(10,10, Settings.BotDifficulty.RANDOM);
-        SettingsController c = new SettingsController(s);
-        s.setSelector(1);
-        c.step(null, GUI.ACTION.RIGHT);
-        assertEquals(11, s.getHeight());
-        c.step(null, GUI.ACTION.LEFT);
-        assertEquals(10, s.getHeight());
-    }
-
-    @Test
-    void difficultyCyclesCorrectly() {
-        Settings s = new Settings(10,10, Settings.BotDifficulty.RANDOM);
-        SettingsController c = new SettingsController(s);
-        s.setSelector(2);
-        c.step(null, GUI.ACTION.RIGHT);
-        assertEquals(Settings.BotDifficulty.HUNT, s.getDifficulty());
-        c.step(null, GUI.ACTION.LEFT);
-        assertEquals(Settings.BotDifficulty.RANDOM, s.getDifficulty());
-    }
-
-    @Test
-    void selectReturnsToMenu() {
-        Game game = mock(Game.class);
-        new SettingsController(new Settings()).step(game, GUI.ACTION.SELECT);
-        verify(game).setState(isA(MenuState.class));
-    }
-
-    @Test
-    void quitReturnsToMenu() {
-        Game game = mock(Game.class);
-        new SettingsController(new Settings()).step(game, GUI.ACTION.QUIT);
-        verify(game).setState(isA(MenuState.class));
+        Game g = mock(Game.class);
+        assertDoesNotThrow(() -> controller(s).step(g,a));
     }
 }

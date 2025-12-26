@@ -48,7 +48,7 @@ public class Board {
     public boolean isHit(Position p)   { return getState(p) == CellState.HIT; }
     public boolean isMiss(Position p)  { return getState(p) == CellState.MISS; }
 
-    void markShip(Position p) {
+    public void markShip(Position p) {
         grid[p.getX()][p.getY()] = CellState.SHIP;
     }
 

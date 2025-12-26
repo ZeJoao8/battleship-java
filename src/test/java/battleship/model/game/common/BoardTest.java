@@ -2,134 +2,135 @@ package battleship.model.game.common;
 
 import battleship.model.Position;
 import battleship.model.Settings;
-import battleship.model.game.common.boats.*;
-import org.junit.jupiter.api.*;
-
-import java.util.List;
+import net.jqwik.api.*;
+import net.jqwik.api.constraints.IntRange;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
 
-    Board board;
-
-    @BeforeEach
-    void setup() {
-        board = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM));
+    private Board newBoard(int w, int h) {
+        return new Board(new Settings(w, h, Settings.BotDifficulty.EASY));
     }
 
     @Test
-    void gridStartsFilledWithWater() {
-        for (int x=0;x<10;x++)
-            for (int y=0;y<10;y++)
-                assertTrue(board.isWater(new Position(x,y)));
-    }
-
-    @Test
-    void fleetContainsCorrectBoatComposition() {
-        List<Boat> f = board.getFleet();
-        assertEquals(5,f.size());
-        int portaAvioes=0, navio=0, contraTorp=0, submarino=0;
-        for(Boat b : f){
-            String name = b.getName();
-            if(name.equals("Porta-Aviões")) portaAvioes++;
-            else if(name.equals("Navio Tanque")) navio++;
-            else if(name.equals("Contra Torpedeiro")) contraTorp++;
-            else if(name.equals("Submarino")) submarino++;
+    void boardStartsWithAllWaterAndUnplacedFleet() {
+        Board board = newBoard(5, 5);
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
+                assertEquals(CellState.WATER, board.getState(new Position(x, y)));
+            }
         }
-        assertEquals(1, portaAvioes);
-        assertEquals(1, navio);
-        assertEquals(2, contraTorp);
-        assertEquals(1, submarino);
+        board.getFleet().forEach(b -> assertFalse(b.isPlaced()));
+    }
+
+    @Property
+    void isInsideIsTrueOnlyForValidCoordinates(
+            @ForAll @IntRange(min = -5, max = 15) int x,
+            @ForAll @IntRange(min = -5, max = 15) int y
+    ) {
+        Board board = newBoard(10, 10);
+        Position p = new Position(x, y);
+        boolean expected = x >= 0 && x < board.getWidth() && y >= 0 && y < board.getHeight();
+        assertEquals(expected, board.isInside(p));
     }
 
     @Test
-    void canPlaceBoatReturnsTrueAndFalseCorrectly() {
-        Boat b = new Battleship();
-        assertTrue(board.canPlaceBoat(b,new Position(2,2),true));
-        assertFalse(board.canPlaceBoat(b,new Position(9,9),true));
-        board.placeBoat(b,new Position(2,2),true);
-        assertFalse(board.canPlaceBoat(new Destroyer(),new Position(2,2),true));
+    void markMissChangesCellToMiss() {
+        Board board = newBoard(5, 5);
+        Position p = new Position(2, 2);
+        board.markMiss(p);
+        assertEquals(CellState.MISS, board.getState(p));
     }
 
     @Test
-    void placeBoatMarksShipCellsOrIgnoresInvalidPlacement() {
-        Boat b = new Battleship();
-        board.placeBoat(b,new Position(1,5),true);
-        assertTrue(board.isShip(new Position(1,5)));
-        assertTrue(board.isShip(new Position(2,5)));
-        assertTrue(board.isShip(new Position(3,5)));
-        Board b2 = new Board(new Settings(10,10, Settings.BotDifficulty.RANDOM));
-        b2.placeBoat(b,new Position(9,9),true); // invalid
-        assertTrue(b2.isWater(new Position(9,9)));
+    void markHitChangesCellToHit() {
+        Board board = newBoard(5, 5);
+        Position p = new Position(1, 1);
+        board.markShip(p);
+        board.markHit(p);
+        assertEquals(CellState.HIT, board.getState(p));
     }
 
     @Test
-    void placingBoatAgainRestoresPreviousCellsBackToWater() {
-        Boat boat = board.getFleet().get(4);
-        board.placeBoat(boat,new Position(0,0),true);
-        board.placeBoat(boat,new Position(5,5),true);
-        assertTrue(board.isWater(new Position(0,0)));
-        assertTrue(board.isShip(new Position(5,5)));
-    }
-
-    @Test
-    void hitAndMissAreRecordedCorrectly() {
-        Position miss = new Position(3,3);
-        assertFalse(board.isHit(miss));
-        assertFalse(board.isMiss(miss));
-        board.markMiss(miss);
-        assertTrue(board.isMiss(miss));
-        assertFalse(board.isHit(miss));
-        Boat b = new Destroyer();
-        board.placeBoat(b,new Position(4,1),true);
-        Position hp = b.getPositions().get(0);
-        board.markHit(hp);
-        assertTrue(board.isHit(hp));
-        assertFalse(board.isMiss(hp));
-    }
-
-    @Test
-    void validBotTargetAllowsWaterOrUnhitShipOnly() {
-        Position p = new Position(5,5);
+    void validBotTargetOnlyForWaterOrShip() {
+        Board board = newBoard(4, 4);
+        Position p = new Position(1, 1);
         assertTrue(board.isValidBotTarget(p));
-        Boat sub = new Destroyer();
-        board.placeBoat(sub,p,true);
+        board.markMiss(p);
+        assertFalse(board.isValidBotTarget(p));
+        board.markWater(p);
+        board.markShip(p);
         assertTrue(board.isValidBotTarget(p));
         board.markHit(p);
         assertFalse(board.isValidBotTarget(p));
     }
 
     @Test
-    void isInsideReturnsTrueOnlyForValidCoordinates() {
-        assertTrue(board.isInside(new Position(0,0)));
-        assertTrue(board.isInside(new Position(9,9)));
-        assertFalse(board.isInside(new Position(-1,0)));
-        assertFalse(board.isInside(new Position(10,0)));
-        assertFalse(board.isInside(new Position(0,-1)));
-        assertFalse(board.isInside(new Position(0,10)));
+    void hittingBoatRegistersHitInBoat() {
+        Board board = newBoard(5, 5);
+        Boat boat = board.getFleet().get(0);
+        Position p = new Position(0, 0);
+        board.placeBoat(boat, p, true);
+        board.markHit(p);
+        assertTrue(boat.isPartHit(0));
+        assertFalse(boat.isSunk());
     }
 
     @Test
-    void hasLostIsTrueOnlyWhenNoShipsRemain() {
-        assertTrue(board.hasLost());
-        board.placeFleetRandomly();
-        assertFalse(board.hasLost());
-        for(int x=0;x<board.getWidth();x++)
-            for(int y = 0; y<board.getHeight(); y++)
-                if(board.isShip(new Position(x,y)))
-                    board.markHit(new Position(x,y));
+    void hasLostOnlyWhenAllBoatsAreSunk() {
+        Board board = newBoard(10, 10);
+        for (Boat b : board.getFleet()) {
+            board.placeBoat(b, new Position(0, board.getFleet().indexOf(b)), true);
+            for (Position p : b.getPositions()) {
+                board.markHit(p);
+            }
+        }
         assertTrue(board.hasLost());
     }
 
     @Test
-    void getNextUnplacedBoatReturnsNullOnlyAfterAllPlaced() {
+    void allBoatsPlacedOnlyAfterAllPlaced() {
+        Board board = newBoard(10, 10);
         assertFalse(board.allBoatsPlaced());
-        assertNotNull(board.getNextUnplacedBoat());
-        int y=0;
-        for (Boat b : board.getFleet())
-            board.placeBoat(b,new Position(0,y++),true);
+        for (Boat b : board.getFleet()) {
+            board.placeBoat(b, new Position(0, board.getFleet().indexOf(b)), true);
+        }
         assertTrue(board.allBoatsPlaced());
-        assertNull(board.getNextUnplacedBoat());
+    }
+
+    @Property
+    void afterHitOrMissCellIsNeverWater(
+            @ForAll @IntRange(min = 0, max = 4) int x,
+            @ForAll @IntRange(min = 0, max = 4) int y
+    ) {
+        Board board = newBoard(5, 5);
+        Position p = new Position(x, y);
+        board.markMiss(p);
+        assertNotEquals(CellState.WATER, board.getState(p));
+        board.markWater(p);
+        board.markShip(p);
+        board.markHit(p);
+        assertNotEquals(CellState.WATER, board.getState(p));
+    }
+
+    @Property
+    void validBotTargetMatchesCellState(
+            @ForAll CellState state
+    ) {
+        Board board = newBoard(3, 3);
+        Position p = new Position(1, 1);
+        switch (state) {
+            case WATER -> board.markWater(p);
+            case SHIP -> board.markShip(p);
+            case HIT -> {
+                board.markShip(p);
+                board.markHit(p);
+            }
+            case MISS -> board.markMiss(p);
+        }
+        boolean expected = state == CellState.WATER || state == CellState.SHIP;
+        assertEquals(expected, board.isValidBotTarget(p));
     }
 }

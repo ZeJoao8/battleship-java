@@ -9,8 +9,10 @@ import java.util.*;
 
 public class Probability extends Bot {
 
-    private final Queue<Position> targetQueue = new LinkedList<>();
+    private Boat currentTarget = null;
     private final List<Position> hitsCluster = new ArrayList<>();
+    private final Queue<Position> targetQueue = new LinkedList<>();
+    private final Queue<Position> pendingHits = new LinkedList<>();
 
     public Probability() {
         super("Probability", "Hard");
@@ -20,9 +22,19 @@ public class Probability extends Bot {
     public Position chooseMove(Board board) {
         if (!targetQueue.isEmpty()) {
             while (!targetQueue.isEmpty()) {
-                Position next = targetQueue.poll();
-                if (board.isInside(next) && board.isValidBotTarget(next))
-                    return next;
+                Position p = targetQueue.poll();
+                if (board.isInside(p) && board.isValidBotTarget(p))
+                    return p;
+            }
+        }
+        if (currentTarget == null && !pendingHits.isEmpty()) {
+            while (!pendingHits.isEmpty()) {
+                Position p = pendingHits.poll();
+                Boat b = findBoatContaining(board, p);
+                if (b != null && !b.isSunk()) {
+                    startNewTarget(b, p, board);
+                    return p;
+                }
             }
         }
         return chooseHuntMove(board);
@@ -39,37 +51,34 @@ public class Probability extends Bot {
                 for (int x = 0; x <= W - size; x++) {
                     boolean valid = true;
                     for (int i = 0; i < size; i++) {
-                        Position p = new Position(x+i, y);
-                        if (!board.isValidBotTarget(p)) {
+                        if (!board.isValidBotTarget(new Position(x + i, y))) {
                             valid = false; break;
                         }
                     }
-                    if (valid) {
+                    if (valid)
                         for (int i = 0; i < size; i++)
-                            heat[x+i][y]++;
-                    }
+                            heat[x + i][y]++;
                 }
             }
             for (int x = 0; x < W; x++) {
                 for (int y = 0; y <= H - size; y++) {
                     boolean valid = true;
                     for (int i = 0; i < size; i++) {
-                        Position p = new Position(x, y+i);
-                        if (!board.isValidBotTarget(p)) {
+                        if (!board.isValidBotTarget(new Position(x, y + i))) {
                             valid = false; break;
                         }
                     }
-                    if (valid) {
+                    if (valid)
                         for (int i = 0; i < size; i++)
-                            heat[x][y+i]++;
-                    }
+                            heat[x][y + i]++;
                 }
             }
         }
+
         int bestX = 0, bestY = 0, best = -1;
         for (int x = 0; x < W; x++) {
             for (int y = 0; y < H; y++) {
-                Position p = new Position(x,y);
+                Position p = new Position(x, y);
                 if (!board.isValidBotTarget(p)) continue;
                 if (heat[x][y] > best) {
                     best = heat[x][y];
@@ -83,14 +92,43 @@ public class Probability extends Bot {
 
     @Override
     public void registerShot(Board board, Position p) {
-        boolean isHit = board.isHit(p);
-        if (isHit) {
+        if (!board.isHit(p)) return;
+        Boat hitBoat = findBoatContaining(board, p);
+        if (hitBoat == null) return;
+        if (currentTarget == null) {
+            startNewTarget(hitBoat, p, board);
+            return;
+        }
+        if (hitBoat == currentTarget) {
             hitsCluster.add(p);
             updateTargetQueue(board);
+            if (currentTarget.isSunk()) {
+                finishCurrentTarget(board);
+            }
+            return;
         }
-        if (clusterSunk(board)) {
-            hitsCluster.clear();
-            targetQueue.clear();
+        pendingHits.add(p);
+    }
+
+    private void startNewTarget(Boat boat, Position p, Board board) {
+        currentTarget = boat;
+        hitsCluster.clear();
+        targetQueue.clear();
+        hitsCluster.add(p);
+        updateTargetQueue(board);
+    }
+
+    private void finishCurrentTarget(Board board) {
+        hitsCluster.clear();
+        targetQueue.clear();
+        currentTarget = null;
+        while (!pendingHits.isEmpty()) {
+            Position p = pendingHits.poll();
+            Boat b = findBoatContaining(board, p);
+            if (b != null && !b.isSunk()) {
+                startNewTarget(b, p, board);
+                break;
+            }
         }
     }
 
@@ -98,25 +136,24 @@ public class Probability extends Bot {
         targetQueue.clear();
         if (hitsCluster.size() == 1) {
             Position h = hitsCluster.get(0);
-            addIfValid(board, new Position(h.getX()+1, h.getY()));
-            addIfValid(board, new Position(h.getX()-1, h.getY()));
-            addIfValid(board, new Position(h.getX(), h.getY()+1));
-            addIfValid(board, new Position(h.getX(), h.getY()-1));
+            addIfValid(board, new Position(h.getX() + 1, h.getY()));
+            addIfValid(board, new Position(h.getX() - 1, h.getY()));
+            addIfValid(board, new Position(h.getX(), h.getY() + 1));
+            addIfValid(board, new Position(h.getX(), h.getY() - 1));
             return;
         }
         boolean horizontal = allSameY();
         boolean vertical = allSameX();
-        hitsCluster.sort(Comparator.comparingInt(Position::getX)
-                .thenComparingInt(Position::getY));
+        hitsCluster.sort(Comparator.comparingInt(Position::getX).thenComparingInt(Position::getY));
         Position first = hitsCluster.get(0);
-        Position last  = hitsCluster.get(hitsCluster.size()-1);
+        Position last  = hitsCluster.get(hitsCluster.size() - 1);
         if (horizontal) {
-            addIfValid(board, new Position(first.getX()-1, first.getY()));
-            addIfValid(board, new Position(last.getX()+1,  last.getY()));
+            addIfValid(board, new Position(first.getX() - 1, first.getY()));
+            addIfValid(board, new Position(last.getX() + 1, last.getY()));
         }
         else if (vertical) {
-            addIfValid(board, new Position(first.getX(), first.getY()-1));
-            addIfValid(board, new Position(last.getX(),  last.getY()+1));
+            addIfValid(board, new Position(first.getX(), first.getY() - 1));
+            addIfValid(board, new Position(last.getX(), last.getY() + 1));
         }
     }
 
@@ -135,14 +172,11 @@ public class Probability extends Bot {
             targetQueue.add(p);
     }
 
-    private boolean clusterSunk(Board board) {
+    private Boat findBoatContaining(Board board, Position p) {
         for (Boat b : board.getFleet()) {
-            if (!b.isSunk()) {
-                for (Position h : hitsCluster)
-                    if (b.getPositions().contains(h))
-                        return false;
-            }
+            if (b.getPositions().contains(p))
+                return b;
         }
-        return true;
+        return null;
     }
 }

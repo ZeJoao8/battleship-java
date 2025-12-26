@@ -5,80 +5,67 @@ import battleship.model.Position;
 import battleship.model.game.PlacementModel;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Boat;
-import battleship.viewer.game.common.BoatViewer;
+import battleship.model.game.common.boats.Destroyer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
 import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 class PlacementBoardViewerTest {
 
-    private PlacementModel model;
     private GUI gui;
+    private PlacementModel model;
     private Board board;
     private PlacementBoardViewer viewer;
 
     @BeforeEach
     void setup() {
         gui = mock(GUI.class);
-        model = mock(PlacementModel.class);
         board = mock(Board.class);
+        model = mock(PlacementModel.class);
         when(model.getBoard()).thenReturn(board);
         viewer = new PlacementBoardViewer(model);
     }
 
     @Test
-    void drawsPlacedFleet() {
-        Boat b1 = mock(Boat.class);
-        Boat b2 = mock(Boat.class);
-        when(board.getFleet()).thenReturn(List.of(b1,b2));
-        when(b1.isPlaced()).thenReturn(true);
-        when(b2.isPlaced()).thenReturn(true);
-        viewer.draw(gui,new Position(0,0));
-        verify(board).getFleet();
-        verify(b1, atLeastOnce()).getSize();
-        verify(b2, atLeastOnce()).getSize();
-    }
+    void drawsBoardAndPlacedBoats() {
+        Boat placed = new Destroyer();
+        placed.addPosition(new Position(0,0));
+        placed.addPosition(new Position(1,0));
 
-    @Test
-    void drawsValidPreview() {
-        Boat cur = mock(Boat.class);
-        when(model.getCurrentBoat()).thenReturn(cur);
-        when(cur.isPlaced()).thenReturn(false);
-        when(model.getCursor()).thenReturn(new Position(3,2));
-        when(board.canPlaceBoat(cur,new Position(3,2),cur.isHorizontal())).thenReturn(true);
-        viewer.draw(gui,new Position(0,0));
-        verify(cur, atLeastOnce()).getSize();
-    }
-
-    @Test
-    void drawsInvalidPreview() {
-        Boat cur = mock(Boat.class);
-        when(model.getCurrentBoat()).thenReturn(cur);
-        when(cur.isPlaced()).thenReturn(false);
-        when(model.getCursor()).thenReturn(new Position(1,1));
-        when(board.canPlaceBoat(cur,new Position(1,1),cur.isHorizontal())).thenReturn(false);
-        viewer.draw(gui,new Position(0,0));
-        verify(cur, atLeastOnce()).getSize();
-        verify(board).canPlaceBoat(cur,new Position(1,1),cur.isHorizontal());
-    }
-
-    @Test
-    void doesNotDrawPreviewIfCurrentNull() {
+        when(board.getFleet()).thenReturn(List.of(placed));
         when(model.getCurrentBoat()).thenReturn(null);
+
         viewer.draw(gui,new Position(0,0));
-        verify(model).getCurrentBoat();
-        verifyNoMoreInteractions(gui);
+
+        verify(gui,atLeastOnce()).drawCharacter(any(),anyChar(),anyString());
     }
 
     @Test
-    void doesNotPreviewIfBoatAlreadyPlaced() {
-        Boat cur = mock(Boat.class);
-        when(model.getCurrentBoat()).thenReturn(cur);
-        when(cur.isPlaced()).thenReturn(true);
+    void drawsCurrentBoatPreviewWhenExists() {
+        Boat current = new Destroyer();
+        when(model.getCurrentBoat()).thenReturn(current);
+        when(model.getCursor()).thenReturn(new Position(0,0));
+        when(board.getFleet()).thenReturn(List.of());
+        when(board.canPlaceBoat(eq(current),any(),anyBoolean())).thenReturn(true);
+
         viewer.draw(gui,new Position(0,0));
-        verify(cur).isPlaced();
-        verifyNoMoreInteractions(gui);
+
+        verify(gui,atLeastOnce()).drawCharacter(any(),anyChar(),eq("#00FF9D"));
+    }
+
+    @Test
+    void drawsInvalidPreviewInRed() {
+        Boat current = new Destroyer();
+        when(model.getCurrentBoat()).thenReturn(current);
+        when(model.getCursor()).thenReturn(new Position(0,0));
+        when(board.getFleet()).thenReturn(List.of());
+        when(board.canPlaceBoat(eq(current),any(),anyBoolean())).thenReturn(false);
+
+        viewer.draw(gui,new Position(0,0));
+
+        verify(gui,atLeastOnce()).drawCharacter(any(),anyChar(),eq("#FF4444"));
     }
 }
