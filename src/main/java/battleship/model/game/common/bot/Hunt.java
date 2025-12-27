@@ -4,17 +4,23 @@ import battleship.model.Position;
 import battleship.model.game.common.Board;
 import battleship.model.game.common.Bot;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
 
 public class Hunt extends Bot {
 
-    private final Queue<Position> queue = new LinkedList<>();
-    private final java.util.Random rnd = new java.util.Random();
+    final Queue<Position> queue = new LinkedList<>();
+    private Random rnd = new Random();
 
     public Hunt() {
         super("Hunt", "Medium");
     }
 
+    protected Hunt(Random rnd) {
+        super("Hunt", "Medium");
+        this.rnd = rnd;
+    }
     @Override
     public Position chooseMove(Board board) {
         while (!queue.isEmpty()) {

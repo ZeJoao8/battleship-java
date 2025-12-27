@@ -12,64 +12,135 @@ import static org.mockito.Mockito.*;
 
 class BattleModelTest {
 
-    private BattleModel makeModel(Board player, Board enemy, BotStrategy bot) {
-        return new BattleModel(player, enemy, bot, new GameStats(null));
+    private Board realBoard() {
+        return new Board(new Settings(5, 5, Settings.BotDifficulty.EASY));
     }
 
-    private Board board() {
-        return new Board(new Settings(5,5, Settings.BotDifficulty.EASY));
+    private BattleModel model(Board player, Board enemy, BotStrategy bot) {
+        GameTimer timer = mock(GameTimer.class);
+        GameStats stats = new GameStats(timer);
+        return new BattleModel(player, enemy, bot, stats);
     }
 
     @Test
     void cursorStartsAtZeroZero() {
-        BattleModel m = makeModel(board(), board(), mock(BotStrategy.class));
-        assertEquals(new Position(0,0), m.getCursor());
+        BattleModel m = model(realBoard(), realBoard(), mock(BotStrategy.class));
+        assertEquals(new Position(0, 0), m.getCursor());
     }
 
     @Test
     void setCursorUpdatesCursor() {
-        BattleModel m = makeModel(board(), board(), mock(BotStrategy.class));
-        Position p = new Position(2,3);
+        BattleModel m = model(realBoard(), realBoard(), mock(BotStrategy.class));
+        Position p = new Position(2, 3);
         m.setCursor(p);
         assertEquals(p, m.getCursor());
     }
 
     @Test
     void alreadyShotEnemyDetectsMissAndHit() {
-        Board enemy = board();
-        enemy.markMiss(new Position(1,1));
-        enemy.markHit(new Position(2,2));
+        Board enemy = realBoard();
+        Position miss = new Position(1, 1);
+        Position hit = new Position(2, 2);
+        enemy.markMiss(miss);
+        enemy.markHit(hit);
+        BattleModel m = model(realBoard(), enemy, mock(BotStrategy.class));
+        assertTrue(m.alreadyShotEnemy(miss));
+        assertTrue(m.alreadyShotEnemy(hit));
+        assertFalse(m.alreadyShotEnemy(new Position(0, 0)));
+    }
 
-        BattleModel m = makeModel(board(), enemy, mock(BotStrategy.class));
+    @Test
+    void playerShootMarksMissOnWater() {
+        Board enemy = spy(realBoard());
+        BattleModel m = model(realBoard(), enemy, mock(BotStrategy.class));
+        Position p = new Position(0, 0);
+        doReturn(true).when(enemy).isWater(p);
+        m.playerShoot(p);
+        verify(enemy).markMiss(p);
+    }
 
-        assertTrue(m.alreadyShotEnemy(new Position(1,1)));
-        assertTrue(m.alreadyShotEnemy(new Position(2,2)));
-        assertFalse(m.alreadyShotEnemy(new Position(0,0)));
+    @Test
+    void playerShootMarksHitOnShip() {
+        Board enemy = spy(realBoard());
+        BattleModel m = model(realBoard(), enemy, mock(BotStrategy.class));
+        Position p = new Position(1, 1);
+        doReturn(false).when(enemy).isWater(p);
+        doReturn(true).when(enemy).isShip(p);
+        m.playerShoot(p);
+        verify(enemy).markHit(p);
+    }
+
+    @Test
+    void applyShotHitsShip() {
+        Board b = spy(realBoard());
+        BattleModel m = model(realBoard(), b, mock(BotStrategy.class));
+        Position p = new Position(2, 2);
+        doReturn(true).when(b).isShip(p);
+        m.applyShot(b, p);
+        verify(b).markHit(p);
+    }
+
+    @Test
+    void applyShotMissesWater() {
+        Board b = spy(realBoard());
+        BattleModel m = model(realBoard(), b, mock(BotStrategy.class));
+        Position p = new Position(3, 3);
+        doReturn(false).when(b).isShip(p);
+        m.applyShot(b, p);
+        verify(b).markMiss(p);
+    }
+
+    @Test
+    void makeBotMoveChoosesAndRegistersShot() {
+        Board player = realBoard();
+        BotStrategy bot = mock(BotStrategy.class);
+        Position shot = new Position(0, 0);
+        when(bot.chooseMove(player)).thenReturn(shot);
+        BattleModel m = model(player, realBoard(), bot);
+        m.makeBotMove();
+        verify(bot).chooseMove(player);
+        verify(bot).registerShot(player, shot);
+        assertTrue(player.isHit(shot) || player.isMiss(shot));
     }
 
     @Test
     void playTurnReturnsContinueIfAlreadyShot() {
-        Board enemy = board();
-        Position p = new Position(1,1);
+        Board enemy = realBoard();
+        Position p = new Position(1, 1);
         enemy.markMiss(p);
-
-        BattleModel m = makeModel(board(), enemy, mock(BotStrategy.class));
-
+        BattleModel m = model(realBoard(), enemy, mock(BotStrategy.class));
         assertEquals(TurnResult.CONTINUE, m.playTurn(p));
     }
 
     @Test
-    void botMoveIsExecuted() {
-        Board player = board();
+    void playTurnMissDoesNotEndGame() {
+        Board enemy = realBoard();
         BotStrategy bot = mock(BotStrategy.class);
-        Position shot = new Position(0,0);
+        when(bot.chooseMove(any())).thenReturn(new Position(0, 0));
+        BattleModel m = model(realBoard(), enemy, bot);
+        TurnResult r = m.playTurn(new Position(2, 2));
+        assertEquals(TurnResult.CONTINUE, r);
+    }
 
-        when(bot.chooseMove(player)).thenReturn(shot);
+    @Test
+    void playTurnPlayerWinsWhenEnemyLost() {
+        Board enemy = spy(realBoard());
+        BotStrategy bot = mock(BotStrategy.class);
+        doReturn(true).when(enemy).hasLost();
+        BattleModel m = model(realBoard(), enemy, bot);
+        TurnResult r = m.playTurn(new Position(0, 0));
+        assertEquals(TurnResult.PLAYER_WON, r);
+    }
 
-        BattleModel m = makeModel(player, board(), bot);
-        m.makeBotMove();
-
-        verify(bot).chooseMove(player);
-        assertTrue(player.isMiss(shot) || player.isHit(shot));
+    @Test
+    void playTurnBotWinsWhenPlayerLost() {
+        Board player = spy(realBoard());
+        Board enemy = realBoard();
+        BotStrategy bot = mock(BotStrategy.class);
+        when(bot.chooseMove(player)).thenReturn(new Position(0, 0));
+        doReturn(true).when(player).hasLost();
+        BattleModel m = model(player, enemy, bot);
+        TurnResult r = m.playTurn(new Position(1, 1));
+        assertEquals(TurnResult.BOT_WON, r);
     }
 }

@@ -13,24 +13,38 @@ import static org.mockito.Mockito.*;
 
 class EndViewerTest {
 
+    private BattleModel makeBattleModel() {
+        Board player = new Board(new Settings(6,6, Settings.BotDifficulty.EASY));
+        Board enemy  = new Board(new Settings(6,6, Settings.BotDifficulty.EASY));
+        return new BattleModel(player, enemy, new Random(), new GameStats(null));
+    }
+
     @Test
-    void drawsBoardsWhenBoardsVisible() throws Exception {
+    void drawsStatsWhenBoardsAreHidden() throws Exception {
         GUI gui = mock(GUI.class);
-
-        Board p = new Board(new Settings());
-        Board e = new Board(new Settings());
-        BattleModel model = new BattleModel(p, e, new Random(), new GameStats(null));
-
+        BattleModel model = makeBattleModel();
         GameStats stats = new GameStats(null);
         stats.setFinalModel(model);
-
         EndState state = new EndState(true, stats);
-        state.toggleBoards();
-
-        EndViewer v = new EndViewer(true, stats, state);
-        v.draw(gui);
-
+        EndViewer viewer = new EndViewer(false, stats, state);
+        viewer.draw(gui);
         verify(gui).clear();
         verify(gui).refresh();
+        verify(gui, atLeastOnce()).drawText(any(), anyString(), anyString());
+    }
+
+    @Test
+    void drawsFinalBoardsWhenBoardsAreVisible() throws Exception {
+        GUI gui = mock(GUI.class);
+        BattleModel model = makeBattleModel();
+        GameStats stats = new GameStats(null);
+        stats.setFinalModel(model);
+        EndState state = new EndState(true, stats);
+        state.toggleBoards();
+        EndViewer viewer = new EndViewer(true, stats, state);
+        viewer.draw(gui);
+        verify(gui).clear();
+        verify(gui).refresh();
+        verify(gui, atLeastOnce()).drawText(any(), anyString(), anyString());
     }
 }

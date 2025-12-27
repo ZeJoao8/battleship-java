@@ -14,10 +14,8 @@ class PlacementViewerTest {
     void drawsPlacementScreenNormally() throws Exception {
         GUI gui = mock(GUI.class);
         PlacementModel model = new PlacementModel(new Board(new Settings()));
-
         PlacementViewer viewer = new PlacementViewer(model);
         viewer.draw(gui);
-
         verify(gui).clear();
         verify(gui).refresh();
     }
@@ -26,12 +24,9 @@ class PlacementViewerTest {
     void showsReadyMessageWhenAllBoatsPlaced() throws Exception {
         GUI gui = mock(GUI.class);
         PlacementModel model = new PlacementModel(new Board(new Settings()));
-
         model.getBoard().placeFleetRandomly();
-
         PlacementViewer viewer = new PlacementViewer(model);
         viewer.draw(gui);
-
         verify(gui).clear();
         verify(gui).refresh();
     }

@@ -4,77 +4,82 @@ import battleship.Game;
 import battleship.gui.GUI;
 import battleship.model.Menu;
 import battleship.model.Settings;
-import battleship.states.MenuState;
 import battleship.states.SettingsState;
-import battleship.states.State;
+import battleship.states.game.PlacementState;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MenuControllerTest {
 
+    private Menu menu;
+    private MenuController controller;
+    private Game game;
+
+    @BeforeEach
+    void setup() {
+        menu = spy(new Menu());
+        controller = new MenuController(menu);
+        game = mock(Game.class);
+        when(game.getSettings()).thenReturn(new Settings());
+    }
+
     @Test
-    void selectSettingsOpensSettings() throws Exception {
-        Menu menu = mock(Menu.class);
-        when(menu.isSelectedSettings()).thenReturn(true);
+    void upMovesSelectionUp() throws Exception {
+        controller.step(game, GUI.ACTION.UP);
+        verify(menu).previous();
+    }
 
-        Settings settings = new Settings();
-        Game game = mock(Game.class);
-        when(game.getSettings()).thenReturn(settings);
+    @Test
+    void downMovesSelectionDown() throws Exception {
+        controller.step(game, GUI.ACTION.DOWN);
+        verify(menu).next();
+    }
 
-        MenuController controller = new MenuController(menu);
-
+    @Test
+    void selectPlayStartsPlacementState() throws Exception {
+        doReturn(true).when(menu).isSelectedPlay();
         controller.step(game, GUI.ACTION.SELECT);
+        verify(game).setState(argThat(s -> s instanceof PlacementState));
+    }
 
-        ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
-        verify(game).setState((State<?>) captor.capture());
-
-        assertTrue(captor.getValue() instanceof SettingsState);
+    @Test
+    void selectSettingsOpensSettingsState() throws Exception {
+        doReturn(false).when(menu).isSelectedPlay();
+        doReturn(true).when(menu).isSelectedSettings();
+        controller.step(game, GUI.ACTION.SELECT);
+        verify(game).setState(argThat(s -> s instanceof SettingsState));
     }
 
     @Test
     void selectQuitEndsGame() throws Exception {
-        Menu menu = mock(Menu.class);
-        when(menu.isSelectedQuit()).thenReturn(true);
-
-        Game game = mock(Game.class);
-        MenuController controller = new MenuController(menu);
-
+        doReturn(false).when(menu).isSelectedPlay();
+        doReturn(false).when(menu).isSelectedSettings();
+        doReturn(true).when(menu).isSelectedQuit();
         controller.step(game, GUI.ACTION.SELECT);
-
         verify(game).setState(null);
     }
 
     @Test
-    void selectPlayStartsPlacement() throws Exception {
-        Menu menu = mock(Menu.class);
-        when(menu.isSelectedPlay()).thenReturn(true);
-
-        Settings settings = new Settings();
-        Game game = mock(Game.class);
-        when(game.getSettings()).thenReturn(settings);
-
-        MenuController controller = new MenuController(menu);
-
+    void selectDoesNothingIfNothingSelected() throws Exception {
+        doReturn(false).when(menu).isSelectedPlay();
+        doReturn(false).when(menu).isSelectedSettings();
+        doReturn(false).when(menu).isSelectedQuit();
         controller.step(game, GUI.ACTION.SELECT);
-
-        ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
-        verify(game).setState((State<?>) captor.capture());
-
-        assertNotNull(captor.getValue());
-        assertTrue(captor.getValue().getClass().getSimpleName().contains("Placement"));
+        verify(game, never()).setState(any());
     }
 
     @Test
     void quitActionEndsGame() throws Exception {
-        Menu menu = new Menu();
-        Game game = mock(Game.class);
-
-        MenuController controller = new MenuController(menu);
         controller.step(game, GUI.ACTION.QUIT);
-
         verify(game).setState(null);
+    }
+
+    @Test
+    void defaultActionDoesNothing() throws Exception {
+        controller.step(game, GUI.ACTION.NONE);
+        verify(game, never()).setState(any());
     }
 }

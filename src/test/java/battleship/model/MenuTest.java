@@ -67,7 +67,6 @@ class MenuTest {
     @Property
     void convenienceMethodsMatchSelection(@ForAll @IntRange(min = 0, max = 20) int steps) {
         Menu menu = new Menu();
-
         for (int i = 0; i < steps; i++)
             menu.next();
         int sel = steps % 3;

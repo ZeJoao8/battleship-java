@@ -58,7 +58,6 @@ public class BattleModel {
         else b.markMiss(p);
     }
 
-    public boolean shouldRevealBoat(Boat b) { return b.isSunk(); }
     public boolean enemyLost() { return enemyBoard.hasLost(); }
     public boolean playerLost() { return playerBoard.hasLost(); }
 

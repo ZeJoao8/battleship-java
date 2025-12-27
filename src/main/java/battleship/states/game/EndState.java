@@ -25,10 +25,6 @@ public class EndState extends State<Boolean> {
         return showBoards;
     }
 
-    public GameStats getStats() {
-        return stats;
-    }
-
     @Override
     public Viewer<Boolean> getViewer() {
         return new EndViewer(getModel(), stats, this);

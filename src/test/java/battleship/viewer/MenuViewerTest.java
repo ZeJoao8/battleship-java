@@ -14,9 +14,7 @@ class MenuViewerTest {
         GUI gui = mock(GUI.class);
         Menu menu = new Menu();
         MenuViewer viewer = new MenuViewer(menu);
-
         viewer.drawElements(gui);
-
         verify(gui, atLeastOnce()).drawText(any(Position.class), anyString(), anyString());
     }
 
@@ -26,9 +24,7 @@ class MenuViewerTest {
         Menu menu = new Menu();
         menu.next();
         MenuViewer viewer = new MenuViewer(menu);
-
         viewer.drawElements(gui);
-
         verify(gui, atLeastOnce()).drawText(any(Position.class), contains(">"), anyString());
     }
 }

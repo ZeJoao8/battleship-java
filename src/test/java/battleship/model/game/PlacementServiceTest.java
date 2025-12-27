@@ -39,10 +39,7 @@ class PlacementServiceTest {
         PlacementService service = new PlacementService();
         service.autoPlace(board);
         service.undo(board, true);
-        board.getFleet().forEach(b -> {
-            assertFalse(b.isPlaced());
-            assertTrue(b.getPositions().isEmpty());
-        });
+        board.getFleet().forEach(b -> {assertFalse(b.isPlaced());assertTrue(b.getPositions().isEmpty());});
     }
 
     @Test
@@ -75,7 +72,8 @@ class PlacementServiceTest {
         for (Boat b : board.getFleet()) {
             if (!b.isPlaced()) {
                 assertTrue(b.getPositions().isEmpty());
-            } else {
+            }
+            else {
                 for (Position p : b.getPositions()) {
                     assertTrue(board.isInside(p));
                 }

@@ -14,9 +14,7 @@ class SettingsViewerTest {
         GUI gui = mock(GUI.class);
         Settings s = new Settings();
         SettingsViewer viewer = new SettingsViewer(s);
-
         viewer.drawElements(gui);
-
         verify(gui, atLeastOnce()).drawText(any(Position.class), anyString(), anyString());
     }
 
@@ -26,9 +24,7 @@ class SettingsViewerTest {
         Settings s = new Settings();
         s.setSelector(1);
         SettingsViewer viewer = new SettingsViewer(s);
-
         viewer.drawElements(gui);
-
         verify(gui, atLeastOnce()).drawText(any(Position.class), contains(">"), anyString());
     }
 }

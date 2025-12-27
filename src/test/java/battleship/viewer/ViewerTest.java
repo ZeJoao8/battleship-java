@@ -12,11 +12,9 @@ class ViewerTest {
 
     static class TestViewer extends Viewer<Object> {
         boolean drawCalled = false;
-
         public TestViewer(Object model) {
             super(model);
         }
-
         @Override
         protected void drawElements(GUI gui) {
             drawCalled = true;

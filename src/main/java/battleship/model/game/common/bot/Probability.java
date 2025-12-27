@@ -27,16 +27,6 @@ public class Probability extends Bot {
                     return p;
             }
         }
-        if (currentTarget == null && !pendingHits.isEmpty()) {
-            while (!pendingHits.isEmpty()) {
-                Position p = pendingHits.poll();
-                Boat b = findBoatContaining(board, p);
-                if (b != null && !b.isSunk()) {
-                    startNewTarget(b, p, board);
-                    return p;
-                }
-            }
-        }
         return chooseHuntMove(board);
     }
 
@@ -132,7 +122,7 @@ public class Probability extends Bot {
         }
     }
 
-    private void updateTargetQueue(Board board) {
+    void updateTargetQueue(Board board) {
         targetQueue.clear();
         if (hitsCluster.size() == 1) {
             Position h = hitsCluster.get(0);
@@ -157,12 +147,12 @@ public class Probability extends Bot {
         }
     }
 
-    private boolean allSameX() {
+    boolean allSameX() {
         int x = hitsCluster.get(0).getX();
         return hitsCluster.stream().allMatch(p -> p.getX() == x);
     }
 
-    private boolean allSameY() {
+    boolean allSameY() {
         int y = hitsCluster.get(0).getY();
         return hitsCluster.stream().allMatch(p -> p.getY() == y);
     }
@@ -172,7 +162,7 @@ public class Probability extends Bot {
             targetQueue.add(p);
     }
 
-    private Boat findBoatContaining(Board board, Position p) {
+    Boat findBoatContaining(Board board, Position p) {
         for (Boat b : board.getFleet()) {
             if (b.getPositions().contains(p))
                 return b;

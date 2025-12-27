@@ -15,14 +15,11 @@ class BattleViewerTest {
     @Test
     void drawsBattleScreen() throws Exception {
         GUI gui = mock(GUI.class);
-
         Board p = new Board(new Settings());
         Board e = new Board(new Settings());
         BattleModel model = new BattleModel(p, e, new Random(), new GameStats(null));
-
         BattleViewer viewer = new BattleViewer(model);
         viewer.draw(gui);
-
         verify(gui).clear();
         verify(gui).refresh();
     }
