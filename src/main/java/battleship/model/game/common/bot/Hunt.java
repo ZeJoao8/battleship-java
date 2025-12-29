@@ -32,7 +32,6 @@ public class Hunt extends Bot {
         do {p = new Position(rnd.nextInt(board.getWidth()), rnd.nextInt(board.getHeight()));
         } while (!board.isValidBotTarget(p) || (p.getX() + p.getY()) % 2 != 0);
 
-
         return register(board, p);
     }
 

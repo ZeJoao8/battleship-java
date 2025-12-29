@@ -25,26 +25,15 @@ public class PlacementController extends Controller<PlacementModel> {
 
     @Override
     public void step(Game game, GUI.ACTION action) {
-
         PlacementModel model = getModel();
 
         switch (action) {
-            case UP -> {
-                model.moveUp();
-            }
-            case DOWN -> {
-                model.moveDown();
-            }
-            case LEFT -> {
-                model.moveLeft();
-            }
-            case RIGHT -> {
-                model.moveRight();
-            }
+            case UP -> model.moveUp();
+            case DOWN -> model.moveDown();
+            case LEFT -> model.moveLeft();
+            case RIGHT -> model.moveRight();
 
-            case ROTATE -> {
-                model.rotateCurrentBoat();
-            }
+            case ROTATE -> model.rotateCurrentBoat();
 
             case SELECT -> {
                 if (model.allBoatsPlaced()) {
@@ -55,9 +44,7 @@ public class PlacementController extends Controller<PlacementModel> {
             }
 
             case AUTO -> model.autoPlaceFleet();
-
             case UNDO -> model.undoLastBoat();
-
             case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
