@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.15.0'
 }
 
 repositories {
@@ -48,4 +49,13 @@ jacocoTestReport {
         csv.required = false
         html.required = true
     }
+}
+
+pitest {
+    junit5PluginVersion = '1.2.1'
+    targetClasses = ['battleship.*']
+    targetTests = ['battleship.*']
+    threads = 4
+    outputFormats = ['HTML']
+    timestampedReports = false
 }
