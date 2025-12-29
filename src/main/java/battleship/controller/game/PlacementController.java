@@ -32,9 +32,10 @@ public class PlacementController extends Controller<PlacementModel> {
             case DOWN -> model.moveDown();
             case LEFT -> model.moveLeft();
             case RIGHT -> model.moveRight();
-
             case ROTATE -> model.rotateCurrentBoat();
-
+            case AUTO -> model.autoPlaceFleet();
+            case UNDO -> model.undoLastBoat();
+            case QUIT -> game.setState(new MenuState(new Menu()));
             case SELECT -> {
                 if (model.allBoatsPlaced()) {
                     startBattle(game, model.getBoard());
@@ -42,10 +43,6 @@ public class PlacementController extends Controller<PlacementModel> {
                 }
                 model.placeCurrentBoat();
             }
-
-            case AUTO -> model.autoPlaceFleet();
-            case UNDO -> model.undoLastBoat();
-            case QUIT -> game.setState(new MenuState(new Menu()));
             default -> {}
         }
     }
