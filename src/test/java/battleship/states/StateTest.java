@@ -23,15 +23,11 @@ class StateTest {
         Controller<Object> controller = mock(Controller.class);
         GUI gui = mock(GUI.class);
         Game game = mock(Game.class);
-
         State<Object> state = makeState(viewer, controller);
-
         when(gui.getNextAction()).thenReturn(GUI.ACTION.NONE);
         doReturn(state).when(game).getState();
         doNothing().when(controller).step(game, GUI.ACTION.NONE);
-
         state.step(game, gui);
-
         verify(viewer).draw(gui);
     }
 
@@ -41,16 +37,12 @@ class StateTest {
         Controller<Object> controller = mock(Controller.class);
         GUI gui = mock(GUI.class);
         Game game = mock(Game.class);
-
         State<Object> oldState = makeState(viewer, controller);
         State<Object> newState = makeState(mock(Viewer.class), mock(Controller.class));
-
         when(gui.getNextAction()).thenReturn(GUI.ACTION.NONE);
         doReturn(oldState, newState).when(game).getState();
         doNothing().when(controller).step(game, GUI.ACTION.NONE);
-
         oldState.step(game, gui);
-
         verify(viewer, never()).draw(gui);
     }
 
